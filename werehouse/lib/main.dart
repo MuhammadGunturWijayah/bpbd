@@ -85,10 +85,10 @@ class _MainAppState extends State<MainApp> {
                 color: Theme.of(context).colorScheme.primary,
               ),
               icon: Icon(
-                IconlyLight.wallet,
+                Icons.inventory_rounded,
                 color: Theme.of(context).colorScheme.primary,
               ),
-              label: "Wallet",
+              label: "Stok",
             ),
             NavigationDestination(
               selectedIcon: Icon(
@@ -96,10 +96,10 @@ class _MainAppState extends State<MainApp> {
                 color: Theme.of(context).colorScheme.primary,
               ),
               icon: Icon(
-                IconlyLight.graph,
+                IconlyBold.scan,
                 color: Theme.of(context).colorScheme.primary,
               ),
-              label: "Statistics",
+              label: "Scan",
             ),
             NavigationDestination(
               selectedIcon: Icon(
