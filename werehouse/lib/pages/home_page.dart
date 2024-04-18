@@ -218,8 +218,8 @@ class HomePage extends StatelessWidget {
           fadeOffset: 360,
           direction: FadeInDirection.ltr,
           child: HomeButton(
-            label: "Bantuan",
-            iconData: Icons.location_history,
+            label: "Bencana",
+            iconData: Icons.local_hospital,
             color: Colors.teal,
             onPressed: () {},
           ),
