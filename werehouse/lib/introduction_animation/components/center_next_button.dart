@@ -1,6 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:werehouse/Login_Simple_3/login_page.dart';
+import 'package:werehouse/login/login.dart';
 
 class CenterNextButton extends StatelessWidget {
   final AnimationController animationController;

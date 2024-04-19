@@ -1,131 +1,53 @@
-import 'package:werehouse/pages/home_page.dart';
-import 'package:werehouse/pages/settings_page.dart';
-import 'package:werehouse/theme_notifier.dart';
+//import 'package:WEREHOUSE/dashboard/homepage/laporan_dashboard/fitur_laporan.dart';
 import 'package:flutter/material.dart';
-import 'package:iconly/iconly.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-//
-//?
-//?
-//? NIKHIL KUMAR
-//?
-//? Software Engineer
-//?
-//? @flutter.fury
-//?
-//?
-//?
-//?
-//
+import 'package:flutter/services.dart';
+import 'package:werehouse/introduction_animation/components/SplashScreen.dart';
+import 'package:werehouse/dashboard/dashboard.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final bool isDark =
-      (await SharedPreferences.getInstance()).getBool('isDark') ?? true;
-
-  runApp(
-    ChangeNotifierProvider(
-      create: (_) => ThemeNotifier(isDark: isDark),
-      child: const MainApp(),
-    ),
-  );
+  await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown
+  ]).then((_) => runApp(MyApp()));
 }
 
-class MainApp extends StatefulWidget {
-  const MainApp({super.key});
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
 
   @override
-  State<MainApp> createState() => _MainAppState();
-}
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(vsync: this);
+  }
 
-class _MainAppState extends State<MainApp> {
-  int selectedIndex = 0;
-  final destinationViews = [
-    const HomePage(),
-    const SizedBox(),
-    const SizedBox(),
-    const SettingsPage(),
-  ];
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final themeData = Provider.of<ThemeNotifier>(context, listen: true);
-
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: themeData.getTheme(),
-      home: Scaffold(
-        body: destinationViews[selectedIndex],
-        bottomNavigationBar: NavigationBar(
-          selectedIndex: selectedIndex,
-          onDestinationSelected: (int index) {
-            setState(() {
-              selectedIndex = index;
-            });
-          },
-          indicatorColor: Colors.white,
-          destinations: [
-            NavigationDestination(
-              tooltip: "Home",
-              selectedIcon: Icon(
-                IconlyBold.home,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              icon: Icon(
-                IconlyLight.home,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              label: "Home",
-            ),
-            NavigationDestination(
-              selectedIcon: Icon(
-                IconlyBold.wallet,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              icon: Icon(
-                Icons.inventory_rounded,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              label: "Stok",
-            ),
-            NavigationDestination(
-              selectedIcon: Icon(
-                IconlyBold.graph,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              icon: Icon(
-                IconlyBold.scan,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              label: "Scan",
-            ),
-            NavigationDestination(
-              selectedIcon: Icon(
-                IconlyBold.setting,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              icon: Icon(
-                IconlyLight.setting,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              label: "Settings",
-            ),
-          ],
-        ),
-      ),
+      home: SplashScreen(), //fitur_laporan //MyHome
     );
   }
 }
 
-// class NavigationItem extends StatelessWidget {
-//   final Icon icon;
-//   final String
-//   const NavigationItem({super.key});
+class HexColor extends Color {
+  HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return
-//   }
-// }
+  static int _getColorFromHex(String hexColor) {
+    hexColor = hexColor.toUpperCase().replaceAll('#', '');
+    if (hexColor.length == 6) {
+      hexColor = 'FF' + hexColor;
+    }
+    return int.parse(hexColor, radix: 16);
+  }
+}
