@@ -28,10 +28,10 @@ class MainApp extends StatefulWidget {
 
 class _MainAppState extends State<MainApp> {
   int selectedIndex = 0;
-  final destinationViews = const [
+  final List<Widget> destinationViews = const [
     HomePage(),
-    SizedBox(),
-    SizedBox(),
+    SizedBox(), // Placeholder for Stok Page
+    SizedBox(), // Placeholder for Scan Page
     SettingsPage(),
   ];
 
@@ -51,10 +51,10 @@ class _MainAppState extends State<MainApp> {
               selectedIndex = index;
             });
           },
-          indicatorColor: Colors.white,
+          indicatorColor: Theme.of(context).colorScheme.primary,
           destinations: [
             NavigationDestination(
-              tooltip: "Home",
+              label: "Home",
               selectedIcon: Icon(
                 IconlyBold.home,
                 color: Theme.of(context).colorScheme.primary,
@@ -63,9 +63,9 @@ class _MainAppState extends State<MainApp> {
                 IconlyLight.home,
                 color: Theme.of(context).colorScheme.primary,
               ),
-              label: "Home",
             ),
             NavigationDestination(
+              label: "Stok",
               selectedIcon: Icon(
                 IconlyBold.wallet,
                 color: Theme.of(context).colorScheme.primary,
@@ -74,9 +74,9 @@ class _MainAppState extends State<MainApp> {
                 Icons.inventory_rounded,
                 color: Theme.of(context).colorScheme.primary,
               ),
-              label: "Stok",
             ),
             NavigationDestination(
+              label: "Scan",
               selectedIcon: Icon(
                 IconlyBold.graph,
                 color: Theme.of(context).colorScheme.primary,
@@ -85,9 +85,9 @@ class _MainAppState extends State<MainApp> {
                 IconlyBold.scan,
                 color: Theme.of(context).colorScheme.primary,
               ),
-              label: "Scan",
             ),
             NavigationDestination(
+              label: "Settings",
               selectedIcon: Icon(
                 IconlyBold.setting,
                 color: Theme.of(context).colorScheme.primary,
@@ -96,7 +96,6 @@ class _MainAppState extends State<MainApp> {
                 IconlyLight.setting,
                 color: Theme.of(context).colorScheme.primary,
               ),
-              label: "Settings",
             ),
           ],
         ),
@@ -129,7 +128,6 @@ class NavigationBar extends StatelessWidget {
         return BottomNavigationBarItem(
           icon: destination.icon,
           label: destination.label,
-          tooltip: destination.tooltip,
         );
       }).toList(),
     );
@@ -138,13 +136,11 @@ class NavigationBar extends StatelessWidget {
 
 class NavigationDestination {
   final String label;
-  final String? tooltip;
   final Icon icon;
   final Icon? selectedIcon;
 
   NavigationDestination({
     required this.label,
-    this.tooltip,
     required this.icon,
     this.selectedIcon,
   });

@@ -30,6 +30,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   void dispose() {
     _animationController.dispose();
     super.dispose();
+    
   }
 
   @override
