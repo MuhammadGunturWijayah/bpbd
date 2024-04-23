@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:gojek/datas/icons.dart';
-import 'package:gojek/theme.dart';
+import 'package:werehouse/dashboard/HomePageButton.dart';
+import 'package:werehouse/theme.dart';
 
 class Menus extends StatelessWidget {
   const Menus({Key? key}) : super(key: key);

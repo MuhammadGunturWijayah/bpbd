@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:gojek/components/akses.dart';
-import 'package:gojek/components/goclub.dart';
-import 'package:gojek/components/gopay.dart';
-import 'package:gojek/components/header.dart';
-import 'package:gojek/components/menus.dart';
-import 'package:gojek/components/news.dart';
-import 'package:gojek/components/search.dart';
-import 'package:gojek/theme.dart';
+import 'package:werehouse/dashboard/components/akses.dart';
+import 'package:werehouse/dashboard/components/goclub.dart';
+import 'package:werehouse/dashboard/components/gopay.dart';
+import 'package:werehouse/dashboard/components/header.dart';
+import 'package:werehouse/dashboard/components/menus.dart';
+import 'package:werehouse/dashboard/components/news.dart';
+import 'package:werehouse/dashboard/components/search.dart';
+import 'package:werehouse/theme.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);

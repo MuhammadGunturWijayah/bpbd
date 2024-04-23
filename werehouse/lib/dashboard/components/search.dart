@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:gojek/theme.dart';
+import 'package:werehouse/theme.dart';
 
 class Search extends StatelessWidget {
   const Search({Key? key}) : super(key: key);

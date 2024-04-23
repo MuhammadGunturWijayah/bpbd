@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gojek/datas/news.dart';
-import 'package:gojek/theme.dart';
+import 'package:werehouse/dashboard/news.dart';
+import 'package:werehouse/theme.dart';
 
 class News extends StatelessWidget {
   const News({Key? key}) : super(key: key);

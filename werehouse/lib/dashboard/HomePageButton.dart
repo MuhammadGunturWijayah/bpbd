@@ -1,5 +1,5 @@
-import 'package:gojek/models/gojek_icon.dart';
-import 'package:gojek/theme.dart';
+import 'package:werehouse/dashboard/HomePageIcon.dart';
+import 'package:werehouse/theme.dart';
 
 List<GojekIcon> gopayIcons = [
   GojekIcon(icon: 'pay', title: 'Bayar'),
