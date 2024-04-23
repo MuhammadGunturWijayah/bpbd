@@ -13,7 +13,7 @@ class Akses extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Akses cepat',
+            'Info Lainnya',
             style: bold18.copyWith(color: dark1),
           ),
           const SizedBox(
