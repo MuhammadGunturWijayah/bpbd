@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:werehouse/dashboard/dashboard.dart';
+import 'package:werehouse/dashboard/HomePage.dart';
 //import 'package:werehouse/dashboard/fitness_app_home_screen.dart';
 import 'package:werehouse/database.dart'; // Pastikan Anda menggantinya sesuai dengan nama proyek Anda
 //import 'package:werehouse/dashboard/homepage/main_page.dart'; // Pastikan Anda menggantinya sesuai dengan nama proyek Anda
-
+import 'package:werehouse/introduction_animation/components/SplashScreen.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -105,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => MainApp(),//tampilan dashboard
+                      builder: (context) => SplashScreen(),//tampilan dashboard
                     ),
                   );
                 },

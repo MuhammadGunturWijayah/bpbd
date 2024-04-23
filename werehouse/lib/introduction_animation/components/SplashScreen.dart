@@ -23,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          color: Color(0xffF7EBE1),// Ganti dengan warna latar belakang yang diinginkan
+          color: Color.fromARGB(255, 255, 255, 255),// Ganti dengan warna latar belakang yang diinginkan
         ),
         child: Center(
         child: Image.asset(
