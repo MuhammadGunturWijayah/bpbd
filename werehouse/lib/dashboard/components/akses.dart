@@ -27,7 +27,7 @@ class Akses extends StatelessWidget {
               children: [
                 ...[
                   'Fitur laporan  berfungsi untuk mencetak laporan seperti pemasukan barang, pengeluaran barang dll.',
-                  'Pintu keluar motor, MNC Land'
+                  '.'
                 ].map((text) {
                   if (text.startsWith('Fitur laporan')) {
                     return Padding(
@@ -72,11 +72,7 @@ class Akses extends StatelessWidget {
                           const SizedBox(
                             width: 24,
                           ),
-                          SvgPicture.asset(
-                            'assets/icons/left.svg',
-                            height: 24,
-                            color: dark1,
-                          )
+                          
                         ],
                       ),
                     );

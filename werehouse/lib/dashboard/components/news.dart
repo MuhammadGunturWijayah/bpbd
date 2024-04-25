@@ -15,22 +15,18 @@ class News extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset(
-                'assets/images/gopaylater.png',
-                height: 14,
-              ),
               const SizedBox(
                 height: 8,
               ),
               Text(
-                'Lebih hemat pake GoPayLater 🤩',
+                'pilih salah satu laporan yang ingin di cetak ',
                 style: bold16.copyWith(color: dark1),
               ),
               const SizedBox(
                 height: 8,
               ),
               Text(
-                'Yuk, belanja di Tokopedia pake GoPay Later dan nikmatin cashback-nya~',
+                'Yuk, Cetak laporan yang ingin anda bagikan dan nikmati fitur fitur lainnya ~',
                 style: regular14.copyWith(color: dark2),
               )
             ],
