@@ -23,11 +23,68 @@ class Akses extends StatelessWidget {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
                 border: Border.all(color: const Color(0xFFE8E8E8))),
-            child: Column(children: [
-              ...['Pintu masuk motor, MNC Land', 'Pintu keluar motor, MNC Land']
-                  .map((text) => Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(children: [
+            child: Column(
+              children: [
+                ...[
+                  'Fitur laporan  berfungsi untuk mencetak laporan seperti pemasukan barang, pengeluaran barang dll.',
+                  'Pintu keluar motor, MNC Land'
+                ].map((text) {
+                  if (text.startsWith('Fitur laporan')) {
+                    return Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 24,
+                            height: 24,
+                            decoration: BoxDecoration(
+                                color: green2,
+                                borderRadius: BorderRadius.circular(20)),
+                            child: SvgPicture.asset(
+                              'assets/icons/goride.svg',
+                              color: Colors.white,
+                              width: 24,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 12,
+                          ),
+                          Flexible(
+                            fit: FlexFit.tight,
+                            child: RichText(
+                              text: TextSpan(
+                                style: regular14.copyWith(color: dark1),
+                                children: [
+                                  TextSpan(
+                                    text: 'Fitur laporan',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: text.substring(14),
+                                    style: regular14.copyWith(color: dark1),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 24,
+                          ),
+                          SvgPicture.asset(
+                            'assets/icons/left.svg',
+                            height: 24,
+                            color: dark1,
+                          )
+                        ],
+                      ),
+                    );
+                  } else {
+                    return Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        children: [
                           Container(
                             width: 24,
                             height: 24,
@@ -58,9 +115,13 @@ class Akses extends StatelessWidget {
                             height: 24,
                             color: dark1,
                           )
-                        ]),
-                      ))
-            ]),
+                        ],
+                      ),
+                    );
+                  }
+                })
+              ],
+            ),
           ),
         ],
       ),
