@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:werehouse/dashboard/components/akses.dart';
-import 'package:werehouse/dashboard/components/goclub.dart';
-import 'package:werehouse/dashboard/components/gopay.dart';
+import 'package:werehouse/dashboard/components/notif_permintaan.dart';
+import 'package:werehouse/dashboard/components/dashboard.dart';
 import 'package:werehouse/dashboard/components/menus.dart';
 import 'package:werehouse/dashboard/components/news.dart';
 import 'package:werehouse/dashboard/components/search.dart';
