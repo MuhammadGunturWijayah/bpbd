@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:werehouse/dashboard/components/akses.dart';
+import 'package:werehouse/dashboard/components/info_lainnya.dart';
 import 'package:werehouse/dashboard/components/notif_permintaan.dart';
 import 'package:werehouse/dashboard/components/dashboard.dart';
 import 'package:werehouse/dashboard/components/menus.dart';
