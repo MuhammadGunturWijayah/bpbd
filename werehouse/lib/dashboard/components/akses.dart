@@ -42,7 +42,7 @@ class Akses extends StatelessWidget {
                                 color: blue1,
                                 borderRadius: BorderRadius.circular(20)),
                             child: SvgPicture.asset(
-                              'assets/icons/goride.svg',
+                              'assets/icons/laporan.svg',
                               color: Colors.white,
                               width: 24,
                             ),
@@ -85,7 +85,7 @@ class Akses extends StatelessWidget {
                                 color: green2,
                                 borderRadius: BorderRadius.circular(20)),
                             child: SvgPicture.asset(
-                              'assets/icons/goride.svg',
+                              'assets/icons/scan.svg',
                               color: Colors.white,
                               width: 24,
                             ),
@@ -128,7 +128,7 @@ class Akses extends StatelessWidget {
                                 color: red,
                                 borderRadius: BorderRadius.circular(20)),
                             child: SvgPicture.asset(
-                              'assets/icons/goride.svg',
+                              'assets/icons/bantuan.svg',
                               color: Colors.white,
                               width: 24,
                             ),
