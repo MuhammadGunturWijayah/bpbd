@@ -17,7 +17,7 @@ class HomePage extends StatelessWidget {
       body: SingleChildScrollView(
           child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [Search(), Gopay(), Menus(), GoCLub(), Akses(), News()],
+        children: const [Search(), dashboard(), Menus(), GoCLub(), Akses(), News()],
       )),
     );
   }
