@@ -27,7 +27,8 @@ class Akses extends StatelessWidget {
               children: [
                 ...[
                   'Fitur laporan  berfungsi untuk mencetak laporan seperti pemasukan barang, pengeluaran barang dll.',
-                  '.'
+                  'Fitur Scan berfungsi untuk pendataan barang masuk maupun keluar',
+                  'Fitur Bantua berfungsi untuk meminta barang kepada admin'
                 ].map((text) {
                   if (text.startsWith('Fitur laporan')) {
                     return Padding(
@@ -38,7 +39,7 @@ class Akses extends StatelessWidget {
                             width: 24,
                             height: 24,
                             decoration: BoxDecoration(
-                                color: green2,
+                                color: blue1,
                                 borderRadius: BorderRadius.circular(20)),
                             child: SvgPicture.asset(
                               'assets/icons/goride.svg',
@@ -69,14 +70,10 @@ class Akses extends StatelessWidget {
                               ),
                             ),
                           ),
-                          const SizedBox(
-                            width: 24,
-                          ),
-                          
                         ],
                       ),
                     );
-                  } else {
+                  } else if (text.startsWith('Fitur Scan')) {
                     return Padding(
                       padding: const EdgeInsets.all(16),
                       child: Row(
@@ -98,19 +95,67 @@ class Akses extends StatelessWidget {
                           ),
                           Flexible(
                             fit: FlexFit.tight,
-                            child: Text(
-                              text,
-                              style: regular14.copyWith(color: dark1),
+                            child: RichText(
+                              text: TextSpan(
+                                style: regular14.copyWith(color: dark1),
+                                children: [
+                                  TextSpan(
+                                    text: 'Fitur Scan',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: text.substring(10),
+                                    style: regular14.copyWith(color: dark1),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    return Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 24,
+                            height: 24,
+                            decoration: BoxDecoration(
+                                color: red,
+                                borderRadius: BorderRadius.circular(20)),
+                            child: SvgPicture.asset(
+                              'assets/icons/goride.svg',
+                              color: Colors.white,
+                              width: 24,
                             ),
                           ),
                           const SizedBox(
-                            width: 24,
+                            width: 12,
                           ),
-                          SvgPicture.asset(
-                            'assets/icons/left.svg',
-                            height: 24,
-                            color: dark1,
-                          )
+                          Flexible(
+                            fit: FlexFit.tight,
+                            child: RichText(
+                              text: TextSpan(
+                                style: regular14.copyWith(color: dark1),
+                                children: [
+                                  TextSpan(
+                                    text: 'Fitur Bantuan',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: text.substring(12),
+                                    style: regular14.copyWith(color: dark1),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     );
