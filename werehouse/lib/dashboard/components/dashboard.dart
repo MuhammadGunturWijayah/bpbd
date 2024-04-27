@@ -11,7 +11,7 @@ class _GopayState extends State<Gopay> {
   int currentImageIndex = 0;
   List<String> images3 = [
     "assets/images/iklan1.png",
-    "assets/images/2.png",
+    "assets/images/iklan2.png",
     "assets/images/3.png",
   ];
 
