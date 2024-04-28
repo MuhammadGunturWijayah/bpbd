@@ -26,29 +26,46 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+       bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Divider(
+            color: Color.fromARGB(255, 214, 214, 214),
+            height: 1,
+            thickness: 1,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.scanner),
-            label: 'Scan',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
+          BottomNavigationBar(
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.scanner),
+                label: 'Scan',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.settings),
+                label: 'Settings',
+              ),
+            ],
+            selectedItemColor: Colors.blue, // Warna ikon yang dipilih
+            unselectedItemColor: Colors.grey, // Warna ikon yang tidak dipilih
+            currentIndex: 0, // Indeks ikon yang aktif secara default
+            onTap: (index) {
+              // Tambahkan logika untuk menangani ketika ikon ditekan
+              // Contoh:
+              // if (index == 0) {
+              //   // Navigasi ke halaman home
+              // } else if (index == 1) {
+              //   // Navigasi ke halaman scan
+              // } else if (index == 2) {
+              //   // Navigasi ke halaman setting
+              // }
+            },
           ),
         ],
-        selectedItemColor: Colors.blue, 
-        unselectedItemColor: Colors.grey, 
-        currentIndex: 0, 
-        onTap: (index) {
-         
-        },
       ),
     );
   }
 }
-
