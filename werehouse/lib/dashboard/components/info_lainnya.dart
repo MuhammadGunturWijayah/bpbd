@@ -27,8 +27,9 @@ class Akses extends StatelessWidget {
               children: [
                 ...[
                   'Fitur laporan  berfungsi untuk mencetak laporan seperti pemasukan barang, pengeluaran barang dll.',
-                  'Fitur Scan berfungsi untuk pendataan barang masuk maupun keluar',
-                  'Fitur Bantua berfungsi untuk meminta barang kepada admin'
+                  'Fitur Scan berfungsi untuk pendataan barang masuk maupun barang keluar melalui scan mobile.',
+                  'Fitur Bantua berfungsi ketika kejadian suatu bencana user dapat meminta barang melalui aplikasi yang terhubung ke pegudangan.',
+                  'Fitur Barang   berfungsi untuk menginput barang masuk ataupun barang keluar.',
                 ].map((text) {
                   if (text.startsWith('Fitur laporan')) {
                     return Padding(
@@ -116,7 +117,7 @@ class Akses extends StatelessWidget {
                         ],
                       ),
                     );
-                  } else {
+                  } else if (text.startsWith('Fitur Bantua')) {
                     return Padding(
                       padding: const EdgeInsets.all(16),
                       child: Row(
@@ -159,8 +160,54 @@ class Akses extends StatelessWidget {
                         ],
                       ),
                     );
+                  } else if (text.startsWith('Fitur Barang')) {
+                    return Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 24,
+                            height: 24,
+                            decoration: BoxDecoration(
+                              color: green2,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: SvgPicture.asset(
+                              'assets/icons/barang.svg',
+                              color: Colors.white,
+                              width: 24,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 12,
+                          ),
+                          Flexible(
+                            fit: FlexFit.tight,
+                            child: RichText(
+                              text: TextSpan(
+                                style: regular14.copyWith(color: dark1),
+                                children: [
+                                  TextSpan(
+                                    text: 'Fitur Barang',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: text.substring(14),
+                                    style: regular14.copyWith(color: dark1),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    return Container(); // Mengembalikan widget kosong jika tidak cocok dengan kondisi apapun
                   }
-                })
+                }).toList(), // Menjadikan hasil dari map menjadi list
               ],
             ),
           ),

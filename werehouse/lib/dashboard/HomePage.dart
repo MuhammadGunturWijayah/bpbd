@@ -41,7 +41,7 @@ class HomePage extends StatelessWidget {
                 label: 'Home',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.scanner),
+                icon: Icon(Icons.qr_code_2),
                 label: 'Scan',
               ),
               BottomNavigationBarItem(
@@ -49,19 +49,11 @@ class HomePage extends StatelessWidget {
                 label: 'Settings',
               ),
             ],
-            selectedItemColor: Colors.blue, // Warna ikon yang dipilih
-            unselectedItemColor: Colors.grey, // Warna ikon yang tidak dipilih
-            currentIndex: 0, // Indeks ikon yang aktif secara default
+            selectedItemColor: Colors.blue, 
+            unselectedItemColor: Colors.grey, 
+            currentIndex: 0, 
             onTap: (index) {
-              // Tambahkan logika untuk menangani ketika ikon ditekan
-              // Contoh:
-              // if (index == 0) {
-              //   // Navigasi ke halaman home
-              // } else if (index == 1) {
-              //   // Navigasi ke halaman scan
-              // } else if (index == 2) {
-              //   // Navigasi ke halaman setting
-              // }
+            
             },
           ),
         ],
