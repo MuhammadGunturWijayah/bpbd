@@ -5,6 +5,7 @@ import 'package:werehouse/dashboard/components/dashboard.dart';
 import 'package:werehouse/dashboard/components/menus.dart';
 import 'package:werehouse/dashboard/components/news.dart';
 import 'package:werehouse/dashboard/components/search.dart';
+import 'package:werehouse/dashboard/components/navigation_bar.dart';
 import 'package:werehouse/theme.dart';
 
 class HomePage extends StatelessWidget {
@@ -17,7 +18,14 @@ class HomePage extends StatelessWidget {
       body: SingleChildScrollView(
           child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [Search(), dashboard(), Menus(), GoCLub(), Akses(), News()],
+        children: const [
+          Search(),
+          dashboard(),
+          Menus(),
+          GoCLub(),
+          Akses(),
+          News(),
+        ],
       )),
     );
   }

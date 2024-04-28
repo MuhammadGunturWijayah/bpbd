@@ -5,5 +5,6 @@ class GojekIcon {
   final String title;
   final Color? color;
 
+
   GojekIcon({required this.icon, required this.title, this.color});
 }
