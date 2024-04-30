@@ -6,7 +6,8 @@ import 'package:werehouse/theme.dart';
 
 class GoCLub extends StatelessWidget {
   final VoidCallback? onPressed;
-  const GoCLub({Key? key, this.onPressed}) : super(key: key);
+  final VoidCallback? parentSetState; // Perbarui tipe properti menjadi VoidCallback
+  const GoCLub({Key? key, this.onPressed, this.parentSetState}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class GoCLub extends StatelessWidget {
             SnackBar(
               content: Row(
                 children: [
-                 SizedBox(
+                  SizedBox(
                     height: 20,
                     width: 20,
                     child: CircularProgressIndicator(
@@ -36,6 +37,7 @@ class GoCLub extends StatelessWidget {
 
           // Setelah loading selesai, tampilkan tampilan RootApp
           Future.delayed(Duration(seconds: 1), () {
+            parentSetState?.call(); // Panggil setState dari parent widget
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => RootApp()), // Ganti dengan rute yang sesuai

@@ -1,13 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:werehouse/dashboard/components/dashboard.dart';
-import 'package:werehouse/dashboard/components/info_lainnya.dart';
-import 'package:werehouse/dashboard/components/menus.dart';
-import 'package:werehouse/dashboard/components/news.dart';
-import 'package:werehouse/dashboard/components/notif_permintaan.dart';
-import 'package:werehouse/dashboard/components/search.dart';
-import 'package:werehouse/dashboard/components/notif_permintaan.dart';
+  import 'package:flutter/material.dart';
+  import 'package:werehouse/dashboard/components/dashboard.dart';
+  import 'package:werehouse/dashboard/components/info_lainnya.dart';
+  import 'package:werehouse/dashboard/components/menus.dart';
+  import 'package:werehouse/dashboard/components/news.dart';
+  import 'package:werehouse/dashboard/components/notif_permintaan.dart';
+  import 'package:werehouse/dashboard/components/search.dart';
+  import 'package:werehouse/dashboard/components/notif_permintaan.dart';
 
-class HomePage extends StatefulWidget {
+  class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 const Search(),
                 const dashboard(),
-                const Menus(),
+                Menus(setState: setState),
                 GoCLub(
                   onPressed: () {
                     setState(() {
@@ -41,6 +41,9 @@ class _HomePageState extends State<HomePage> {
                       });
                     });
                   },
+                  parentSetState: () {
+                    setState(() {}); // Menggunakan lambda expression untuk setState
+                  },
                 ),
                 const Akses(),
                 const News(),
@@ -51,7 +54,7 @@ class _HomePageState extends State<HomePage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Divider(
-                color: Color.fromARGB(255, 233, 233, 233), // Warna garis hitam
+                color: Color.fromARGB(255, 233, 233, 233),
                 height: 1,
                 thickness: 1,
               ),

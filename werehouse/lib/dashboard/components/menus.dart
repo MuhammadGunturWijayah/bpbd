@@ -1,10 +1,115 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:werehouse/dashboard/fitur_button_dashboard.dart';
-import 'package:werehouse/theme.dart';
+import 'package:werehouse/dashboard/profile.dart';
+
+class ButtonIcon {
+  final String icon;
+  final String title;
+  final Color? color;
+  final Function(BuildContext) onPressed;
+
+  ButtonIcon({
+    required this.icon,
+    required this.title,
+    this.color,
+    required this.onPressed,
+  });
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: Scaffold(
+      appBar: AppBar(
+        title: Text('Your App'),
+      ),
+      body: YourWidget(),
+    ),
+  ));
+}
+
+class YourWidget extends StatefulWidget {
+  @override
+  _YourWidgetState createState() => _YourWidgetState();
+}
+
+class _YourWidgetState extends State<YourWidget> {
+  bool isLoading = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: ListView(
+        children: menuIcons.map((button) {
+          return GestureDetector(
+            onTap: () async {
+              setState(() {
+                isLoading = true;
+              });
+              await Future.delayed(Duration(seconds: 1)); // Tunggu 1 detik
+              setState(() {
+                isLoading = false;
+              });
+              button.onPressed(context); // Jalankan aksi setelah loading
+            },
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Icon(getIcon(button.icon)),
+                  SizedBox(width: 8.0),
+                  Text(button.title),
+                ],
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  IconData getIcon(String iconName) {
+    switch (iconName) {
+      case 'laporan':
+        return Icons.description;
+      case 'scan':
+        return Icons.scanner;
+      case 'bantuan':
+        return Icons.help;
+      case 'barang':
+        return Icons.shopping_basket;
+      case 'setting':
+        return Icons.settings;
+      case 'akun':
+        return Icons.account_circle;
+      case 'goclub':
+        return Icons.group_add;
+      case 'other':
+        return Icons.apps;
+      default:
+        return Icons.error;
+    }
+  }
+}
+
+List<ButtonIcon> menuIcons = [
+  ButtonIcon(
+    icon: 'laporan',
+    title: 'Laporan',
+    color: Colors.green,
+    onPressed: (context) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => RootApp()),
+      );
+    },
+  ),
+  // Daftar tombol lainnya disini
+];
 
 class Menus extends StatelessWidget {
-  const Menus({Key? key}) : super(key: key);
+  final void Function(VoidCallback) setState;
+
+  const Menus({Key? key, required this.setState}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,20 +121,26 @@ class Menus extends StatelessWidget {
           ...menuIcons.map(
             (icon) => Column(
               children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                      color: icon.icon == 'goclub' ? Colors.white : icon.color,
-                      borderRadius: BorderRadius.circular(20)),
-                  child: SvgPicture.asset(
-                    'assets/icons/${icon.icon}.svg',
-                    color: icon.icon == 'goclub'
-                        ? icon.color
-                        : icon.icon == 'other'
-                            ? dark2
-                            : Colors.white,
-                    width: 24,
+                GestureDetector(
+                  onTap: () async {
+                    icon.onPressed(context);
+
+                  },
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: icon.icon == 'goclub' ? Colors.white : icon.color,
+                        borderRadius: BorderRadius.circular(20)),
+                    child: SvgPicture.asset(
+                      'assets/icons/${icon.icon}.svg',
+                      color: icon.icon == 'goclub'
+                          ? icon.color
+                          : icon.icon == 'other'
+                              ? Colors.black // Ganti dengan warna yang sesuai
+                              : Colors.white,
+                      width: 24,
+                    ),
                   ),
                 ),
                 const SizedBox(
@@ -37,7 +148,7 @@ class Menus extends StatelessWidget {
                 ),
                 Text(
                   icon.title,
-                  style: regular12_5.copyWith(color: dark2),
+                  style: TextStyle(color: Colors.black), // Ganti dengan gaya teks yang sesuai
                 ),
               ],
             ),
