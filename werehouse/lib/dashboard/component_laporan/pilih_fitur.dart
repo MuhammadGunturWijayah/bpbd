@@ -1,4 +1,4 @@
-class Service {
+class pilih_fitur {
   static String vaccine = "Semua";
   static String Barang = "Barang";
   static String surgery = "Penerimaan Logistik";

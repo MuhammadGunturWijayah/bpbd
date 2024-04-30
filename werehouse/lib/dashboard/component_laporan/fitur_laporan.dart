@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:werehouse/dashboard/component_laporan/service_model.dart';
+import 'package:werehouse/dashboard/component_laporan/pilih_fitur.dart';
 import 'package:werehouse/dashboard/component_laporan/keterangan_laporan.dart';
 
 
@@ -157,7 +157,7 @@ class fitur_laporan extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10)),
                 child: Center(
                     child: Text(
-                  Service.all()[index],
+                  pilih_fitur.all()[index],
                   style: GoogleFonts.manrope(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
@@ -169,7 +169,7 @@ class fitur_laporan extends StatelessWidget {
           separatorBuilder: (context, index) => const SizedBox(
                 width: 10,
               ),
-          itemCount: Service.all().length),
+          itemCount: pilih_fitur.all().length),
     );
   }
 
