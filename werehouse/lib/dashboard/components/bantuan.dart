@@ -119,7 +119,7 @@ class bantuan extends StatelessWidget {
                       const SizedBox(height: 10),
                       _buildTextFieldWithButton(
                         hintText: 'Input Tanggal',
-                        label: 'Tanggal :',
+                        label: 'Tanggal Kejadian :',
                         controller: _expiredController,
                         onTap: () {
                           _selectDate(context);
