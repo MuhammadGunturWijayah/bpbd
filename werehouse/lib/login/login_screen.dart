@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:login_signup_flow_app/screens/forgot_password_screen.dart';
-import 'package:login_signup_flow_app/screens/register_screen.dart';
+import 'package:werehouse/login/forgot_password_screen.dart';
+import 'package:werehouse/login/register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);

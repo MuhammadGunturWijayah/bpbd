@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:login_signup_flow_app/screens/create_password_screen.dart';
+import 'package:werehouse/login/create_password_screen.dart';
 import 'package:pinput/pinput.dart';
 
 class OTPScreen extends StatelessWidget {

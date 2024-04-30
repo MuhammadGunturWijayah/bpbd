@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:login_signup_flow_app/screens/login_screen.dart';
+import 'package:werehouse/login/login_screen.dart';
 
 class PasswordCreatedScreen extends StatelessWidget {
   const PasswordCreatedScreen({Key? key}) : super(key: key);
