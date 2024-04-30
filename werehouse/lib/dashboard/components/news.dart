@@ -19,14 +19,14 @@ class News extends StatelessWidget {
                 height: 8,
               ),
               Text(
-                'pilih salah satu laporan yang ingin di cetak ',
+                'Penjelasan terkait fitur cetak laporan BPBD ~ ',
                 style: bold16.copyWith(color: dark1),
               ),
               const SizedBox(
                 height: 8,
               ),
               Text(
-                'Yuk, Cetak laporan yang ingin anda bagikan dan nikmati fitur fitur lainnya ~',
+                'Yuk, Pelajari Fitur Cetak Laporan Yang Ada Pada Aplikasi BPBD ~',
                 style: regular14.copyWith(color: dark2),
               )
             ],
