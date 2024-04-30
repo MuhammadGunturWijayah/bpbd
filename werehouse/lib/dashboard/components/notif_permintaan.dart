@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:werehouse/dashboard/component_laporan/fitur_laporan.dart';
 import 'package:werehouse/dashboard/components/barang.dart';
 import 'package:werehouse/dashboard/profile.dart';
 import 'package:werehouse/theme.dart';
@@ -41,7 +42,7 @@ class GoCLub extends StatelessWidget {
             parentSetState?.call(); // Panggil setState dari parent widget
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => Barang()), // Ganti dengan rute yang sesuai
+              MaterialPageRoute(builder: (context) => fitur_laporan()), // Ganti dengan rute yang sesuai
             );
           });
         },
