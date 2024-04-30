@@ -1,13 +1,13 @@
-  import 'package:flutter/material.dart';
-  import 'package:werehouse/dashboard/components/dashboard.dart';
-  import 'package:werehouse/dashboard/components/info_lainnya.dart';
-  import 'package:werehouse/dashboard/components/menus.dart';
-  import 'package:werehouse/dashboard/components/news.dart';
-  import 'package:werehouse/dashboard/components/notif_permintaan.dart';
-  import 'package:werehouse/dashboard/components/search.dart';
-  import 'package:werehouse/dashboard/components/notif_permintaan.dart';
+import 'package:flutter/material.dart';
+import 'package:werehouse/dashboard/components/dashboard.dart';
+import 'package:werehouse/dashboard/components/info_lainnya.dart';
+import 'package:werehouse/dashboard/components/menus.dart';
+import 'package:werehouse/dashboard/components/news.dart';
+import 'package:werehouse/dashboard/components/notif_permintaan.dart';
+import 'package:werehouse/dashboard/components/search.dart';
+import 'package:werehouse/dashboard/components/notif_permintaan.dart';
 
-  class HomePage extends StatefulWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
@@ -29,7 +29,20 @@ class _HomePageState extends State<HomePage> {
               children: [
                 const Search(),
                 const dashboard(),
-                Menus(setState: setState),
+                Menus(
+                  isLoading: _isLoading,
+                  setState: (bool value) {
+                    setState(() {
+                      _isLoading = value;
+                    });
+                  },
+                  onPressed: () {
+                    // Implement your onPressed logic here
+                  },
+                  parentSetState: () {
+                    setState(() {});
+                  },
+                ),
                 GoCLub(
                   onPressed: () {
                     setState(() {
@@ -42,7 +55,8 @@ class _HomePageState extends State<HomePage> {
                     });
                   },
                   parentSetState: () {
-                    setState(() {}); // Menggunakan lambda expression untuk setState
+                    setState(
+                        () {}); // Menggunakan lambda expression untuk setState
                   },
                 ),
                 const Akses(),

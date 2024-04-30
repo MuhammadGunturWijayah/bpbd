@@ -107,9 +107,18 @@ List<ButtonIcon> menuIcons = [
 ];
 
 class Menus extends StatelessWidget {
-  final void Function(VoidCallback) setState;
+  final bool isLoading;
+  final void Function(bool) setState;
+  final void Function() onPressed;
+  final void Function() parentSetState;
 
-  const Menus({Key? key, required this.setState}) : super(key: key);
+  const Menus({
+    Key? key,
+    required this.isLoading,
+    required this.setState,
+    required this.onPressed,
+    required this.parentSetState,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -117,43 +126,48 @@ class Menus extends StatelessWidget {
       padding: const EdgeInsets.only(left: 27, right: 27, top: 32),
       child: SizedBox(
         height: 157,
-        child: GridView.count(crossAxisCount: 4, mainAxisSpacing: 8, children: [
-          ...menuIcons.map(
-            (icon) => Column(
-              children: [
-                GestureDetector(
-                  onTap: () async {
-                    icon.onPressed(context);
-
-                  },
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
+        child: GridView.count(
+          crossAxisCount: 4,
+          mainAxisSpacing: 8,
+          children: [
+            ...menuIcons.map(
+              (icon) => Column(
+                children: [
+                  GestureDetector(
+                    onTap: () async {
+                      setState(true);
+                      await Future.delayed(const Duration(seconds: 1));
+                      setState(false);
+                      onPressed();
+                    },
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
                         color: icon.icon == 'goclub' ? Colors.white : icon.color,
-                        borderRadius: BorderRadius.circular(20)),
-                    child: SvgPicture.asset(
-                      'assets/icons/${icon.icon}.svg',
-                      color: icon.icon == 'goclub'
-                          ? icon.color
-                          : icon.icon == 'other'
-                              ? Colors.black // Ganti dengan warna yang sesuai
-                              : Colors.white,
-                      width: 24,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: SvgPicture.asset(
+                        'assets/icons/${icon.icon}.svg',
+                        color: icon.icon == 'goclub'
+                            ? icon.color
+                            : icon.icon == 'other'
+                                ? Colors.black
+                                : Colors.white,
+                        width: 24,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 9,
-                ),
-                Text(
-                  icon.title,
-                  style: TextStyle(color: Colors.black), // Ganti dengan gaya teks yang sesuai
-                ),
-              ],
-            ),
-          )
-        ]),
+                  const SizedBox(height: 9),
+                  Text(
+                    icon.title,
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
