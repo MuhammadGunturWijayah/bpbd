@@ -45,7 +45,7 @@ class bantuan extends StatelessWidget {
     'Sapu',
     'Sapu',
     'Sendok',
-    'Sendok',
+    'Sendok cangkul',
     'Handuk',
     'Handuk',
     'Tas',
@@ -783,7 +783,7 @@ class bantuan extends StatelessWidget {
                     return ListTile(
                       title: Text(daftarBarang[index]),
                       onTap: () {
-                        _satuanController.text = daftarBarang[index];
+                        _namaBarangController.text = daftarBarang[index];
                         Navigator.pop(context);
                       },
                     );
