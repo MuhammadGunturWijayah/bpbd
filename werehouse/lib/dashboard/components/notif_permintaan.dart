@@ -1,8 +1,8 @@
-// Di GoClub.dart
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:werehouse/dashboard/profile.dart';
 import 'package:werehouse/theme.dart';
+
 
 class GoCLub extends StatelessWidget {
   final VoidCallback? onPressed;
@@ -13,7 +13,29 @@ class GoCLub extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 19, left: 15, right: 15),
       child: GestureDetector(
-        onTap: onPressed,
+        onTap: () {
+          // Tampilkan indikator loading
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(width: 16),
+                  Text("Loading ..."),
+                ],
+              ),
+              duration: Duration(seconds: 1), // Atur durasi sesuai kebutuhan
+            ),
+          );
+
+          // Setelah loading selesai, tampilkan tampilan RootApp
+          Future.delayed(Duration(seconds: 1), () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => RootApp()), // Ganti dengan rute yang sesuai
+            );
+          });
+        },
         child: Container(
           height: 65,
           width: double.infinity,
