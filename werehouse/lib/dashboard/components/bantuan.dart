@@ -755,7 +755,7 @@ class bantuan extends StatelessWidget {
       context: context,
       builder: (BuildContext builder) {
         return Container(
-          height: MediaQuery.of(context).size.height / 3,
+          height: MediaQuery.of(context).size.height / 1,
           child: Column(
             children: [
               Padding(
