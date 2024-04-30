@@ -5,7 +5,6 @@ import 'package:werehouse/dashboard/components/menus.dart';
 import 'package:werehouse/dashboard/components/news.dart';
 import 'package:werehouse/dashboard/components/notif_permintaan.dart';
 import 'package:werehouse/dashboard/components/search.dart';
-import 'package:werehouse/dashboard/components/notif_permintaan.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -37,8 +36,7 @@ class _HomePageState extends State<HomePage> {
                     });
                   },
                   onPressed: () async {
-                   
-                     Future.delayed(const Duration(seconds: 1));
+                    Future.delayed(const Duration(seconds: 1));
                     setState(() {
                       _isLoading = false;
                     });
