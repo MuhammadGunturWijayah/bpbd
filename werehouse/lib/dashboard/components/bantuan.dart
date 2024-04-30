@@ -515,6 +515,54 @@ class bantuan extends StatelessWidget {
     );
   }
 
+  Widget _buildDaftarBarang(
+      {required String hintText, required String label}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 12,
+          ),
+        ),
+        SizedBox(height: 5),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 1,
+                blurRadius: 7,
+                offset: Offset(0, 3),
+              ),
+            ],
+          ),
+          child: DropdownButtonFormField<String>(
+            value: selectedSatuan,
+            onChanged: (newValue) {
+              selectedSatuan = newValue;
+            },
+            items: daftarBarang.map((satuan) {
+              return DropdownMenuItem<String>(
+                value: satuan,
+                child: Text(satuan),
+              );
+            }).toList(),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   AspectRatio _card() {
     return AspectRatio(
       aspectRatio: 336 / 184,
@@ -707,23 +755,42 @@ class bantuan extends StatelessWidget {
     );
   }
 
-  Future<void> _showDaftarBarang(BuildContext context) {
-    return showDialog(
+  void _showDaftarBarang(BuildContext context) {
+    showModalBottomSheet(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Pilih Barang"),
-          content: SingleChildScrollView(
-            child: Column(
-              children: daftarBarang
-                  .map((barang) => ListTile(
-                        title: Text(barang),
-                        onTap: () {
-                          Navigator.pop(context, barang);
-                        },
-                      ))
-                  .toList(),
-            ),
+      builder: (BuildContext builder) {
+        return Container(
+          height: MediaQuery.of(context).size.height / 1,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListTile(
+                  leading: new Icon(Icons.arrow_back_ios),
+                  title: new Text(
+                    'Pilih Barang',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: daftarBarang.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(daftarBarang[index]),
+                      onTap: () {
+                        _satuanController.text = daftarBarang[index];
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         );
       },
