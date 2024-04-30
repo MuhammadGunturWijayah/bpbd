@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:werehouse/dashboard/component_laporan/service_model.dart';
-import 'package:werehouse/dashboard/component_laporan/doctor_model.dart';
+import 'package:werehouse/dashboard/component_laporan/keterangan_laporan.dart';
 
 
 var selectedService = 0;
@@ -56,7 +56,7 @@ class fitur_laporan extends StatelessWidget {
         itemCount: doctors.length);
   }
 
-  Container _doctor(DoctorModel doctorModel) {
+  Container _doctor(keterangan_laporan keterangan_laporan) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -73,7 +73,7 @@ class fitur_laporan extends StatelessWidget {
           clipBehavior: Clip.hardEdge,
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
           child: Image.asset(
-            'assets/images/${doctorModel.image}',
+            'assets/images/${keterangan_laporan.image}',
             width: 88,
             height: 103,
           ),
@@ -87,7 +87,7 @@ class fitur_laporan extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                doctorModel.name,
+                keterangan_laporan.name,
                 style: GoogleFonts.manrope(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -98,7 +98,7 @@ class fitur_laporan extends StatelessWidget {
               ),
               RichText(
                   text: TextSpan(
-                      text: "Terkait: ${doctorModel.services.join(', ')}",
+                      text: "Terkait: ${keterangan_laporan.services.join(', ')}",
                       style: GoogleFonts.manrope(
                           fontSize: 12, color: Colors.black))),
               const SizedBox(
@@ -109,7 +109,7 @@ class fitur_laporan extends StatelessWidget {
                   const SizedBox(
                     width: 7,
                   ),
-                  Text("${doctorModel.distance}Lihat Lebih Detail",
+                  Text("${keterangan_laporan.distance}Lihat Lebih Detail",
                       style: GoogleFonts.manrope(
                         fontSize: 12,
                         color: const Color(0xFFACA3A3),
