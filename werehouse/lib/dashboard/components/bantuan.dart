@@ -869,7 +869,7 @@ Widget _greetings() {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Hai, User!',
+          'Hai, Guntur!',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -877,7 +877,7 @@ Widget _greetings() {
         ),
         SizedBox(height: 5),
         Text(
-          'Ayo kelola barang kamu!',
+          'Ayo lakukan pengiriman barang !',
           style: TextStyle(
             fontSize: 16,
           ),
