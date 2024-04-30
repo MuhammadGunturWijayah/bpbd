@@ -19,7 +19,13 @@ class GoCLub extends StatelessWidget {
             SnackBar(
               content: Row(
                 children: [
-                  CircularProgressIndicator(),
+                 SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 1, // Atur ketebalan garis di sini
+                    ),
+                  ),
                   SizedBox(width: 16),
                   Text("Loading ..."),
                 ],
