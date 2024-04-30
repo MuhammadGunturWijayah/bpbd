@@ -36,7 +36,12 @@ class _HomePageState extends State<HomePage> {
                       _isLoading = value;
                     });
                   },
-                  onPressed: () {
+                  onPressed: () async {
+                   
+                     Future.delayed(const Duration(seconds: 1));
+                    setState(() {
+                      _isLoading = false;
+                    });
                     // Implement your onPressed logic here
                   },
                   parentSetState: () {

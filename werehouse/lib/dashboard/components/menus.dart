@@ -16,56 +16,7 @@ class ButtonIcon {
   });
 }
 
-void main() {
-  runApp(MaterialApp(
-    home: Scaffold(
-      appBar: AppBar(
-        title: Text('Your App'),
-      ),
-      body: YourWidget(),
-    ),
-  ));
-}
 
-class YourWidget extends StatefulWidget {
-  @override
-  _YourWidgetState createState() => _YourWidgetState();
-}
-
-class _YourWidgetState extends State<YourWidget> {
-  bool isLoading = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView(
-        children: menuIcons.map((button) {
-          return GestureDetector(
-            onTap: () async {
-              setState(() {
-                isLoading = true;
-              });
-              await Future.delayed(Duration(seconds: 1)); // Tunggu 1 detik
-              setState(() {
-                isLoading = false;
-              });
-              button.onPressed(context); // Jalankan aksi setelah loading
-            },
-            child: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Icon(getIcon(button.icon)),
-                  SizedBox(width: 8.0),
-                  Text(button.title),
-                ],
-              ),
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
 
   IconData getIcon(String iconName) {
     switch (iconName) {
@@ -89,9 +40,42 @@ class _YourWidgetState extends State<YourWidget> {
         return Icons.error;
     }
   }
-}
+
 
 List<ButtonIcon> menuIcons = [
+  ButtonIcon(
+    icon: 'laporan',
+    title: 'Laporan',
+    color: Colors.green,
+    onPressed: (context) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => RootApp()),
+      );
+    },
+  ),
+  ButtonIcon(
+    icon: 'laporan',
+    title: 'Laporan',
+    color: Colors.green,
+    onPressed: (context) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => RootApp()),
+      );
+    },
+  ),
+  ButtonIcon(
+    icon: 'laporan',
+    title: 'Laporan',
+    color: Colors.green,
+    onPressed: (context) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => RootApp()),
+      );
+    },
+  ),
   ButtonIcon(
     icon: 'laporan',
     title: 'Laporan',
@@ -107,17 +91,13 @@ List<ButtonIcon> menuIcons = [
 ];
 
 class Menus extends StatelessWidget {
-  final bool isLoading;
-  final void Function(bool) setState;
   final void Function() onPressed;
   final void Function() parentSetState;
 
   const Menus({
     Key? key,
-    required this.isLoading,
-    required this.setState,
     required this.onPressed,
-    required this.parentSetState,
+    required this.parentSetState, required bool isLoading, required Null Function(bool value) setState,
   }) : super(key: key);
 
   @override
@@ -135,16 +115,34 @@ class Menus extends StatelessWidget {
                 children: [
                   GestureDetector(
                     onTap: () async {
-                      setState(true);
-                      await Future.delayed(const Duration(seconds: 1));
-                      setState(false);
-                      onPressed();
+                      // Tampilkan Snackbar dengan indikator loading
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Row(
+                            children: [
+                              SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 1,
+                                ),
+                              ),
+                              SizedBox(width: 16),
+                              Text("Loading ..."),
+                            ],
+                          ),
+                          duration: Duration(seconds: 1),
+                        ),
+                      );
+
+                      onPressed(); // Jalankan aksi setelah loading
                     },
                     child: Container(
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: icon.icon == 'goclub' ? Colors.white : icon.color,
+                        color:
+                            icon.icon == 'goclub' ? Colors.white : icon.color,
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: SvgPicture.asset(
