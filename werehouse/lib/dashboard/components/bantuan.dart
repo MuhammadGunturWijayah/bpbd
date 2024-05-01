@@ -14,6 +14,7 @@ class bantuan extends StatelessWidget {
   final TextEditingController _inputGambar = TextEditingController();
   final TextEditingController _inputShareLocation = TextEditingController();
   final TextEditingController _inputNomor = TextEditingController();
+  final TextEditingController _inputKeterangan = TextEditingController();
   final TextEditingController _namaBarangController = TextEditingController();
   final TextEditingController _jumlahController = TextEditingController();
   final TextEditingController _satuanController = TextEditingController();
@@ -105,6 +106,13 @@ class bantuan extends StatelessWidget {
                         hintText: 'Nomor KK',
                         label: 'Nomor KK :',
                         controller: _inputNomor,
+                        onTap: () {},
+                      ),
+                      const SizedBox(height: 10),
+                      _fieldNomorKK(
+                        hintText: 'Keterangan',
+                        label: 'Keterangan :',
+                        controller: _inputKeterangan,
                         onTap: () {},
                       ),
                       const SizedBox(height: 10),
@@ -394,6 +402,80 @@ class bantuan extends StatelessWidget {
   }
 
   Widget _fieldNomorKK({
+    required String hintText,
+    required String label,
+    TextEditingController? controller,
+    VoidCallback? onTap,
+    VoidCallback? onButtonTap,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 12,
+          ),
+        ),
+        SizedBox(height: 5),
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 7,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: TextFormField(
+                  controller: controller,
+                  onTap: onTap,
+                  maxLines: null,
+                  style: TextStyle(
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: hintText,
+                    border: InputBorder.none,
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                    suffixIcon: onButtonTap != null
+                        ? InkWell(
+                            onTap: onButtonTap,
+                            child: Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Icon(
+                                Icons.add,
+                                size: 24,
+                                color: Colors.white,
+                              ),
+                            ),
+                          )
+                        : null,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _fieldKeterangan({
     required String hintText,
     required String label,
     TextEditingController? controller,

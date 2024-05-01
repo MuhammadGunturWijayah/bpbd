@@ -20,6 +20,7 @@ dependencies:
   flutter_svg: ^1.1.4
   image_picker: ^1.0.7
   url_launcher: ^6.2.6
+  pinput: ^4.0.0
 
 dev_dependencies:
   flutter_test:
