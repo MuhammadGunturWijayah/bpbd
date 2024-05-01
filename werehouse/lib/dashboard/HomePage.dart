@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:werehouse/dashboard/component_setting/settings_screen.dart';
 import 'package:werehouse/dashboard/components/iklan.dart';
 import 'package:werehouse/dashboard/components/info_lainnya.dart';
 import 'package:werehouse/dashboard/components/menus.dart';
@@ -90,12 +91,18 @@ class _HomePageState extends State<HomePage> {
                     label: 'Settings',
                   ),
                 ],
+                onTap: (index) {
+                  if (index == 2) {
+                    // Jika item 'Settings' di tap
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SettingsScreen()),
+                    );
+                  }
+                },
                 selectedItemColor: Colors.blue,
                 unselectedItemColor: Colors.grey,
                 currentIndex: 0,
-                onTap: (index) {
-                  // Handle bottom navigation taps
-                },
               ),
             ],
           ),
