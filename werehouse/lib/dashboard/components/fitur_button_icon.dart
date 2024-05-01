@@ -86,8 +86,8 @@ List<ButtonIcon> menuIcons = [
     },
   ),
   ButtonIcon(
-    icon: 'laporan',
-    title: 'Laporan',
+    icon: 'akun',
+    title: 'Buat Akun',
     color: Colors.green,
     onPressed: (context) {
       Navigator.push(
@@ -98,8 +98,8 @@ List<ButtonIcon> menuIcons = [
   ),
 
   ButtonIcon(
-    icon: 'scan',
-    title: 'Scan',
+    icon: 'setting',
+    title: 'Pengaturan',
     color: Colors.blue,
     onPressed: (context) {
       Navigator.push(
@@ -120,8 +120,8 @@ List<ButtonIcon> menuIcons = [
     },
   ),
   ButtonIcon(
-    icon: 'barang',
-    title: 'Barang',
+    icon: 'other',
+    title: 'Lainnya',
     color: Colors.green,
     onPressed: (context) {
       Navigator.push(
