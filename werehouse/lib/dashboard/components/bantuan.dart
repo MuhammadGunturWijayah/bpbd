@@ -109,9 +109,9 @@ class bantuan extends StatelessWidget {
                         onTap: () {},
                       ),
                       const SizedBox(height: 10),
-                      _fieldNomorKK(
+                      _fieldKeterangan(
                         hintText: 'Keterangan',
-                        label: 'Keterangan :',
+                        label: 'Keterangan Kejadian :',
                         controller: _inputKeterangan,
                         onTap: () {},
                       ),
@@ -437,6 +437,7 @@ class bantuan extends StatelessWidget {
                 ),
                 child: TextFormField(
                   controller: controller,
+                  keyboardType: TextInputType.number,
                   onTap: onTap,
                   maxLines: null,
                   style: TextStyle(
