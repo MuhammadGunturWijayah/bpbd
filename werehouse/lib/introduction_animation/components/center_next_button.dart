@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:werehouse/login/login.dart';
+
+import 'package:werehouse/login/login_screen.dart';
 
 class CenterNextButton extends StatelessWidget {
   final AnimationController animationController;
@@ -100,7 +101,7 @@ class CenterNextButton extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => LoginPage()),
+                                    builder: (context) => LoginScreen()),
                               );
                             },
                             child: Padding(

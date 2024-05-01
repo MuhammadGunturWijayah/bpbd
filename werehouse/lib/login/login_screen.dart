@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:werehouse/dashboard/HomePage.dart';
 import 'package:werehouse/login/forgot_password_screen.dart';
 import 'package:werehouse/login/register_screen.dart';
 
@@ -175,7 +176,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const LoginScreen()));
+                                builder: (context) => const HomePage()));
                       },
                       child: const Padding(
                         padding: EdgeInsets.all(15.0),
