@@ -21,7 +21,7 @@ class AvatarCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Text(
-              "Uranus Code",
+              "Guntur wijaya",
               style: TextStyle(
                 fontSize: kbigFontSize,
                 fontWeight: FontWeight.bold,
@@ -29,7 +29,7 @@ class AvatarCard extends StatelessWidget {
               ),
             ),
             Text(
-              "Youtube Channel",
+              "User",
               style: TextStyle(
                 fontSize: ksmallFontSize,
                 color: Colors.grey.shade600,
