@@ -37,6 +37,7 @@ class bantuan extends StatelessWidget {
   ];
 
   String? selectedSatuan;
+  List<Map<String, dynamic>> selectedItems = []; // List untuk menyimpan detail barang
 
   bantuan({this.key}) : super(key: key);
 
@@ -163,6 +164,8 @@ class bantuan extends StatelessWidget {
       ),
     );
   }
+
+  
 
   Widget _buildTextFieldWithButton({
     required String hintText,

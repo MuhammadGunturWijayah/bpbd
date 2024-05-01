@@ -30,13 +30,37 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: const EdgeInsets.symmetric(
                 horizontal: 20,
               ),
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: const Text(
-                  "Welcome back! Glad to see you, Again!",
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.w700,
+              child: Align(
+                alignment: Alignment.center,
+                child: Image.asset(
+                  "assets/logo_bpbd.png", // Ganti dengan path dan nama file logo_bpbd
+                  height: 100, // Sesuaikan dengan ukuran logo
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
+              child: Align(
+                alignment: Alignment.center,
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end, // Geser teks ke kanan
+                    children: const [
+                      Expanded(
+                        child: Text(
+                          "Silahkan Login ! Werehouse BPBD !",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -204,23 +228,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               child: Row(
                 children: [
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: const Color(0xFFE8ECF4),
-                        ),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Image.asset(
-                          "assets/fb.png",
-                          height: 32,
-                        ),
-                      ),
-                    ),
-                  ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Container(
@@ -240,55 +247,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(width: 10),
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: const Color(0xFFE8ECF4),
-                        ),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Image.asset(
-                          "assets/apple.png",
-                          height: 32,
-                        ),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
             const Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  "Don’t have an account? ",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const RegisterScreen()));
-                  },
-                  child: const Text(
-                    "Register",
-                    style: TextStyle(
-                      color: Color(0xFF35C2C1),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ],
-            ),
           ],
         ),
       ),
