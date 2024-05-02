@@ -3,40 +3,40 @@
 class keterangan_laporan {
   String name;
   String image;
-  List<String> services;
+  List<String> keterangan;
   String distance;
 
   keterangan_laporan({
     required this.name,
     required this.image,
-    required this.services,
+    required this.keterangan,
     required this.distance,
   });
 }
 
 var doctors = [
-  keterangan_laporan (
-    name: "Barang",
+  keterangan_laporan(
+    name: "Ihsannudin", 
     image: "pengiriman_barang.png", // Memperbarui path gambar disini
-    services: ["Laporan Barang"],
+    keterangan: ["Laporan Barang"],
     distance: "",
   ),
   keterangan_laporan(
     name: "Penerimaan Logistik",
     image: "pengiriman_barang.png", // Memperbarui path gambar disini
-    services: ["Laporan Penerimaan Logistik"],
+    keterangan: ["Laporan Penerimaan Logistik"],
     distance: "",
   ),
   keterangan_laporan(
     name: "Pengeluaran Logistik",
     image: "pengiriman_barang.png", // Memperbarui path gambar disini
-    services: ["Laporan Pengeluaran Logistik"],
+    keterangan: ["Laporan Pengeluaran Logistik"],
     distance: "",
   ),
   keterangan_laporan(
     name: "Rekab Kejadian",
     image: "pengiriman_barang.png", // Memperbarui path gambar disini
-    services: ["Laporan Kejadian Bencana"],
+    keterangan: ["Laporan Kejadian Bencana"],
     distance: "",
   ),
 ];

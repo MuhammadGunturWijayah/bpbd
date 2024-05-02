@@ -44,10 +44,15 @@ class accept_barang extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
-        itemBuilder: (context, index) => _doctor(doctors[index]),
+        itemBuilder: (context, index) => GestureDetector(
+          onTap: () {
+            _showConfirmationDialog(context, doctors[index]);
+          },
+          child: _doctor(doctors[index]),
+        ),
         separatorBuilder: (context, index) => const SizedBox(
-              height: 11,
-            ),
+          height: 11,
+        ),
         itemCount: doctors.length);
   }
 
@@ -93,7 +98,7 @@ class accept_barang extends StatelessWidget {
               ),
               RichText(
                   text: TextSpan(
-                      text: "Terkait: ${keterangan_laporan.services.join(', ')}",
+                      text: "Keterangan : ${keterangan_laporan.keterangan.join(', ')}",
                       style: GoogleFonts.manrope(
                           fontSize: 12, color: Colors.black))),
               const SizedBox(
@@ -104,7 +109,7 @@ class accept_barang extends StatelessWidget {
                   const SizedBox(
                     width: 7,
                   ),
-                  Text("${keterangan_laporan.distance}Lihat Lebih Detail",
+                  Text("${keterangan_laporan.distance}",
                       style: GoogleFonts.manrope(
                         fontSize: 12,
                         color: const Color(0xFFACA3A3),
@@ -114,21 +119,38 @@ class accept_barang extends StatelessWidget {
               const SizedBox(
                 height: 7,
               ),
-              Row(
-                children: [
-                  Text(
-                    "Selanjutnya >",
-                    style: GoogleFonts.manrope(
-                        color: const Color(0xFF50CC98),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12),
-                  ),
-                ],
-              ),
             ],
           ),
         )
       ]),
+    );
+  }
+
+  void _showConfirmationDialog(BuildContext context, keterangan_laporan dokter) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Konfirmasi"),
+          content: Text("Apakah Anda ingin menerima atau menolak ${dokter.name}?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                // Tindakan ketika diterima
+                Navigator.of(context).pop();
+              },
+              child: Text("Terima"),
+            ),
+            TextButton(
+              onPressed: () {
+                // Tindakan ketika ditolak
+                Navigator.of(context).pop();
+              },
+              child: Text("Tolak"),
+            ),
+          ],
+        );
+      },
     );
   }
 
