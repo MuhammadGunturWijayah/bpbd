@@ -47,7 +47,7 @@ class GoCLub extends StatelessWidget {
             parentSetState?.call(); // Panggil setState dari parent widget
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => SettingsScreen()), // Ganti dengan rute yang sesuai
+              MaterialPageRoute(builder: (context) => const RootApp()), // Ganti dengan rute yang sesuai
             );
           });
         },

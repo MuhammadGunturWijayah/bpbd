@@ -74,113 +74,13 @@ class _RootAppState extends State<RootApp> {
         elevation: 0,
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.black,
-        title: const Text("PROFILE"),
+        title: const Text("Permintaan Barang"),
         centerTitle: true,
       ),
       body: ListView(
         padding: const EdgeInsets.all(10),
         children: [
           // COLUMN THAT WILL CONTAIN THE PROFILE
-          Column(
-            children: [
-              Stack(
-                children: [
-                  GestureDetector(
-                    onTap: _getImage,
-                    child: CircleAvatar(
-                      radius: 50,
-                      backgroundColor: Colors.white,
-                      backgroundImage: _image != null
-                          ? FileImage(_image!) as ImageProvider<Object>
-                          : const NetworkImage(
-                              "https://www.pngall.com/wp-content/uploads/5/Profile-PNG-Images.png",
-                            ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 5,
-                    right: -2,
-                    child: Stack(
-                      children: [
-                        Container(
-                          width:
-                              29, // menyesuaikan dengan lebar icon dan outline
-                          height:
-                              29, // menyesuaikan dengan tinggi icon dan outline
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.blue,
-                          ),
-                        ),
-                        Positioned(
-                          top: 0,
-                          left: 0,
-                          child: Container(
-                            width: 29,
-                            height: 29,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Colors.white,
-                                width: 2,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          child: IconButton(
-                            onPressed: _getImage,
-                            icon: Icon(
-                              Icons.add,
-                              size: 17,
-                              color: Colors.white,
-                            ),
-                          ),
-                          left: -9, // menyesuaikan posisi ikon dalam kotak biru
-                          top: -9, // menyesuaikan posisi ikon dalam kotak biru
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Text(
-                "Guntur Wijaya",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text("~ User ~"),
-              SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () {
-                  // Tambahkan fungsi onPressed sesuai kebutuhan
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue, // Warna latar belakang tombol
-                  shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(30), // Mengatur border radius
-                  ),
-                  elevation: 4, // Menambahkan elevasi
-                  shadowColor: Colors.black, // Warna bayangan
-                ),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: Text(
-                    "Edit", // Teks pada tombol
-                    style: TextStyle(
-                      color: Colors.white, // Warna teks
-                      fontSize: 16, // Ukuran teks
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
           const SizedBox(height: 20),
           ...List.generate(
             customListTiles.length,
