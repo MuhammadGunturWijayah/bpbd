@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:werehouse/dashboard/component_laporan/fitur_laporan.dart';
+import 'package:werehouse/dashboard/component_setting/settings_screen.dart';
+import 'package:werehouse/dashboard/components/bantuan.dart';
+import 'package:werehouse/dashboard/components/barang.dart';
 import 'package:werehouse/dashboard/profile.dart';
 
 class ButtonIcon {
@@ -47,11 +51,10 @@ List<ButtonIcon> menuIcons = [
     onPressed: (context) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => RootApp()),
+        MaterialPageRoute(builder: (context) => fitur_laporan()),
       );
     },
   ),
-
   ButtonIcon(
     icon: 'scan',
     title: 'Scan',
@@ -70,8 +73,12 @@ List<ButtonIcon> menuIcons = [
     onPressed: (context) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => RootApp()),
-      );
+        MaterialPageRoute(
+            builder: (context) =>
+                bantuan()), // Ganti dengan rute yang sesuai
+      ).then((_) {
+        // Panggil parentSetState jika diperlukan untuk memperbarui state dari widget induk
+      });
     },
   ),
   ButtonIcon(
@@ -81,7 +88,7 @@ List<ButtonIcon> menuIcons = [
     onPressed: (context) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => RootApp()),
+        MaterialPageRoute(builder: (context) => Barang()),
       );
     },
   ),
@@ -92,11 +99,10 @@ List<ButtonIcon> menuIcons = [
     onPressed: (context) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => RootApp()),
+        MaterialPageRoute(builder: (context) => const SettingsScreen()),
       );
     },
   ),
-
   ButtonIcon(
     icon: 'setting',
     title: 'Pengaturan',
@@ -104,7 +110,7 @@ List<ButtonIcon> menuIcons = [
     onPressed: (context) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => RootApp()),
+        MaterialPageRoute(builder: (context) => const SettingsScreen()),
       );
     },
   ),
@@ -141,8 +147,6 @@ class Menus extends StatelessWidget {
     Key? key,
     required this.onPressed,
     required this.parentSetState,
-    required bool isLoading,
-    required Null Function(bool value) setState,
   }) : super(key: key);
 
   @override
@@ -180,7 +184,8 @@ class Menus extends StatelessWidget {
                         ),
                       );
 
-                      onPressed(); // Jalankan aksi setelah loading
+                      // Panggil onPressed dari ButtonIcon yang sesuai
+                      icon.onPressed(context);
                     },
                     child: Container(
                       width: 40,

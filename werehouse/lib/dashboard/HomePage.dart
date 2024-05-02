@@ -30,21 +30,11 @@ class _HomePageState extends State<HomePage> {
                 const Search(),
                 const dashboard(),
                 Menus(
-                  isLoading: _isLoading,
-                  setState: (bool value) {
-                    setState(() {
-                      _isLoading = value;
-                    });
-                  },
-                  onPressed: () async {
-                    Future.delayed(const Duration(seconds: 1));
-                    setState(() {
-                      _isLoading = false;
-                    });
-                    // Implement your onPressed logic here
+                  onPressed: () {
+                    // Implementasi logika yang diinginkan saat tombol di dalam Menus ditekan
                   },
                   parentSetState: () {
-                    setState(() {});
+                    setState(() {}); // Contoh pemanggilan setState
                   },
                 ),
                 GoCLub(
