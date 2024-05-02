@@ -42,30 +42,11 @@ class _RootAppState extends State<RootApp> {
   Widget build(BuildContext context) {
     List<CustomListTile> customListTiles = [
       CustomListTile(
-        icon: Icons.person,
+        icon: Icons.send_and_archive_outlined,
         title: "akun",
         shadow: Colors.black,
       ),
-      CustomListTile(
-        icon: Icons.edit,
-        title: "Edit Profile",
-        shadow: Colors.black,
-      ),
-      CustomListTile(
-        icon: Icons.lock,
-        title: "Kata Sandi dan Keamanan",
-        shadow: Colors.black,
-      ),
-      CustomListTile(
-        title: "Detail Pribadi",
-        icon: CupertinoIcons.person_2_alt,
-        shadow: Colors.black,
-      ),
-      CustomListTile(
-        title: "Logout",
-        icon: CupertinoIcons.arrow_right_arrow_left,
-        shadow: Colors.black,
-      ),
+     
     ];
 
     return Scaffold(
@@ -80,7 +61,6 @@ class _RootAppState extends State<RootApp> {
       body: ListView(
         padding: const EdgeInsets.all(10),
         children: [
-          // COLUMN THAT WILL CONTAIN THE PROFILE
           const SizedBox(height: 20),
           ...List.generate(
             customListTiles.length,
@@ -93,7 +73,7 @@ class _RootAppState extends State<RootApp> {
                   shadowColor: tile.shadow ?? Colors.black12, // Penambahan shadow color
                   shape: RoundedRectangleBorder(
                     borderRadius:
-                        BorderRadius.circular(30), // Mengatur border radius
+                        BorderRadius.circular(15), // Mengatur border radius
                   ),
                   child: ListTile(
                     leading: Icon(tile.icon),
