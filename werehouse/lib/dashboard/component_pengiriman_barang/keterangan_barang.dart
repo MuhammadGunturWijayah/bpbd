@@ -17,25 +17,25 @@ class keterangan_laporan {
 var doctors = [
   keterangan_laporan (
     name: "Barang",
-    image: "gambar_laporan.png", // Memperbarui path gambar disini
+    image: "pengiriman_barang.png", // Memperbarui path gambar disini
     services: ["Laporan Barang"],
     distance: "",
   ),
   keterangan_laporan(
     name: "Penerimaan Logistik",
-    image: "gambar_laporan.png", // Memperbarui path gambar disini
+    image: "pengiriman_barang.png", // Memperbarui path gambar disini
     services: ["Laporan Penerimaan Logistik"],
     distance: "",
   ),
   keterangan_laporan(
     name: "Pengeluaran Logistik",
-    image: "gambar_laporan.png", // Memperbarui path gambar disini
+    image: "pengiriman_barang.png", // Memperbarui path gambar disini
     services: ["Laporan Pengeluaran Logistik"],
     distance: "",
   ),
   keterangan_laporan(
     name: "Rekab Kejadian",
-    image: "gambar_laporan.png", // Memperbarui path gambar disini
+    image: "pengiriman_barang.png", // Memperbarui path gambar disini
     services: ["Laporan Kejadian Bencana"],
     distance: "",
   ),
