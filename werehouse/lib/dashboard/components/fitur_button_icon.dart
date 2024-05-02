@@ -74,8 +74,7 @@ List<ButtonIcon> menuIcons = [
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) =>
-                bantuan()), // Ganti dengan rute yang sesuai
+            builder: (context) => bantuan()), // Ganti dengan rute yang sesuai
       ).then((_) {
         // Panggil parentSetState jika diperlukan untuk memperbarui state dari widget induk
       });
@@ -164,7 +163,6 @@ class Menus extends StatelessWidget {
                 children: [
                   GestureDetector(
                     onTap: () async {
-                      // Tampilkan Snackbar dengan indikator loading
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Row(
@@ -184,7 +182,6 @@ class Menus extends StatelessWidget {
                         ),
                       );
 
-                      // Panggil onPressed dari ButtonIcon yang sesuai
                       icon.onPressed(context);
                     },
                     child: Container(
@@ -207,9 +204,12 @@ class Menus extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 9),
-                  Text(
-                    icon.title,
-                    style: TextStyle(color: Colors.black),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      icon.title,
+                      style: TextStyle(color: Colors.black),
+                    ),
                   ),
                 ],
               ),
