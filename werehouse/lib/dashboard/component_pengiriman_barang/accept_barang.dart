@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:werehouse/dashboard/component_laporan/pilih_fitur.dart';
-import 'package:werehouse/dashboard/component_laporan/keterangan_laporan.dart';
+import 'package:werehouse/dashboard/component_pengiriman_barang/keterangan_barang.dart';
 
 
 var selectedService = 0;
@@ -31,10 +30,6 @@ class accept_barang extends StatelessWidget {
             _card(),
             const SizedBox(
               height: 20,
-            ),
-            _services(),
-            const SizedBox(
-              height: 27,
             ),
             _doctors()
           ],
@@ -137,41 +132,7 @@ class accept_barang extends StatelessWidget {
     );
   }
 
-  SizedBox _services() {
-    return SizedBox(
-      height: 36,
-      child: ListView.separated(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          scrollDirection: Axis.horizontal,
-          itemBuilder: (context, index) => Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                decoration: BoxDecoration(
-                    color: selectedService == index
-                        ? const Color(0xFF818AF9)
-                        : const Color(0xFFF6F6F6),
-                    border: selectedService == index
-                        ? Border.all(
-                            color: const Color(0xFFF1E5E5).withOpacity(.22),
-                            width: 2)
-                        : null,
-                    borderRadius: BorderRadius.circular(10)),
-                child: Center(
-                    child: Text(
-                  pilih_fitur.all()[index],
-                  style: GoogleFonts.manrope(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: selectedService == index
-                          ? Colors.white
-                          : const Color(0xFF3F3E3F).withOpacity(.3)),
-                )),
-              ),
-          separatorBuilder: (context, index) => const SizedBox(
-                width: 10,
-              ),
-          itemCount: pilih_fitur.all().length),
-    );
-  }
+  
 
  
 
@@ -251,7 +212,7 @@ class accept_barang extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Laporan',
+            'Permohonan Barang',
             style: GoogleFonts.manrope(
                 fontSize: 24,
                 fontWeight: FontWeight.w800,
