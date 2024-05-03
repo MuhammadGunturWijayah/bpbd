@@ -888,13 +888,16 @@ class bantuan extends StatelessWidget {
   }
 
   Future<void> _getImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+  final picker = ImagePicker();
+  final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
-    if (pickedFile != null) {
-      _inputGambar.text = pickedFile.path;
-    }
+  if (pickedFile != null) {
+    // Set path gambar ke controller inputGambar
+    _inputGambar.text = pickedFile.path;
   }
+}
+
+
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
