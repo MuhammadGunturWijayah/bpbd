@@ -701,62 +701,66 @@ class bantuan extends StatelessWidget {
   }
 
   Widget _fieldDokumentasi({
-    required String hintText,
-    required String label,
-    TextEditingController? controller,
-    VoidCallback? onTap,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.grey,
-            fontSize: 12,
-          ),
+  required String hintText,
+  required String label,
+  TextEditingController? controller,
+  VoidCallback? onTap,
+}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        label,
+        style: TextStyle(
+          color: Colors.grey,
+          fontSize: 12,
         ),
-        SizedBox(height: 5),
-        Row(
-          children: [
-            Expanded(
-              child: InkWell(
-                onTap: onTap,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 1,
-                        blurRadius: 7,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: TextFormField(
-                    controller: controller,
-                    readOnly: true,
-                    decoration: InputDecoration(
-                      hintText: hintText,
-                      border: InputBorder.none,
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                      suffixIcon: Icon(
-                        Icons.camera_alt,
-                        color: Colors.grey,
-                      ),
+      ),
+      SizedBox(height: 5),
+      Row(
+        children: [
+          Expanded(
+            child: InkWell(
+              onTap: () {
+                _getImage(); // Panggil fungsi _getImage di sini
+                if (onTap != null) onTap();
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 7,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: TextFormField(
+                  controller: controller,
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    hintText: hintText,
+                    border: InputBorder.none,
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                    suffixIcon: Icon(
+                      Icons.camera_alt,
+                      color: Colors.grey,
                     ),
                   ),
                 ),
               ),
             ),
-          ],
-        ),
-      ],
-    );
-  }
+          ),
+        ],
+      ),
+    ],
+  );
+}
+
 
   Widget _fieldShareLocation({
     required String hintText,
