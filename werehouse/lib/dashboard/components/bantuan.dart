@@ -18,6 +18,7 @@ class bantuan extends StatelessWidget {
   final TextEditingController _namaBarangController = TextEditingController();
   final TextEditingController _jumlahController = TextEditingController();
   final TextEditingController _satuanController = TextEditingController();
+  final TextEditingController _ListBarang = TextEditingController();
   final List<String> satuanOptions = [
     'Pieces (pcs)',
     'Kilogram (kg)',
@@ -101,6 +102,13 @@ class bantuan extends StatelessWidget {
                         onButtonTap: () {
                           // Panggil fungsi yang ingin Anda eksekusi ketika tombol ditekan
                         },
+                      ),
+                      const SizedBox(height: 10),
+                      _fieldListBarang(
+                        hintText: '',
+                        label: 'List Barang :',
+                        controller: _ListBarang,
+                        onTap: () {},
                       ),
                       const SizedBox(height: 10),
                       _fieldNomorKK(
@@ -215,6 +223,60 @@ class bantuan extends StatelessWidget {
                       Icons.keyboard_arrow_down,
                       color: Colors.grey,
                     ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _fieldListBarang({
+    required String hintText,
+    required String label,
+    TextEditingController? controller,
+    VoidCallback? onTap,
+    VoidCallback? onButtonTap,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 12,
+          ),
+        ),
+        SizedBox(height: 5),
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 236, 236, 236),
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 7,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: TextFormField(
+                  controller: controller,
+                  onTap: onTap,
+                  readOnly: true, // Set field menjadi tidak bisa ditulis
+                  maxLines: null,
+                  decoration: InputDecoration(
+                    hintText: hintText,
+                    border: InputBorder.none,
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                   ),
                 ),
               ),
@@ -478,6 +540,8 @@ class bantuan extends StatelessWidget {
       ],
     );
   }
+
+ 
 
   Widget _fieldKeterangan({
     required String hintText,
