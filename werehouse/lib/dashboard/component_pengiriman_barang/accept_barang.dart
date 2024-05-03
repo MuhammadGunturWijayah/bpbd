@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:werehouse/dashboard/component_pengiriman_barang/keterangan_barang.dart';
 
-
 var selectedService = 0;
 
 class accept_barang extends StatelessWidget {
@@ -15,27 +14,26 @@ class accept_barang extends StatelessWidget {
 
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-           padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
-          child: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 30,
-            ),
-            _greetings(),
-            const SizedBox(
-              height: 16,
-            ),
-            _card(),
-            const SizedBox(
-              height: 20,
-            ),
-            _doctors()
-          ],
-        ),
-          )
-      )),
+          child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    _greetings(),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    _card(),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    _doctors()
+                  ],
+                ),
+              ))),
     );
   }
 
@@ -45,14 +43,14 @@ class accept_barang extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         itemBuilder: (context, index) => GestureDetector(
-          onTap: () {
-            _showConfirmationDialog(context, doctors[index]);
-          },
-          child: _doctor(doctors[index]),
-        ),
+              onTap: () {
+                _showConfirmationDialog(context, doctors[index]);
+              },
+              child: _doctor(doctors[index]),
+            ),
         separatorBuilder: (context, index) => const SizedBox(
-          height: 11,
-        ),
+              height: 11,
+            ),
         itemCount: doctors.length);
   }
 
@@ -98,7 +96,17 @@ class accept_barang extends StatelessWidget {
               ),
               RichText(
                   text: TextSpan(
-                      text: "Keterangan : ${keterangan_laporan.keterangan.join(', ')}",
+                      text:
+                          "Keterangan : ${keterangan_laporan.keterangan.join(', ')}",
+                      style: GoogleFonts.manrope(
+                          fontSize: 12, color: Colors.black))),
+              const SizedBox(
+                height: 7,
+              ),
+               RichText(
+                  text: TextSpan(
+                      text:
+                          "Barang : ${keterangan_laporan.barang.join(', ')}",
                       style: GoogleFonts.manrope(
                           fontSize: 12, color: Colors.black))),
               const SizedBox(
@@ -117,6 +125,10 @@ class accept_barang extends StatelessWidget {
                 ],
               ),
               const SizedBox(
+                width: 20,
+              ),
+              
+              const SizedBox(
                 height: 7,
               ),
             ],
@@ -126,13 +138,15 @@ class accept_barang extends StatelessWidget {
     );
   }
 
-  void _showConfirmationDialog(BuildContext context, keterangan_laporan dokter) {
+  void _showConfirmationDialog(
+      BuildContext context, keterangan_laporan dokter) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Konfirmasi"),
-          content: Text("Apakah Anda ingin menerima atau menolak ${dokter.name}?"),
+          content: Text(
+              "Apakah Anda yakin ingin menerima permintaan ${dokter.name}?"),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -153,10 +167,6 @@ class accept_barang extends StatelessWidget {
       },
     );
   }
-
-  
-
- 
 
   AspectRatio _card() {
     return AspectRatio(
@@ -245,5 +255,4 @@ class accept_barang extends StatelessWidget {
       ),
     );
   }
-
 }
