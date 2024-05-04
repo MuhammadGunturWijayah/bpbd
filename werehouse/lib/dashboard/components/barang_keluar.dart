@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 var selectedService = 0;
 DateTime? selectedDate; // Change to nullable DateTime
 
-class Barang extends StatelessWidget {
+class Barang_keluar extends StatelessWidget {
   final Key? key;
   final TextEditingController _expiredController = TextEditingController();
   final List<String> satuanOptions = [
@@ -29,7 +29,7 @@ class Barang extends StatelessWidget {
 
   String? selectedSatuan;
 
-  Barang({this.key}) : super(key: key);
+  Barang_keluar({this.key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

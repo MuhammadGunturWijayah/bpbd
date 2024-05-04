@@ -4,6 +4,7 @@ import 'package:werehouse/dashboard/component_laporan/fitur_laporan.dart';
 import 'package:werehouse/dashboard/component_setting/settings_screen.dart';
 import 'package:werehouse/dashboard/components/bantuan.dart';
 import 'package:werehouse/dashboard/components/barang_masuk.dart';
+import 'package:werehouse/dashboard/components/barang_keluar.dart';
 import 'package:werehouse/dashboard/profile.dart';
 
 class ButtonIcon {
@@ -87,7 +88,7 @@ List<ButtonIcon> menuIcons = [
     onPressed: (context) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Barang()),
+        MaterialPageRoute(builder: (context) => Barang_masuk()),
       );
     },
   ),
@@ -98,7 +99,7 @@ List<ButtonIcon> menuIcons = [
     onPressed: (context) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const SettingsScreen()),
+        MaterialPageRoute(builder: (context) => Barang_keluar()),
       );
     },
   ),
