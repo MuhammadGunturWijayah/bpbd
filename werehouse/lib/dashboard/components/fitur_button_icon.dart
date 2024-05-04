@@ -113,17 +113,7 @@ List<ButtonIcon> menuIcons = [
       );
     },
   ),
-  ButtonIcon(
-    icon: 'bantuan',
-    title: 'Bantuan',
-    color: Colors.red,
-    onPressed: (context) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => RootApp()),
-      );
-    },
-  ),
+  
   ButtonIcon(
     icon: 'akun',
     title: 'Buat Akun',
@@ -137,7 +127,6 @@ List<ButtonIcon> menuIcons = [
   ),
   // Daftar tombol lainnya disini
 ];
-
 class Menus extends StatelessWidget {
   final void Function() onPressed;
   final void Function() parentSetState;

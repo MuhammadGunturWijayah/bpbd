@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart'; // Import untuk showDatePicker
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:http/http.dart' as http;
 var selectedService = 0;
 DateTime? selectedDate; // Change to nullable DateTime
 
@@ -111,6 +111,13 @@ class bantuan extends StatelessWidget {
                         onTap: () {},
                       ),
                       const SizedBox(height: 10),
+                      _fieldKeterangan(
+                        hintText: 'Alamat',
+                        label: 'Alamat Penerima :',
+                        controller: _inputKeterangan,
+                        onTap: () {},
+                      ),
+                      const SizedBox(height: 10),
                       _fieldNomorKK(
                         hintText: 'Nomor KK',
                         label: 'Nomor KK :',
@@ -130,7 +137,7 @@ class bantuan extends StatelessWidget {
                         label: 'Foto Dokumentasi :',
                         controller: _inputGambar,
                         onTap: () {
-                          _getImage();
+                          _uploadImage();
                         },
                       ),
                       const SizedBox(height: 10),
@@ -258,14 +265,6 @@ class bantuan extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Color.fromARGB(255, 236, 236, 236),
                   borderRadius: BorderRadius.circular(10.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 7,
-                      offset: Offset(0, 3),
-                    ),
-                  ],
                 ),
                 child: TextFormField(
                   controller: controller,
@@ -276,7 +275,7 @@ class bantuan extends StatelessWidget {
                     hintText: hintText,
                     border: InputBorder.none,
                     contentPadding:
-                        EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                        EdgeInsets.symmetric(vertical: 50, horizontal: 20),
                   ),
                 ),
               ),
@@ -786,12 +785,12 @@ class bantuan extends StatelessWidget {
           Expanded(
             child: InkWell(
               onTap: () {
-                _getImage(); // Panggil fungsi _getImage di sini
+                _uploadImage(); // Panggil fungsi _getImage di sini
                 if (onTap != null) onTap();
               },
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Colors.white, 
                   borderRadius: BorderRadius.circular(10.0),
                   boxShadow: [
                     BoxShadow(
@@ -951,13 +950,26 @@ class bantuan extends StatelessWidget {
     );
   }
 
-  Future<void> _getImage() async {
+  Future<void> _uploadImage() async {
   final picker = ImagePicker();
   final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
   if (pickedFile != null) {
-    // Set path gambar ke controller inputGambar
-    _inputGambar.text = pickedFile.path;
+    // Membuat request multipart
+    var request = http.MultipartRequest('POST', Uri.parse('YOUR_UPLOAD_URL'));
+
+    // Melampirkan file yang dipilih ke request
+    request.files.add(await http.MultipartFile.fromPath('file', pickedFile.path));
+
+    // Mengirim request
+    var response = await request.send();
+
+    // Memeriksa status response
+    if (response.statusCode == 200) {
+      print('Gambar berhasil diunggah');
+    } else {
+      print('Gagal mengunggah gambar');
+    }
   }
 }
 
