@@ -8,7 +8,7 @@ DateTime? selectedDate; // Change to nullable DateTime
 
 class Barang_keluar extends StatelessWidget {
   final Key? key;
-  final TextEditingController _expiredController = TextEditingController();
+   final TextEditingController _expiredController = TextEditingController();
   final TextEditingController _satuanController = TextEditingController();
   final List<String> satuanOptions = [
     'Pieces (pcs)',
@@ -82,9 +82,9 @@ class Barang_keluar extends StatelessWidget {
                             ShowsatuanOptions(context);
                           }),
                       const SizedBox(height: 10),
-                      _buildTextField(
-                        hintText: 'Kadaluarsa',
-                        label: 'Tanggal Kadaluarsa :',
+                      _buildTextFieldWithButton(
+                        hintText: 'Input Tanggal',
+                        label: 'Tanggal Keluar :',
                         controller: _expiredController,
                         onTap: () {
                           _selectDate(context);
@@ -121,6 +121,64 @@ class Barang_keluar extends StatelessWidget {
     );
   }
 
+
+ Widget _buildTextFieldWithButton({
+    required String hintText,
+    required String label,
+    TextEditingController? controller,
+    VoidCallback? onTap,
+    VoidCallback? onButtonTap,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 12,
+          ),
+        ),
+        SizedBox(height: 5),
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 7,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: TextFormField(
+                  controller: controller,
+                  onTap: onTap,
+                  readOnly: true, // Set field menjadi tidak bisa ditulis
+                  maxLines: null,
+                  decoration: InputDecoration(
+                    hintText: hintText,
+                    border: InputBorder.none,
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                    suffixIcon: Icon(
+                      Icons.keyboard_arrow_down,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
   Widget _buildTextField({
     required String hintText,
     required String label,
