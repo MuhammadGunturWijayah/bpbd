@@ -104,6 +104,17 @@ List<ButtonIcon> menuIcons = [
     },
   ),
   ButtonIcon(
+    icon: 'akun',
+    title: 'Buat Akun',
+    color: Colors.green,
+    onPressed: (context) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => RootApp()),
+      );
+    },
+  ),
+   ButtonIcon(
     icon: 'setting',
     title: 'Pengaturan',
     color: Colors.blue,
@@ -115,17 +126,6 @@ List<ButtonIcon> menuIcons = [
     },
   ),
   
-  ButtonIcon(
-    icon: 'akun',
-    title: 'Buat Akun',
-    color: Colors.green,
-    onPressed: (context) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => RootApp()),
-      );
-    },
-  ),
   // Daftar tombol lainnya disini
 ];
 class Menus extends StatelessWidget {

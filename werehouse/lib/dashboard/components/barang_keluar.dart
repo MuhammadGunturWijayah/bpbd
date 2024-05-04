@@ -9,6 +9,7 @@ DateTime? selectedDate; // Change to nullable DateTime
 class Barang_keluar extends StatelessWidget {
   final Key? key;
   final TextEditingController _expiredController = TextEditingController();
+  final TextEditingController _satuanController = TextEditingController();
   final List<String> satuanOptions = [
     'Pieces (pcs)',
     'Kilogram (kg)',
@@ -74,9 +75,12 @@ class Barang_keluar extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       _buildSatuanDropdown(
-                       hintText: '(satuan)', 
-                       label: 'Satuan :',
-                      ),
+                          hintText: 'satuan',
+                          label: 'Satuan :',
+                          controller3: _satuanController,
+                          onTap3: () {
+                            ShowsatuanOptions(context);
+                          }),
                       const SizedBox(height: 10),
                       _buildTextField(
                         hintText: 'Kadaluarsa',
@@ -118,52 +122,11 @@ class Barang_keluar extends StatelessWidget {
   }
 
   Widget _buildTextField({
-  required String hintText,
-  required String label,
-  TextEditingController? controller,
-  VoidCallback? onTap,
-}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        label,
-        style: TextStyle(
-          color: Colors.grey,
-          fontSize: 12,
-        ),
-      ),
-      SizedBox(height: 5),
-      Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10.0),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 1,
-              blurRadius: 7,
-              offset: Offset(0, 3),
-            ),
-          ],
-        ),
-        child: TextFormField(
-          controller: controller,
-          onTap: onTap,
-          maxLines: null, // Set maxLines menjadi null untuk mengizinkan teks turun ke baris baru
-          decoration: InputDecoration(
-            hintText: hintText,
-            border: InputBorder.none,
-            contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-          ),
-        ),
-      ),
-    ],
-  );
-}
-
-
-  Widget _buildSatuanDropdown({required String hintText, required String label}) {
+    required String hintText,
+    required String label,
+    TextEditingController? controller,
+    VoidCallback? onTap,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -188,20 +151,16 @@ class Barang_keluar extends StatelessWidget {
               ),
             ],
           ),
-          child: DropdownButtonFormField<String>(
-            value: selectedSatuan,
-            onChanged: (newValue) {
-              selectedSatuan = newValue;
-            },
-            items: satuanOptions.map((satuan) {
-              return DropdownMenuItem<String>(
-                value: satuan,
-                child: Text(satuan),
-              );
-            }).toList(),
+          child: TextFormField(
+            controller: controller,
+            onTap: onTap,
+            maxLines:
+                null, // Set maxLines menjadi null untuk mengizinkan teks turun ke baris baru
             decoration: InputDecoration(
+              hintText: hintText,
               border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 15, horizontal: 20),
             ),
           ),
         ),
@@ -209,6 +168,93 @@ class Barang_keluar extends StatelessWidget {
     );
   }
 
+  void ShowsatuanOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext builder) {
+        return Container(
+          height: MediaQuery.of(context).size.height / 1,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListTile(
+                  leading: new Icon(Icons.arrow_back_ios),
+                  title: new Text(
+                    'Pilih Satuan',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: satuanOptions.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(satuanOptions[index]),
+                      onTap: () {
+                        _satuanController.text = satuanOptions[index];
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildSatuanDropdown({
+    required String hintText,
+    required String label,
+    TextEditingController? controller3,
+    VoidCallback? onTap3,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 12,
+          ),
+        ),
+        SizedBox(height: 5),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 1,
+                blurRadius: 7,
+                offset: Offset(0, 3),
+              ),
+            ],
+          ),
+          child: TextFormField(
+            controller: controller3,
+            onTap: onTap3,
+            readOnly: true,
+            decoration: InputDecoration(
+              hintText: hintText,
+              border: InputBorder.none,
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
   AspectRatio _card() {
     return AspectRatio(
@@ -280,7 +326,7 @@ class Barang_keluar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Input Barang ',
+            'Input Barang Keluar',
             style: GoogleFonts.manrope(
               fontSize: 24,
               fontWeight: FontWeight.w800,
@@ -292,7 +338,10 @@ class Barang_keluar extends StatelessWidget {
     );
   }
 
-  Widget _customButton({required String text, required VoidCallback onPressed, required Color color}) {
+  Widget _customButton(
+      {required String text,
+      required VoidCallback onPressed,
+      required Color color}) {
     return ElevatedButton(
       onPressed: onPressed,
       child: Text(
