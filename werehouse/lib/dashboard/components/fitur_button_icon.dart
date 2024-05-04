@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:werehouse/dashboard/component_laporan/fitur_laporan.dart';
 import 'package:werehouse/dashboard/component_setting/settings_screen.dart';
 import 'package:werehouse/dashboard/components/bantuan.dart';
-import 'package:werehouse/dashboard/components/barang.dart';
+import 'package:werehouse/dashboard/components/barang_masuk.dart';
 import 'package:werehouse/dashboard/profile.dart';
 
 class ButtonIcon {

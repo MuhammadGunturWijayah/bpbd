@@ -4,7 +4,7 @@ import 'package:werehouse/dashboard/component_pengiriman_barang/accept_barang.da
 import 'package:werehouse/dashboard/component_setting/setting_title.dart';
 import 'package:werehouse/dashboard/component_setting/settings_screen.dart';
 import 'package:werehouse/dashboard/components/bantuan.dart';
-import 'package:werehouse/dashboard/components/barang.dart';
+import 'package:werehouse/dashboard/components/barang_masuk.dart';
 import 'package:werehouse/dashboard/profile.dart';
 import 'package:werehouse/login/login_screen.dart';
 import 'package:werehouse/login/welcome_screen.dart';
