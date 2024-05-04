@@ -307,6 +307,10 @@ class Barang_keluar extends StatelessWidget {
               border: InputBorder.none,
               contentPadding:
                   EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                   suffixIcon: Icon(
+                      Icons.keyboard_arrow_down,
+                      color: Colors.grey,
+                    ),
             ),
           ),
         ),
