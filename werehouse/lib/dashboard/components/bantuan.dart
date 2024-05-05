@@ -109,14 +109,6 @@ class _BantuanState extends State<Bantuan> {
                         },
                       ),
                       SizedBox(height: 10),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: _barangList.length,
-                        itemBuilder: (context, index) {
-                          return _barangList[
-                              index]; // Tampilkan widget field barang
-                        },
-                      ),
                       const SizedBox(height: 10),
                       _fieldKeterangan(
                         hintText: 'Alamat',
