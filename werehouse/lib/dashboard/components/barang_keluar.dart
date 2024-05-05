@@ -60,13 +60,18 @@ class Barang_keluar extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildTextField(
-                        hintText: 'Dari',
-                        label: 'Bantuan Dari :',
+                        hintText: 'Nama',
+                        label: 'Nama Penerima Bantuan :',
                       ),
                       const SizedBox(height: 10),
                       _buildTextField(
-                        hintText: 'Jenis',
-                        label: 'Jenis Terima :',
+                        hintText: 'Nomor',
+                        label: 'Nomor NIK / KK :',
+                      ),
+                      const SizedBox(height: 10),
+                      _buildTextField(
+                        hintText: 'Alamat',
+                        label: 'Alamat Penerima :',
                       ),
                       const SizedBox(height: 10),
                       _buildTextField(

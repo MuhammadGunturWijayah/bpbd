@@ -5,11 +5,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
+
 var selectedService = 0;
 DateTime? selectedDate; // Change to nullable DateTime
-
-class bantuan extends StatelessWidget {
-  final Key? key;
+class Bantuan extends StatefulWidget {
+  @override
+  _BantuanState createState() => _BantuanState();
+}
+class _BantuanState extends State<Bantuan> {
+ 
   final TextEditingController _expiredController = TextEditingController();
   final TextEditingController _inputGambar = TextEditingController();
   final TextEditingController _inputShareLocation = TextEditingController();
@@ -38,9 +42,11 @@ class bantuan extends StatelessWidget {
   ];
 
   String? selectedSatuan;
-  List<Map<String, dynamic>> selectedItems = []; // List untuk menyimpan detail barang
+  List<Map<String, dynamic>> selectedItems =
+      []; // List untuk menyimpan detail barang
+  List<Map<String, String>> _barangList = [];
 
-  bantuan({this.key}) : super(key: key);
+ 
 
   // Deklarasi daftar barang
   final List<String> daftarBarang = [
@@ -55,7 +61,6 @@ class bantuan extends StatelessWidget {
     'Tas',
   ];
 
-  
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
@@ -100,15 +105,20 @@ class bantuan extends StatelessWidget {
                           ShowsatuanOptions(context);
                         },
                         onButtonTap: () {
-                          // Panggil fungsi yang ingin Anda eksekusi ketika tombol ditekan
+                          _tambahBarang();
                         },
                       ),
-                      const SizedBox(height: 10),
-                      _fieldListBarang(
-                        hintText: '',
-                        label: 'List Barang :',
-                        controller: _ListBarang,
-                        onTap: () {},
+                      SizedBox(height: 10),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: _barangList.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text("Nama: ${_barangList[index]['nama']}"),
+                            subtitle: Text(
+                                "Jumlah: ${_barangList[index]['jumlah']}, Satuan: ${_barangList[index]['satuan']}"),
+                          );
+                        },
                       ),
                       const SizedBox(height: 10),
                       _fieldKeterangan(
@@ -180,8 +190,6 @@ class bantuan extends StatelessWidget {
     );
   }
 
-  
-
   Widget _buildTextFieldWithButton({
     required String hintText,
     required String label,
@@ -240,51 +248,20 @@ class bantuan extends StatelessWidget {
     );
   }
 
-  Widget _fieldListBarang({
-    required String hintText,
-    required String label,
-    TextEditingController? controller,
-    VoidCallback? onTap,
-    VoidCallback? onButtonTap,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.grey,
-            fontSize: 12,
-          ),
-        ),
-        SizedBox(height: 5),
-        Row(
-          children: [
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 236, 236, 236),
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: TextFormField(
-                  controller: controller,
-                  onTap: onTap,
-                  readOnly: true, // Set field menjadi tidak bisa ditulis
-                  maxLines: null,
-                  decoration: InputDecoration(
-                    hintText: hintText,
-                    border: InputBorder.none,
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 50, horizontal: 20),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
+  void _tambahBarang() {
+  setState(() {
+    _barangList.add({
+      'nama': _namaBarangController.text,
+      'jumlah': _jumlahController.text,
+      'satuan': _satuanController.text,
+    });
+    // Bersihkan text controllers setelah menambahkan data
+    _namaBarangController.clear();
+    _jumlahController.clear();
+    _satuanController.clear();
+  });
+}
+
 
   Widget _buildThreeFieldsInRow({
     required String hintText1,
@@ -299,8 +276,7 @@ class bantuan extends StatelessWidget {
     VoidCallback? onTap1,
     VoidCallback? onTap2,
     VoidCallback? onTap3,
-    VoidCallback?
-        onButtonTap, // Tambahkan parameter untuk menangani tombol input
+    required VoidCallback onButtonTap,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -441,17 +417,17 @@ class bantuan extends StatelessWidget {
               color: Colors.blue,
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 7,
-                      offset: Offset(0, 3),
-                    ),
-                  ],
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 1,
+                  blurRadius: 7,
+                  offset: Offset(0, 3),
+                ),
+              ],
             ),
             child: Center(
               child: Text(
-                'Input',
+                'Tambah Barang',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16, // Sesuaikan ukuran font sesuai kebutuhan
@@ -539,8 +515,6 @@ class bantuan extends StatelessWidget {
       ],
     );
   }
-
- 
 
   Widget _fieldKeterangan({
     required String hintText,
@@ -664,8 +638,7 @@ class bantuan extends StatelessWidget {
     );
   }
 
-  Widget _buildDaftarBarang(
-      {required String hintText, required String label}) {
+  Widget _buildDaftarBarang({required String hintText, required String label}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -764,66 +737,65 @@ class bantuan extends StatelessWidget {
   }
 
   Widget _fieldDokumentasi({
-  required String hintText,
-  required String label,
-  TextEditingController? controller,
-  VoidCallback? onTap,
-}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        label,
-        style: TextStyle(
-          color: Colors.grey,
-          fontSize: 12,
+    required String hintText,
+    required String label,
+    TextEditingController? controller,
+    VoidCallback? onTap,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 12,
+          ),
         ),
-      ),
-      SizedBox(height: 5),
-      Row(
-        children: [
-          Expanded(
-            child: InkWell(
-              onTap: () {
-                _uploadImage(); // Panggil fungsi _getImage di sini
-                if (onTap != null) onTap();
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white, 
-                  borderRadius: BorderRadius.circular(10.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 7,
-                      offset: Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: TextFormField(
-                  controller: controller,
-                  readOnly: true,
-                  decoration: InputDecoration(
-                    hintText: hintText,
-                    border: InputBorder.none,
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                    suffixIcon: Icon(
-                      Icons.camera_alt,
-                      color: Colors.grey,
+        SizedBox(height: 5),
+        Row(
+          children: [
+            Expanded(
+              child: InkWell(
+                onTap: () {
+                  _uploadImage(); // Panggil fungsi _getImage di sini
+                  if (onTap != null) onTap();
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 1,
+                        blurRadius: 7,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: TextFormField(
+                    controller: controller,
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      hintText: hintText,
+                      border: InputBorder.none,
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                      suffixIcon: Icon(
+                        Icons.camera_alt,
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
-      ),
-    ],
-  );
-}
-
+          ],
+        ),
+      ],
+    );
+  }
 
   Widget _fieldShareLocation({
     required String hintText,
@@ -951,29 +923,28 @@ class bantuan extends StatelessWidget {
   }
 
   Future<void> _uploadImage() async {
-  final picker = ImagePicker();
-  final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
-  if (pickedFile != null) {
-    // Membuat request multipart
-    var request = http.MultipartRequest('POST', Uri.parse('YOUR_UPLOAD_URL'));
+    if (pickedFile != null) {
+      // Membuat request multipart
+      var request = http.MultipartRequest('POST', Uri.parse('YOUR_UPLOAD_URL'));
 
-    // Melampirkan file yang dipilih ke request
-    request.files.add(await http.MultipartFile.fromPath('file', pickedFile.path));
+      // Melampirkan file yang dipilih ke request
+      request.files
+          .add(await http.MultipartFile.fromPath('file', pickedFile.path));
 
-    // Mengirim request
-    var response = await request.send();
+      // Mengirim request
+      var response = await request.send();
 
-    // Memeriksa status response
-    if (response.statusCode == 200) {
-      print('Gambar berhasil diunggah');
-    } else {
-      print('Gagal mengunggah gambar');
+      // Memeriksa status response
+      if (response.statusCode == 200) {
+        print('Gambar berhasil diunggah');
+      } else {
+        print('Gagal mengunggah gambar');
+      }
     }
   }
-}
-
-
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -1027,8 +998,6 @@ class bantuan extends StatelessWidget {
       },
     );
   }
-
-  
 }
 
 Widget _greetings() {
@@ -1062,6 +1031,6 @@ void main() {
     theme: ThemeData(
       textTheme: GoogleFonts.poppinsTextTheme(),
     ),
-    home: bantuan(),
+    home: Bantuan(),
   ));
 }

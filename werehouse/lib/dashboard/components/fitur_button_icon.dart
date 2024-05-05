@@ -75,7 +75,7 @@ List<ButtonIcon> menuIcons = [
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => bantuan()), // Ganti dengan rute yang sesuai
+            builder: (context) => Bantuan()), // Ganti dengan rute yang sesuai
       ).then((_) {
         // Panggil parentSetState jika diperlukan untuk memperbarui state dari widget induk
       });
