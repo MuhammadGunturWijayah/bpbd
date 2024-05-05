@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:werehouse/dashboard/component_laporan/pilih_fitur.dart';
 import 'package:werehouse/dashboard/component_laporan/keterangan_laporan.dart';
 
-
 var selectedService = 0;
 
 class fitur_laporan extends StatelessWidget {
@@ -15,32 +14,36 @@ class fitur_laporan extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
 
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-           padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
-          child: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 30,
-            ),
-            _greetings(),
-            const SizedBox(
-              height: 16,
-            ),
-            _card(),
-            const SizedBox(
-              height: 20,
-            ),
-            _services(),
-            const SizedBox(
-              height: 27,
-            ),
-            _doctors()
-          ],
+      appBar: AppBar(
+        title: Text('Cetak Laporan'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
-          )
-      )),
+      ),
+      body: SafeArea(
+          child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    _card(),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    _services(),
+                    const SizedBox(
+                      height: 27,
+                    ),
+                    _doctors()
+                  ],
+                ),
+              ))),
     );
   }
 
@@ -98,7 +101,8 @@ class fitur_laporan extends StatelessWidget {
               ),
               RichText(
                   text: TextSpan(
-                      text: "Terkait: ${keterangan_laporan.services.join(', ')}",
+                      text:
+                          "Terkait: ${keterangan_laporan.services.join(', ')}",
                       style: GoogleFonts.manrope(
                           fontSize: 12, color: Colors.black))),
               const SizedBox(
@@ -173,8 +177,6 @@ class fitur_laporan extends StatelessWidget {
     );
   }
 
- 
-
   AspectRatio _card() {
     return AspectRatio(
       aspectRatio: 336 / 184,
@@ -244,23 +246,5 @@ class fitur_laporan extends StatelessWidget {
     );
   }
 
-  Padding _greetings() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Laporan',
-            style: GoogleFonts.manrope(
-                fontSize: 24,
-                fontWeight: FontWeight.w800,
-                color: const Color(0xFF3F3E3F)),
-          ),
-          // Tombol belanja dihapus
-        ],
-      ),
-    );
-  }
-
+  
 }
