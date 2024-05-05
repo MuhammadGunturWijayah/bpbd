@@ -37,6 +37,15 @@ class Barang_keluar extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Barang Keluar'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
@@ -45,10 +54,6 @@ class Barang_keluar extends StatelessWidget {
               children: [
                 const SizedBox(
                   height: 30,
-                ),
-                _greetings(),
-                const SizedBox(
-                  height: 16,
                 ),
                 _card(),
                 const SizedBox(
@@ -382,25 +387,6 @@ class Barang_keluar extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Padding _greetings() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Input Barang Keluar',
-            style: GoogleFonts.manrope(
-              fontSize: 24,
-              fontWeight: FontWeight.w800,
-              color: const Color(0xFF3F3E3F),
-            ),
-          ),
-        ],
       ),
     );
   }
