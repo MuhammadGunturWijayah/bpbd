@@ -369,7 +369,8 @@ class _BantuanState extends State<Bantuan> {
 
  void _tambahBarang() {
   setState(() {
-    _barangList.add(_buildBarangField()); 
+    // Tambah field baru ke posisi pertama dalam list _barangList
+    _barangList.insert(0, _buildBarangField()); 
   });
 }
 
@@ -516,6 +517,7 @@ Widget _buildThreeFieldsInRow({
           ),
         ],
       ),
+      ..._barangList,
       SizedBox(height: 15),
       // Menambahkan tombol di bawah field
       _inkWell(
