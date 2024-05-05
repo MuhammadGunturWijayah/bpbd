@@ -5,6 +5,7 @@ import 'package:werehouse/dashboard/component_setting/settings_screen.dart';
 import 'package:werehouse/dashboard/components/bantuan.dart';
 import 'package:werehouse/dashboard/components/barang_masuk.dart';
 import 'package:werehouse/dashboard/components/barang_keluar.dart';
+import 'package:werehouse/login/register_screen.dart';
 import 'package:werehouse/dashboard/profile.dart';
 
 class ButtonIcon {
@@ -110,7 +111,7 @@ List<ButtonIcon> menuIcons = [
     onPressed: (context) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => RootApp()),
+        MaterialPageRoute(builder: (context) => RegisterScreen()),
       );
     },
   ),
