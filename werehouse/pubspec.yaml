@@ -10,7 +10,7 @@ dependencies:
   cupertino_icons: ^1.0.6
   flutter:
     sdk: flutter
-  flutter_card_swiper: ^7.0.0
+  flutter_card_swiper: ^7.0.1
   google_fonts: ^6.1.0
   iconly: ^1.0.1
   provider: ^6.1.2
@@ -23,6 +23,9 @@ dependencies:
   pinput: ^4.0.0
   http: ^1.2.1
   get: ^4.6.6
+  flutter_screenutil: ^5.9.0
+  line_awesome_flutter: ^2.0.0
+  animated_theme_switcher: ^2.0.10
 
 dev_dependencies:
   flutter_test:

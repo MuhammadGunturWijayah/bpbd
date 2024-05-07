@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:werehouse/dashboard/component_pengiriman_barang/accept_barang.dart';
-import 'package:werehouse/dashboard/component_setting/setting_title.dart';
-import 'package:werehouse/dashboard/component_setting/settings_screen.dart';
 import 'package:werehouse/dashboard/components/bantuan.dart';
 import 'package:werehouse/dashboard/components/barang_masuk.dart';
 import 'package:werehouse/dashboard/profile.dart';
