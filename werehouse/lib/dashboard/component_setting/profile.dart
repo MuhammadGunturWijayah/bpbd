@@ -25,14 +25,14 @@ class ProfilePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: size.height * 0.06),
+              SizedBox(height: size.height * 0.05),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
                   width: 150,
                   child: const CircleAvatar(
                     radius: 60,
-                    backgroundImage: ExactAssetImage('assets/images/profile.jpg'),
+                    backgroundImage: ExactAssetImage('assets/images/profile.png'),
                   ),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,

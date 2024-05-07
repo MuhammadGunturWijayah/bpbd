@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
                     setState(() {}); // Contoh pemanggilan setState
                   },
                 ),
-                GoCLub(
+                notif_permintaan(
                   onPressed: () {
                     setState(() {
                       _isLoading = true;

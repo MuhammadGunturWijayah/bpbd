@@ -9,10 +9,10 @@ import 'package:werehouse/login/welcome_screen.dart';
 import 'package:werehouse/theme.dart';
 
 
-class GoCLub extends StatelessWidget {
+class notif_permintaan extends StatelessWidget {
   final VoidCallback? onPressed;
   final VoidCallback? parentSetState; // Perbarui tipe properti menjadi VoidCallback
-  const GoCLub({Key? key, this.onPressed, this.parentSetState}) : super(key: key);
+  const notif_permintaan({Key? key, this.onPressed, this.parentSetState}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
