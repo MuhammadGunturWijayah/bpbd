@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart'; // Import untuk showDatePicker
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
 
 var selectedService = 0;
@@ -148,6 +149,26 @@ class _BantuanState extends State<Bantuan> {
                         },
                       ),
                       const SizedBox(height: 20),
+                      _buildTextFieldWithButton(
+                        hintText: 'Input Lokasi',
+                        label: 'Lokasi Kejadian :',
+                        controller: _inputShareLocation,
+                        onTap: () {
+                          _shareLocation();
+                        },
+                        onButtonTap: () async {
+                          String currentLocation =
+                              await _getCurrentLocation(); // Mendapatkan lokasi saat ini
+                          if (currentLocation != null &&
+                              currentLocation.isNotEmpty) {
+                            _sendLocationViaWhatsApp(
+                                currentLocation); // Mengirim lokasi ke WhatsApp
+                          } else {
+                            print("Tidak dapat membagikan lokasi saat ini.");
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -239,7 +260,7 @@ class _BantuanState extends State<Bantuan> {
   TextEditingController controller = TextEditingController();
 
   void onTap1() {
-   _showDaftarBarang(context);
+    _showDaftarBarang(context);
   }
 
   Widget _buildBarangField() {
@@ -270,7 +291,7 @@ class _BantuanState extends State<Bantuan> {
                   ],
                 ),
                 child: TextFormField(
-                  controller: _namaBarangController ,
+                  controller: _namaBarangController,
                   onTap: onTap1,
                   readOnly: true,
                   decoration: InputDecoration(
@@ -551,6 +572,52 @@ class _BantuanState extends State<Bantuan> {
         ),
       ],
     );
+  }
+
+  //lokasi
+// Fungsi untuk mendapatkan lokasi saat ini
+  Future<String> _getCurrentLocation() async {
+    LocationData currentLocation;
+    var location = Location();
+
+    try {
+      currentLocation = await location.getLocation();
+      return "${currentLocation.latitude},${currentLocation.longitude}";
+    } catch (e) {
+      print("Error getting location: $e");
+      return ''; // Mengembalikan string kosong jika gagal mendapatkan lokasi
+    }
+  }
+
+// Memperbarui _shareLocation() untuk mendapatkan lokasi saat ini dan mengirimkannya ke _sendLocationViaWhatsApp()
+  void _shareLocation() async {
+    String currentLocation = await _getCurrentLocation();
+    if (currentLocation != null) {
+      _sendLocationViaWhatsApp(currentLocation);
+    } else {
+      // Handle ketika tidak bisa mendapatkan lokasi saat ini
+      print("Tidak dapat mendapatkan lokasi saat ini.");
+    }
+  }
+
+  
+
+// Memperbarui _sendLocationViaWhatsApp() untuk menggunakan lokasi saat ini
+  void _sendLocationViaWhatsApp(String location) async {
+    // Membuat link Google Maps dengan lokasi saat ini
+    String googleMapsUrl =
+        'https://www.google.com/maps/search/?api=1&query=$location';
+
+    // Pesan yang berisi link Google Maps
+    String message = 'Lokasi: $googleMapsUrl';
+
+    // Membuka WhatsApp dan menyiapkan pesan dengan link Google Maps
+    String whatsappUrl = 'https://wa.me/?text=${Uri.encodeComponent(message)}';
+    if (await canLaunch(whatsappUrl)) {
+      await launch(whatsappUrl);
+    } else {
+      throw 'Could not launch $whatsappUrl';
+    }
   }
 
   Widget _inkWell({required VoidCallback onTap, required Widget child}) {
