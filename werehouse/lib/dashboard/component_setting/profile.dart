@@ -9,6 +9,16 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+       appBar: AppBar(
+        // Tambahkan tombol kembali di AppBar
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop(); // Fungsi untuk kembali ke halaman sebelumnya
+          },
+        ),
+        title: Text('Profile Setting'), // Judul AppBar
+      ),
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(16),
