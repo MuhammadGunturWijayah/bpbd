@@ -29,7 +29,7 @@ class AvatarCard extends StatelessWidget {
               ),
             ),
             Text(
-              "User",
+              "Admin",
               style: TextStyle(
                 fontSize: ksmallFontSize,
                 color: Colors.grey.shade600,

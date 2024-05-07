@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:werehouse/dashboard/HomePage.dart';
+import 'package:werehouse/dashboard/component_setting/personal_data/personal_data.dart';
 
 class Setting {
   final String title;
-  final String route;
+  final String route; // Merubah tipe dari Map<String, WidgetBuilder> menjadi String
   final IconData icon;
 
   Setting({
@@ -16,22 +18,22 @@ class Setting {
 final List<Setting> settings = [
   Setting(
     title: "Personal Data",
-    route: "/",
+    route: '/PersonalDataPage', // Menggunakan string sebagai route
     icon: CupertinoIcons.person_fill,
   ),
   Setting(
     title: "Settings",
-    route: "/",
+    route: '/SettingsPage',
     icon: Icons.settings,
   ),
   Setting(
     title: "E-Statements",
-    route: "/",
+    route: '/EStatementsPage',
     icon: CupertinoIcons.doc_fill,
   ),
   Setting(
-    title: "Refferal Code",
-    route: "/",
+    title: "Referral Code",
+    route: '/ReferralCodePage',
     icon: CupertinoIcons.heart_fill,
   ),
 ];
@@ -39,17 +41,28 @@ final List<Setting> settings = [
 final List<Setting> settings2 = [
   Setting(
     title: "FAQ",
-    route: "/",
+    route: '/FAQPage',
     icon: CupertinoIcons.ellipsis_vertical_circle_fill,
   ),
   Setting(
     title: "Our Handbook",
-    route: "/",
+    route: '/HandbookPage',
     icon: CupertinoIcons.pencil_circle_fill,
   ),
   Setting(
     title: "Community",
-    route: "/",
+    route: '/CommunityPage',
     icon: CupertinoIcons.person_3_fill,
   ),
 ];
+
+
+void main() {
+  runApp(MaterialApp(
+    routes: {
+      '/PersonalDataPage': (context) => PersonalDataPage(),
+     
+    },
+    home:  HomePage(),
+  ));
+}

@@ -13,7 +13,10 @@ class SettingTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {}, // Navigation
+      onTap: () {
+        Navigator.pushNamed(context, setting.route);
+      },
+      // Navigation
       child: Row(
         children: [
           Container(

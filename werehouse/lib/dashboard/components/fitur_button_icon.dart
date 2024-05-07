@@ -4,7 +4,6 @@ import 'package:werehouse/dashboard/component_laporan/fitur_laporan.dart';
 import 'package:werehouse/dashboard/component_setting/settings_screen.dart';
 import 'package:werehouse/dashboard/components/bantuan.dart';
 import 'package:werehouse/dashboard/components/barang_masuk.dart';
-import 'package:werehouse/dashboard/components/barang_keluar.dart';
 import 'package:werehouse/login/register_screen.dart';
 import 'package:werehouse/dashboard/profile.dart';
 
@@ -70,7 +69,7 @@ List<ButtonIcon> menuIcons = [
   ),
   ButtonIcon(
     icon: 'bantuan',
-    title: 'Bantuan',
+    title: 'Barang Keluar',
     color: Colors.red,
     onPressed: (context) {
       Navigator.push(
@@ -90,17 +89,6 @@ List<ButtonIcon> menuIcons = [
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => Barang_masuk()),
-      );
-    },
-  ),
-  ButtonIcon(
-    icon: 'barangkeluar',
-    title: 'Barang Keluar',
-    color: Colors.green,
-    onPressed: (context) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Barang_keluar()),
       );
     },
   ),

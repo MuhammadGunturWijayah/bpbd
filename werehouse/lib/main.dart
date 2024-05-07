@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:werehouse/introduction_animation/components/SplashScreen.dart';
 import 'package:werehouse/dashboard/HomePage.dart';
-
+import 'package:werehouse/dashboard/component_setting/personal_data/personal_data.dart';
 
 void main() {
   runApp(MyApp());
