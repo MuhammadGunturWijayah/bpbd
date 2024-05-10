@@ -107,28 +107,12 @@ class _barang_keluarState extends State<barang_keluar> {
                         label: 'List Barang :',
                         controller: _ListBarang,
                         onTap: () {},
+                         onButtonTaps: () {
+                          // Tidak ada pemanggilan _tambahBarang() di sini lagi
+                        },
                       ),
                       const SizedBox(height: 10),
-                      const SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _customButton(
-                            text: 'Simpan',
-                            onPressed: () {
-                              // Tambahkan fungsi untuk menyimpan data
-                            },
-                            color: Colors.blue,
-                          ),
-                          _customButton(
-                            text: 'Cancel',
-                            onPressed: () {
-                              // Tambahkan fungsi untuk menghapus data
-                            },
-                            color: Colors.grey,
-                          ),
-                        ],
-                      ),
+                      
                     ],
                   ),
                 ),
@@ -494,7 +478,7 @@ class _barang_keluarState extends State<barang_keluar> {
             ),
             child: Center(
               child: Text(
-                'Tambah Barang',
+                'Tambah Ke List Barang',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,
@@ -516,75 +500,102 @@ class _barang_keluarState extends State<barang_keluar> {
   }
 
   Widget _FieldListBarang({
-    required String hintText,
-    required String label,
-    TextEditingController? controller,
-    VoidCallback? onTap,
-    VoidCallback? onButtonTap,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: Color.fromARGB(255, 171, 171, 171),
-            fontSize: 12,
-          ),
+  required String hintText,
+  required String label,
+  TextEditingController? controller,
+  VoidCallback? onTap,
+  required VoidCallback onButtonTaps,
+}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        label,
+        style: TextStyle(
+          color: Color.fromARGB(255, 171, 171, 171),
+          fontSize: 12,
         ),
-        SizedBox(height: 5),
-        Row(
-          children: [
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 255, 255, 255),
-                  borderRadius: BorderRadius.circular(10.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 7,
-                      offset: Offset(0, 3),
-                    ),
-                  ],
+      ),
+      SizedBox(height: 5),
+      Row(
+        children: [
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 255, 255, 255),
+                borderRadius: BorderRadius.circular(10.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 1,
+                    blurRadius: 7,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: TextFormField(
+                controller: controller,
+                keyboardType: TextInputType.number,
+                onTap: onTap,
+                maxLines: null,
+                enabled: false, // Field tidak bisa diketik
+                style: TextStyle(
+                  overflow: TextOverflow.ellipsis,
                 ),
-                child: TextFormField(
-                  controller: controller,
-                  keyboardType: TextInputType.number,
-                  onTap: onTap,
-                  maxLines: null,
-                  enabled: false, // Field tidak bisa diketik
-                  style: TextStyle(
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: hintText,
-                    border: InputBorder.none,
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 90, horizontal: 20),
-                    suffixIcon: onButtonTap != null
-                        ? InkWell(
-                            onTap: onButtonTap,
-                            child: Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                color: Colors.blue,
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                            ),
-                          )
-                        : null,
-                  ),
+                decoration: InputDecoration(
+                  hintText: hintText,
+                  border: InputBorder.none,
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 90, horizontal: 20),
+                  
                 ),
               ),
             ),
-          ],
+          ),
+        ],
+      ),
+       SizedBox(height: 20),
+      // Menambahkan tombol di bawah field
+      _inkWell(
+        onTap:
+            onButtonTaps, // Anda bisa menggunakan onButtonTap untuk menambahkan item saat tombol ditekan
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.blue,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 1,
+                blurRadius: 7,
+                offset: Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Lanjutkan',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Icon(
+                Icons.arrow_forward,
+                color: Colors.white,
+              ),
+            ],
+          ),
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
+}
 
   Widget _buildSatuanDropdown(
       {required String hintText, required String label}) {
@@ -685,32 +696,7 @@ class _barang_keluarState extends State<barang_keluar> {
     );
   }
 
-  Widget _customButton({
-    required String text,
-    required VoidCallback onPressed,
-    required Color color,
-  }) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      child: Text(
-        text,
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(color),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
-      ),
-    );
-  }
-
+ 
   void _showDaftarBarang(BuildContext context) {
     showModalBottomSheet(
       context: context,
