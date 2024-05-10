@@ -595,7 +595,7 @@ class _barang_keluarState extends State<barang_keluar> {
                     hintText: hintText,
                     border: InputBorder.none,
                     contentPadding:
-                        EdgeInsets.symmetric(vertical: 90, horizontal: 20),
+                        EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                   ),
                 ),
               ),
