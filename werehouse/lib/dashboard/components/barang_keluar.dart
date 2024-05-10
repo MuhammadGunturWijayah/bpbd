@@ -14,7 +14,6 @@ class barang_keluar extends StatefulWidget {
   _barang_keluarState createState() => _barang_keluarState();
 }
 
-
 class Barang {
   final String nama;
   final int jumlah;
@@ -49,7 +48,7 @@ class _barang_keluarState extends State<barang_keluar> {
   String? selectedSatuan;
   List<Map<String, dynamic>> selectedItems =
       []; // List untuk menyimpan detail barang
- List<Barang> listBarang = []; 
+  List<Barang> listBarang = [];
   // Deklarasi daftar barang
   final List<String> daftarBarang = [
     'Sapu',
@@ -116,12 +115,9 @@ class _barang_keluarState extends State<barang_keluar> {
                         label: 'List Barang :',
                         controller: _ListBarang,
                         onTap: () {},
-                         onButtonTaps: () {
-                      
-                        },
+                        onButtonTaps: () {},
                       ),
                       const SizedBox(height: 10),
-                      
                     ],
                   ),
                 ),
@@ -134,9 +130,18 @@ class _barang_keluarState extends State<barang_keluar> {
   }
 
   void _tambahBarang() {
-  if (_namaBarangController.text.isNotEmpty &&
-      _jumlahController.text.isNotEmpty &&
-      _satuanController.text.isNotEmpty) {
+    if (_namaBarangController.text.isEmpty ||
+        _jumlahController.text.isEmpty ||
+        _satuanController.text.isEmpty) {
+      // Jika salah satu field tidak terisi, tampilkan notifikasi
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Lengkapi kolom terlebih dahulu'),
+        ),
+      );
+      return; // Hentikan proses tambah barang
+    }
+
     // Buat objek Barang baru
     Barang barangBaru = Barang(
       nama: _namaBarangController.text,
@@ -158,13 +163,15 @@ class _barang_keluarState extends State<barang_keluar> {
     _namaBarangController.clear();
     _jumlahController.clear();
     _satuanController.clear();
-    
+
     // Update controller _ListBarang agar menampilkan data baru
-    _ListBarang.text = listBarang.map((barang) => 'Barang : ${barang.nama}\nJumlah : ${barang.jumlah} \nSatuan : ${barang.satuan}').join('\n\n');
-
+    _ListBarang.text = listBarang
+        .map((barang) =>
+            'Barang : ${barang.nama}\nJumlah : ${barang.jumlah} \nSatuan : ${barang.satuan}')
+        .join('\n\n');
   }
-}
 
+//
 
   Widget _buildTextFieldWithButton({
     required String hintText,
@@ -542,102 +549,101 @@ class _barang_keluarState extends State<barang_keluar> {
   }
 
   Widget _FieldListBarang({
-  required String hintText,
-  required String label,
-  TextEditingController? controller,
-  VoidCallback? onTap,
-  required VoidCallback onButtonTaps,
-}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        label,
-        style: TextStyle(
-          color: Color.fromARGB(255, 171, 171, 171),
-          fontSize: 12,
+    required String hintText,
+    required String label,
+    TextEditingController? controller,
+    VoidCallback? onTap,
+    required VoidCallback onButtonTaps,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Color.fromARGB(255, 171, 171, 171),
+            fontSize: 12,
+          ),
         ),
-      ),
-      SizedBox(height: 5),
-      Row(
-        children: [
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 255, 255, 255),
-                borderRadius: BorderRadius.circular(10.0),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 1,
-                    blurRadius: 7,
-                    offset: Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                controller: controller,
-                keyboardType: TextInputType.number,
-                onTap: onTap,
-                maxLines: null,
-                enabled: false, // Field tidak bisa diketik
-                style: TextStyle(
-                  overflow: TextOverflow.ellipsis,
+        SizedBox(height: 5),
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 7,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
                 ),
-                decoration: InputDecoration(
-                  hintText: hintText,
-                  border: InputBorder.none,
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 90, horizontal: 20),
-                  
+                child: TextFormField(
+                  controller: controller,
+                  keyboardType: TextInputType.number,
+                  onTap: onTap,
+                  maxLines: null,
+                  enabled: false, // Field tidak bisa diketik
+                  style: TextStyle(
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: hintText,
+                    border: InputBorder.none,
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 90, horizontal: 20),
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
-      ),
-       SizedBox(height: 20),
-      // Menambahkan tombol di bawah field
-      _inkWell(
-        onTap:
-            onButtonTaps, // Anda bisa menggunakan onButtonTap untuk menambahkan item saat tombol ditekan
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.blue,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 1,
-                blurRadius: 7,
-                offset: Offset(0, 3),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Lanjutkan',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+          ],
+        ),
+        SizedBox(height: 20),
+        // Menambahkan tombol di bawah field
+        _inkWell(
+          onTap:
+              onButtonTaps, // Anda bisa menggunakan onButtonTap untuk menambahkan item saat tombol ditekan
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 1,
+                  blurRadius: 7,
+                  offset: Offset(0, 3),
                 ),
-              ),
-              Icon(
-                Icons.arrow_forward,
-                color: Colors.white,
-              ),
-            ],
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Lanjutkan',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Icon(
+                  Icons.arrow_forward,
+                  color: Colors.white,
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    ],
-  );
-}
+      ],
+    );
+  }
 
   Widget _buildSatuanDropdown(
       {required String hintText, required String label}) {
@@ -738,7 +744,6 @@ class _barang_keluarState extends State<barang_keluar> {
     );
   }
 
- 
   void _showDaftarBarang(BuildContext context) {
     showModalBottomSheet(
       context: context,
