@@ -360,6 +360,7 @@ class _barang_keluarState extends State<barang_keluar> {
       ],
     );
   }
+  
 
   Widget _buildThreeFieldsInRow({
     required String hintText1,
@@ -744,47 +745,92 @@ class _barang_keluarState extends State<barang_keluar> {
     );
   }
 
-  void _showDaftarBarang(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext builder) {
-        return Container(
-          height: MediaQuery.of(context).size.height / 1,
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListTile(
-                  leading: new Icon(Icons.arrow_back_ios),
-                  title: new Text(
-                    'Pilih Barang',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+ void _showDaftarBarang(BuildContext context) {
+  List<String> filteredDaftarBarang = List.from(daftarBarang);
+
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext builder) {
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return Container(
+            height: MediaQuery.of(context).size.height / 1,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    leading: new Icon(Icons.arrow_back_ios),
+                    title: new Text(
+                      'Pilih Barang',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
                   ),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
                 ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: daftarBarang.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(daftarBarang[index]),
-                      onTap: () {
-                        _namaBarangController.text = daftarBarang[index];
-                        Navigator.pop(context);
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 1,
+                          blurRadius: 7,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Cari Barang',
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 12, horizontal: 16),
+                        prefixIcon: Icon(Icons.search),
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          filteredDaftarBarang = daftarBarang
+                              .where((barang) => barang
+                                  .toLowerCase()
+                                  .contains(value.toLowerCase()))
+                              .toList();
+                        });
                       },
-                    );
-                  },
+                    ),
+                  ),
                 ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: filteredDaftarBarang.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(filteredDaftarBarang[index]),
+                        onTap: () {
+                          _namaBarangController.text =
+                              filteredDaftarBarang[index];
+                          Navigator.pop(context);
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    },
+  );
+}
+
+
+
 
   void ShowsatuanOptions(BuildContext context) {
     showModalBottomSheet(
