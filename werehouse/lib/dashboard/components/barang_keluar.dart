@@ -14,6 +14,15 @@ class barang_keluar extends StatefulWidget {
   _barang_keluarState createState() => _barang_keluarState();
 }
 
+
+class Barang {
+  final String nama;
+  final int jumlah;
+  final String satuan;
+
+  Barang({required this.nama, required this.jumlah, required this.satuan});
+}
+
 class _barang_keluarState extends State<barang_keluar> {
   final TextEditingController _namaBarangController = TextEditingController();
   final TextEditingController _jumlahController = TextEditingController();
@@ -40,7 +49,7 @@ class _barang_keluarState extends State<barang_keluar> {
   String? selectedSatuan;
   List<Map<String, dynamic>> selectedItems =
       []; // List untuk menyimpan detail barang
-
+ List<Barang> listBarang = []; 
   // Deklarasi daftar barang
   final List<String> daftarBarang = [
     'Sapu',
@@ -98,7 +107,7 @@ class _barang_keluarState extends State<barang_keluar> {
                           ShowsatuanOptions(context);
                         },
                         onButtonTap: () {
-                          // Tidak ada pemanggilan _tambahBarang() di sini lagi
+                          _tambahBarang();
                         },
                       ),
                       SizedBox(height: 10),
@@ -108,7 +117,7 @@ class _barang_keluarState extends State<barang_keluar> {
                         controller: _ListBarang,
                         onTap: () {},
                          onButtonTaps: () {
-                          // Tidak ada pemanggilan _tambahBarang() di sini lagi
+                      
                         },
                       ),
                       const SizedBox(height: 10),
@@ -123,6 +132,39 @@ class _barang_keluarState extends State<barang_keluar> {
       ),
     );
   }
+
+  void _tambahBarang() {
+  if (_namaBarangController.text.isNotEmpty &&
+      _jumlahController.text.isNotEmpty &&
+      _satuanController.text.isNotEmpty) {
+    // Buat objek Barang baru
+    Barang barangBaru = Barang(
+      nama: _namaBarangController.text,
+      jumlah: int.parse(_jumlahController.text),
+      satuan: _satuanController.text,
+    );
+
+    // Tambahkan barang ke dalam list selectedItems
+    setState(() {
+      selectedItems.add({
+        'nama': barangBaru.nama,
+        'jumlah': barangBaru.jumlah,
+        'satuan': barangBaru.satuan,
+      });
+      listBarang.add(barangBaru); // Tambahkan barang ke dalam listBarang
+    });
+
+    // Reset field setelah menambahkan barang
+    _namaBarangController.clear();
+    _jumlahController.clear();
+    _satuanController.clear();
+    
+    // Update controller _ListBarang agar menampilkan data baru
+    _ListBarang.text = listBarang.map((barang) => 'Barang : ${barang.nama}\nJumlah : ${barang.jumlah} \nSatuan : ${barang.satuan}').join('\n\n');
+
+  }
+}
+
 
   Widget _buildTextFieldWithButton({
     required String hintText,
