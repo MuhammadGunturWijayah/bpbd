@@ -4,23 +4,17 @@ import 'package:flutter/cupertino.dart'; // Import untuk showDatePicker
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:location/location.dart';
+
 import 'package:http/http.dart' as http;
 
 var selectedService = 0;
-DateTime? selectedDate; // Change to nullable DateTime
 
-class Bantuan extends StatefulWidget {
+class barang_keluar extends StatefulWidget {
   @override
-  _BantuanState createState() => _BantuanState();
+  _barang_keluarState createState() => _barang_keluarState();
 }
 
-class _BantuanState extends State<Bantuan> {
-  final TextEditingController _expiredController = TextEditingController();
-  final TextEditingController _inputGambar = TextEditingController();
-  final TextEditingController _inputShareLocation = TextEditingController();
-  final TextEditingController _inputNomor = TextEditingController();
-  final TextEditingController _inputKeterangan = TextEditingController();
+class _barang_keluarState extends State<barang_keluar> {
   final TextEditingController _namaBarangController = TextEditingController();
   final TextEditingController _jumlahController = TextEditingController();
   final TextEditingController _satuanController = TextEditingController();
@@ -46,7 +40,6 @@ class _BantuanState extends State<Bantuan> {
   String? selectedSatuan;
   List<Map<String, dynamic>> selectedItems =
       []; // List untuk menyimpan detail barang
-  List<Widget> _barangList = [];
 
   // Deklarasi daftar barang
   final List<String> daftarBarang = [
@@ -105,69 +98,17 @@ class _BantuanState extends State<Bantuan> {
                           ShowsatuanOptions(context);
                         },
                         onButtonTap: () {
-                          _tambahBarang();
+                          // Tidak ada pemanggilan _tambahBarang() di sini lagi
                         },
                       ),
                       SizedBox(height: 10),
-                      const SizedBox(height: 10),
-                      _fieldKeterangan(
-                        hintText: 'Alamat',
-                        label: 'Alamat Penerima :',
-                        controller: _inputKeterangan,
+                      _FieldListBarang(
+                        hintText: '',
+                        label: 'List Barang :',
+                        controller: _ListBarang,
                         onTap: () {},
                       ),
                       const SizedBox(height: 10),
-                      _fieldNomorKK(
-                        hintText: 'Nomor KK',
-                        label: 'Nomor KK :',
-                        controller: _inputNomor,
-                        onTap: () {},
-                      ),
-                      const SizedBox(height: 10),
-                      _fieldKeterangan(
-                        hintText: 'Keterangan',
-                        label: 'Keterangan Kejadian :',
-                        controller: _inputKeterangan,
-                        onTap: () {},
-                      ),
-                      const SizedBox(height: 10),
-                      _fieldDokumentasi(
-                        hintText: 'Input Images',
-                        label: 'Foto Dokumentasi :',
-                        controller: _inputGambar,
-                        onTap: () {
-                          _uploadImage();
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      _buildTextFieldWithButton(
-                        hintText: 'Input Tanggal',
-                        label: 'Tanggal Kejadian :',
-                        controller: _expiredController,
-                        onTap: () {
-                          _selectDate(context);
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      _buildTextFieldWithButton(
-                        hintText: 'Input Lokasi',
-                        label: 'Lokasi Kejadian :',
-                        controller: _inputShareLocation,
-                        onTap: () {
-                          _shareLocation();
-                        },
-                        onButtonTap: () async {
-                          String currentLocation =
-                              await _getCurrentLocation(); // Mendapatkan lokasi saat ini
-                          if (currentLocation != null &&
-                              currentLocation.isNotEmpty) {
-                            _sendLocationViaWhatsApp(
-                                currentLocation); // Mengirim lokasi ke WhatsApp
-                          } else {
-                            print("Tidak dapat membagikan lokasi saat ini.");
-                          }
-                        },
-                      ),
                       const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -387,13 +328,6 @@ class _BantuanState extends State<Bantuan> {
     );
   }
 
-  void _tambahBarang() {
-    setState(() {
-      // Tambah field baru ke posisi pertama dalam list _barangList
-      _barangList.insert(0, _buildBarangField());
-    });
-  }
-
   Widget _buildThreeFieldsInRow({
     required String hintText1,
     required String hintText2,
@@ -537,9 +471,9 @@ class _BantuanState extends State<Bantuan> {
             ),
           ],
         ),
-        ..._barangList,
         SizedBox(height: 15),
         // Menambahkan tombol di bawah field
+
         _inkWell(
           onTap:
               onButtonTap, // Anda bisa menggunakan onButtonTap untuk menambahkan item saat tombol ditekan
@@ -574,52 +508,6 @@ class _BantuanState extends State<Bantuan> {
     );
   }
 
-  //lokasi
-// Fungsi untuk mendapatkan lokasi saat ini
-  Future<String> _getCurrentLocation() async {
-    LocationData currentLocation;
-    var location = Location();
-
-    try {
-      currentLocation = await location.getLocation();
-      return "${currentLocation.latitude},${currentLocation.longitude}";
-    } catch (e) {
-      print("Error getting location: $e");
-      return ''; // Mengembalikan string kosong jika gagal mendapatkan lokasi
-    }
-  }
-
-// Memperbarui _shareLocation() untuk mendapatkan lokasi saat ini dan mengirimkannya ke _sendLocationViaWhatsApp()
-  void _shareLocation() async {
-    String currentLocation = await _getCurrentLocation();
-    if (currentLocation != null) {
-      _sendLocationViaWhatsApp(currentLocation);
-    } else {
-      // Handle ketika tidak bisa mendapatkan lokasi saat ini
-      print("Tidak dapat mendapatkan lokasi saat ini.");
-    }
-  }
-
-  
-
-// Memperbarui _sendLocationViaWhatsApp() untuk menggunakan lokasi saat ini
-  void _sendLocationViaWhatsApp(String location) async {
-    // Membuat link Google Maps dengan lokasi saat ini
-    String googleMapsUrl =
-        'https://www.google.com/maps/search/?api=1&query=$location';
-
-    // Pesan yang berisi link Google Maps
-    String message = 'Lokasi: $googleMapsUrl';
-
-    // Membuka WhatsApp dan menyiapkan pesan dengan link Google Maps
-    String whatsappUrl = 'https://wa.me/?text=${Uri.encodeComponent(message)}';
-    if (await canLaunch(whatsappUrl)) {
-      await launch(whatsappUrl);
-    } else {
-      throw 'Could not launch $whatsappUrl';
-    }
-  }
-
   Widget _inkWell({required VoidCallback onTap, required Widget child}) {
     return InkWell(
       onTap: onTap,
@@ -627,7 +515,7 @@ class _BantuanState extends State<Bantuan> {
     );
   }
 
-  Widget _fieldNomorKK({
+  Widget _FieldListBarang({
     required String hintText,
     required String label,
     TextEditingController? controller,
@@ -640,7 +528,7 @@ class _BantuanState extends State<Bantuan> {
         Text(
           label,
           style: TextStyle(
-            color: Colors.grey,
+            color: Color.fromARGB(255, 171, 171, 171),
             fontSize: 12,
           ),
         ),
@@ -650,7 +538,7 @@ class _BantuanState extends State<Bantuan> {
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Color.fromARGB(255, 255, 255, 255),
                   borderRadius: BorderRadius.circular(10.0),
                   boxShadow: [
                     BoxShadow(
@@ -666,6 +554,7 @@ class _BantuanState extends State<Bantuan> {
                   keyboardType: TextInputType.number,
                   onTap: onTap,
                   maxLines: null,
+                  enabled: false, // Field tidak bisa diketik
                   style: TextStyle(
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -673,7 +562,7 @@ class _BantuanState extends State<Bantuan> {
                     hintText: hintText,
                     border: InputBorder.none,
                     contentPadding:
-                        EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                        EdgeInsets.symmetric(vertical: 90, horizontal: 20),
                     suffixIcon: onButtonTap != null
                         ? InkWell(
                             onTap: onButtonTap,
@@ -683,85 +572,6 @@ class _BantuanState extends State<Bantuan> {
                               decoration: BoxDecoration(
                                 color: Colors.blue,
                                 borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Icon(
-                                Icons.add,
-                                size: 24,
-                                color: Colors.white,
-                              ),
-                            ),
-                          )
-                        : null,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _fieldKeterangan({
-    required String hintText,
-    required String label,
-    TextEditingController? controller,
-    VoidCallback? onTap,
-    VoidCallback? onButtonTap,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.grey,
-            fontSize: 12,
-          ),
-        ),
-        SizedBox(height: 5),
-        Row(
-          children: [
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 7,
-                      offset: Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: TextFormField(
-                  controller: controller,
-                  onTap: onTap,
-                  maxLines: null,
-                  style: TextStyle(
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: hintText,
-                    border: InputBorder.none,
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                    suffixIcon: onButtonTap != null
-                        ? InkWell(
-                            onTap: onButtonTap,
-                            child: Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                color: Colors.blue,
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Icon(
-                                Icons.add,
-                                size: 24,
-                                color: Colors.white,
                               ),
                             ),
                           )
@@ -808,53 +618,6 @@ class _BantuanState extends State<Bantuan> {
               selectedSatuan = newValue;
             },
             items: satuanOptions.map((satuan) {
-              return DropdownMenuItem<String>(
-                value: satuan,
-                child: Text(satuan),
-              );
-            }).toList(),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding:
-                  EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDaftarBarang({required String hintText, required String label}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.grey,
-            fontSize: 12,
-          ),
-        ),
-        SizedBox(height: 5),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10.0),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 1,
-                blurRadius: 7,
-                offset: Offset(0, 3),
-              ),
-            ],
-          ),
-          child: DropdownButtonFormField<String>(
-            value: selectedSatuan,
-            onChanged: (newValue) {
-              selectedSatuan = newValue;
-            },
-            items: daftarBarang.map((satuan) {
               return DropdownMenuItem<String>(
                 value: satuan,
                 child: Text(satuan),
@@ -922,125 +685,6 @@ class _BantuanState extends State<Bantuan> {
     );
   }
 
-  Widget _fieldDokumentasi({
-    required String hintText,
-    required String label,
-    TextEditingController? controller,
-    VoidCallback? onTap,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.grey,
-            fontSize: 12,
-          ),
-        ),
-        SizedBox(height: 5),
-        Row(
-          children: [
-            Expanded(
-              child: InkWell(
-                onTap: () {
-                  _uploadImage(); // Panggil fungsi _getImage di sini
-                  if (onTap != null) onTap();
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 1,
-                        blurRadius: 7,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: TextFormField(
-                    controller: controller,
-                    readOnly: true,
-                    decoration: InputDecoration(
-                      hintText: hintText,
-                      border: InputBorder.none,
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                      suffixIcon: Icon(
-                        Icons.camera_alt,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _fieldShareLocation({
-    required String hintText,
-    required String label,
-    TextEditingController? controller,
-    VoidCallback? onTap,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.grey,
-            fontSize: 12,
-          ),
-        ),
-        SizedBox(height: 5),
-        Row(
-          children: [
-            Expanded(
-              child: InkWell(
-                onTap: onTap,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 1,
-                        blurRadius: 7,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: TextFormField(
-                    controller: controller,
-                    readOnly: true,
-                    decoration: InputDecoration(
-                      hintText: hintText,
-                      border: InputBorder.none,
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                      suffixIcon: Icon(
-                        Icons.location_on,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
   Widget _customButton({
     required String text,
     required VoidCallback onPressed,
@@ -1053,6 +697,7 @@ class _BantuanState extends State<Bantuan> {
         style: TextStyle(
           color: Colors.white,
           fontSize: 16,
+          fontWeight: FontWeight.bold,
         ),
       ),
       style: ButtonStyle(
@@ -1106,41 +751,6 @@ class _BantuanState extends State<Bantuan> {
         );
       },
     );
-  }
-
-  Future<void> _uploadImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      // Membuat request multipart
-      var request = http.MultipartRequest('POST', Uri.parse('YOUR_UPLOAD_URL'));
-
-      // Melampirkan file yang dipilih ke request
-      request.files
-          .add(await http.MultipartFile.fromPath('file', pickedFile.path));
-
-      // Mengirim request
-      var response = await request.send();
-
-      // Memeriksa status response
-      if (response.statusCode == 200) {
-        print('Gambar berhasil diunggah');
-      } else {
-        print('Gagal mengunggah gambar');
-      }
-    }
-  }
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2015, 8),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null && picked != selectedDate) selectedDate = picked;
-    _expiredController.text = selectedDate.toString().substring(0, 10);
   }
 
   void ShowsatuanOptions(BuildContext context) {
@@ -1217,6 +827,6 @@ void main() {
     theme: ThemeData(
       textTheme: GoogleFonts.poppinsTextTheme(),
     ),
-    home: Bantuan(),
+    home: barang_keluar(),
   ));
 }

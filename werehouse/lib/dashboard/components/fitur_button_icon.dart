@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:werehouse/dashboard/component_laporan/fitur_laporan.dart';
 import 'package:werehouse/dashboard/component_pengiriman_barang/accept_barang.dart';
 import 'package:werehouse/dashboard/component_setting/profile.dart';
-import 'package:werehouse/dashboard/components/bantuan.dart';
+import 'package:werehouse/dashboard/components/barang_keluar.dart';
 import 'package:werehouse/dashboard/components/barang_masuk.dart';
 import 'package:werehouse/login/register_screen.dart';
 import 'package:werehouse/dashboard/profile.dart';
@@ -76,7 +76,7 @@ List<ButtonIcon> menuIcons = [
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => Bantuan()), // Ganti dengan rute yang sesuai
+            builder: (context) => barang_keluar()), // Ganti dengan rute yang sesuai
       ).then((_) {
         // Panggil parentSetState jika diperlukan untuk memperbarui state dari widget induk
       });

@@ -11,8 +11,8 @@ class _dashboardState extends State<dashboard> {
   int currentImageIndex = 0;
   List<String> images3 = [
     "assets/images/iklan1.png",
-    "assets/images/2.png",
-    "assets/images/3.png",
+    "assets/images/iklan_1.png",
+    "assets/images/iklan1.png",
   ];
 
   @override
