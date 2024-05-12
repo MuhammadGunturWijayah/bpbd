@@ -556,7 +556,7 @@ class _barang_keluarState extends State<barang_keluar> {
   TextEditingController? controller,
   VoidCallback? onTap,
   required VoidCallback onButtonTaps,
-  required List<Barang> listBarang, // Pass the list of items to display
+  required List<Barang> listBarang,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -575,37 +575,36 @@ class _barang_keluarState extends State<barang_keluar> {
         itemCount: listBarang.length,
         itemBuilder: (context, index) {
           final barang = listBarang[index];
-          return Row(
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 255, 255, 255),
-                    borderRadius: BorderRadius.circular(10.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 1,
-                        blurRadius: 7,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: ListTile(
-                    title: Text(
-                      'Barang : ${barang.nama}\nJumlah: ${barang.jumlah} \nSatuan : ${barang.satuan}',
+              Container(
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 7,
+                      offset: Offset(0, 3),
                     ),
-                    onTap: onTap,
+                  ],
+                ),
+                child: ListTile(
+                  title: Text(
+                    'Barang : ${barang.nama}\nJumlah: ${barang.jumlah} \nSatuan : ${barang.satuan}',
+                  ),
+                  onTap: onTap,
+                  trailing: IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      _deleteItem(index);
+                    },
                   ),
                 ),
               ),
-              IconButton(
-                icon: Icon(Icons.delete),
-                onPressed: () {
-                  // Call a function to delete the item from the list
-                  _deleteItem(index);
-                },
-              ),
+              SizedBox(height: 10), // Add spacing between items
             ],
           );
         },
@@ -651,6 +650,7 @@ class _barang_keluarState extends State<barang_keluar> {
     ],
   );
 }
+
 
 
   void _deleteItem(int index) {
