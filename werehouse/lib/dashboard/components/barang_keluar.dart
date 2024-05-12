@@ -116,6 +116,7 @@ class _barang_keluarState extends State<barang_keluar> {
                         controller: _ListBarang,
                         onTap: () {},
                         onButtonTaps: () {},
+                        listBarang: listBarang, // Pass the list of items here
                       ),
                       const SizedBox(height: 10),
                     ],
@@ -360,7 +361,6 @@ class _barang_keluarState extends State<barang_keluar> {
       ],
     );
   }
-  
 
   Widget _buildThreeFieldsInRow({
     required String hintText1,
@@ -555,6 +555,7 @@ class _barang_keluarState extends State<barang_keluar> {
     TextEditingController? controller,
     VoidCallback? onTap,
     required VoidCallback onButtonTaps,
+    required List<Barang> listBarang, // Pass the list of items to display
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -567,47 +568,52 @@ class _barang_keluarState extends State<barang_keluar> {
           ),
         ),
         SizedBox(height: 5),
-        Row(
-          children: [
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 255, 255, 255),
-                  borderRadius: BorderRadius.circular(10.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 7,
-                      offset: Offset(0, 3),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: listBarang.length,
+          itemBuilder: (context, index) {
+            final barang = listBarang[index];
+            return Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(255, 255, 255, 255),
+                      borderRadius: BorderRadius.circular(10.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 1,
+                          blurRadius: 7,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                child: TextFormField(
-                  controller: controller,
-                  keyboardType: TextInputType.number,
-                  onTap: onTap,
-                  maxLines: null,
-                  enabled: false, // Field tidak bisa diketik
-                  style: TextStyle(
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: hintText,
-                    border: InputBorder.none,
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                    child: ListTile(
+                      title: Text(
+                        'Barang : ${barang.nama}\nJumlah : ${barang.jumlah} \nSatuan : ${barang.satuan}',
+                      ),
+                      onTap: onTap,
+                    ),
                   ),
                 ),
-              ),
-            ),
-          ],
+                SizedBox(width: 10),
+                IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    // Call a function to delete the item from the list
+                    _deleteItem(index);
+                  },
+                ),
+              ],
+            );
+          },
         ),
         SizedBox(height: 20),
         // Menambahkan tombol di bawah field
         _inkWell(
-          onTap:
-              onButtonTaps, // Anda bisa menggunakan onButtonTap untuk menambahkan item saat tombol ditekan
+          onTap: onButtonTaps,
           child: Container(
             width: double.infinity,
             padding: EdgeInsets.all(12),
@@ -644,6 +650,12 @@ class _barang_keluarState extends State<barang_keluar> {
         ),
       ],
     );
+  }
+
+  void _deleteItem(int index) {
+    setState(() {
+      listBarang.removeAt(index);
+    });
   }
 
   Widget _buildSatuanDropdown(
@@ -745,92 +757,89 @@ class _barang_keluarState extends State<barang_keluar> {
     );
   }
 
- void _showDaftarBarang(BuildContext context) {
-  List<String> filteredDaftarBarang = List.from(daftarBarang);
+  void _showDaftarBarang(BuildContext context) {
+    List<String> filteredDaftarBarang = List.from(daftarBarang);
 
-  showModalBottomSheet(
-    context: context,
-    builder: (BuildContext builder) {
-      return StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
-          return Container(
-            height: MediaQuery.of(context).size.height / 1,
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListTile(
-                    leading: new Icon(Icons.arrow_back_ios),
-                    title: new Text(
-                      'Pilih Barang',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 1,
-                          blurRadius: 7,
-                          offset: Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Cari Barang',
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(
-                            vertical: 12, horizontal: 16),
-                        prefixIcon: Icon(Icons.search),
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext builder) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Container(
+              height: MediaQuery.of(context).size.height / 1,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListTile(
+                      leading: new Icon(Icons.arrow_back_ios),
+                      title: new Text(
+                        'Pilih Barang',
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      onChanged: (value) {
-                        setState(() {
-                          filteredDaftarBarang = daftarBarang
-                              .where((barang) => barang
-                                  .toLowerCase()
-                                  .contains(value.toLowerCase()))
-                              .toList();
-                        });
+                      onTap: () {
+                        Navigator.pop(context);
                       },
                     ),
                   ),
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: filteredDaftarBarang.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(filteredDaftarBarang[index]),
-                        onTap: () {
-                          _namaBarangController.text =
-                              filteredDaftarBarang[index];
-                          Navigator.pop(context);
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 1,
+                            blurRadius: 7,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Cari Barang',
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 16),
+                          prefixIcon: Icon(Icons.search),
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            filteredDaftarBarang = daftarBarang
+                                .where((barang) => barang
+                                    .toLowerCase()
+                                    .contains(value.toLowerCase()))
+                                .toList();
+                          });
                         },
-                      );
-                    },
+                      ),
+                    ),
                   ),
-                ),
-              ],
-            ),
-          );
-        },
-      );
-    },
-  );
-}
-
-
-
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: filteredDaftarBarang.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          title: Text(filteredDaftarBarang[index]),
+                          onTap: () {
+                            _namaBarangController.text =
+                                filteredDaftarBarang[index];
+                            Navigator.pop(context);
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 
   void ShowsatuanOptions(BuildContext context) {
     showModalBottomSheet(
