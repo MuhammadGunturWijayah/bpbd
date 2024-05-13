@@ -9,7 +9,7 @@ class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
-//
+
 class _LoginScreenState extends State<LoginScreen> {
   void _showSuccessSnackBar(BuildContext context) {
     final snackBar = SnackBar(
@@ -17,8 +17,8 @@ class _LoginScreenState extends State<LoginScreen> {
       behavior: SnackBarBehavior.floating,
       backgroundColor: Colors.transparent,
       content: AwesomeSnackbarContent(
-        title: 'Login Successful',
-        message: 'You have successfully logged in.',
+        title: 'Loginn Berhasil',
+        message: 'Anda dapat menggunakan aplikasi',
         contentType: ContentType.success,
       ),
     );
