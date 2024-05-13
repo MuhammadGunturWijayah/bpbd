@@ -18,7 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: Colors.transparent,
       content: AwesomeSnackbarContent(
         title: 'Loginn Berhasil',
-        message: 'Anda dapat menggunakan aplikasi',
+        message: 'Selamat anda berhasil login !!',
         contentType: ContentType.success,
       ),
     );
