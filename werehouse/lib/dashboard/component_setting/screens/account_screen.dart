@@ -1,7 +1,7 @@
-import 'package:account_example/screens/edit_screen.dart';
-import 'package:account_example/widgets/forward_button.dart';
-import 'package:account_example/widgets/setting_item.dart';
-import 'package:account_example/widgets/setting_switch.dart';
+import 'package:werehouse/dashboard/component_setting/screens/edit_screen.dart';
+import 'package:werehouse/dashboard/component_setting/widgets/forward_button.dart';
+import 'package:werehouse/dashboard/component_setting/widgets/setting_item.dart';
+import 'package:werehouse/dashboard/component_setting/widgets/setting_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 
@@ -19,11 +19,13 @@ class _AccountScreenState extends State<AccountScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text('Pengaturan'),
         leading: IconButton(
-          onPressed: () {},
-          icon: const Icon(Ionicons.chevron_back_outline),
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
-        leadingWidth: 80,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -31,13 +33,6 @@ class _AccountScreenState extends State<AccountScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Settings",
-                style: TextStyle(
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
               const SizedBox(height: 40),
               const Text(
                 "Account",
@@ -57,7 +52,7 @@ class _AccountScreenState extends State<AccountScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Uranus Code",
+                          "Guntur",
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
@@ -65,7 +60,7 @@ class _AccountScreenState extends State<AccountScreen> {
                         ),
                         SizedBox(height: 10),
                         Text(
-                          "Youtube Channel",
+                          "Admin",
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.grey,

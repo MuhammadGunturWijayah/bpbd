@@ -1,4 +1,4 @@
-import 'package:account_example/widgets/edit_item.dart';
+import 'package:werehouse/dashboard/component_setting/widgets/edit_item.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 
@@ -16,30 +16,13 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text('Detail Akun'),
         leading: IconButton(
+          icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.of(context).pop();
           },
-          icon: const Icon(Ionicons.chevron_back_outline),
         ),
-        leadingWidth: 80,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: IconButton(
-              onPressed: () {},
-              style: IconButton.styleFrom(
-                backgroundColor: Colors.lightBlueAccent,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                fixedSize: Size(60, 50),
-                elevation: 3,
-              ),
-              icon: Icon(Ionicons.checkmark, color: Colors.white),
-            ),
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         child: Padding(

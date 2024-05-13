@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:werehouse/dashboard/component_setting/profile.dart';
+import 'package:werehouse/dashboard/component_setting/screens/account_screen.dart';
 import 'package:werehouse/dashboard/components/iklan.dart';
 import 'package:werehouse/dashboard/components/info_lainnya.dart';
 import 'package:werehouse/dashboard/components/fitur_button_icon.dart';
@@ -86,7 +86,7 @@ class _HomePageState extends State<HomePage> {
                     // Jika item 'Settings' di tap
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ProfilePage()),
+                      MaterialPageRoute(builder: (context) => AccountScreen()),
                     );
                   }
                 },
