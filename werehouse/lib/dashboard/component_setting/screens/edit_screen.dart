@@ -1,9 +1,8 @@
-import 'package:werehouse/dashboard/component_setting/widgets/edit_item.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 
 class EditAccountScreen extends StatefulWidget {
-  const EditAccountScreen({super.key});
+  const EditAccountScreen({Key? key}) : super(key: key);
 
   @override
   State<EditAccountScreen> createState() => _EditAccountScreenState();
@@ -16,9 +15,9 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detail Akun'),
+        title: const Text('Detail Akun'),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -41,6 +40,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
               EditItem(
                 title: "Photo",
                 widget: Column(
+                  mainAxisAlignment: MainAxisAlignment.center, // Added
                   children: [
                     Image.asset(
                       "assets/avatar.png",
@@ -65,44 +65,67 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
               EditItem(
                 title: "Gender",
                 widget: Row(
+                  mainAxisAlignment: MainAxisAlignment.center, // Added
                   children: [
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          gender = "man";
-                        });
-                      },
-                      style: IconButton.styleFrom(
-                        backgroundColor: gender == "man"
-                            ? Colors.deepPurple
-                            : Colors.grey.shade200,
-                        fixedSize: const Size(50, 50),
-                      ),
-                      icon: Icon(
-                        Ionicons.male,
-                        color: gender == "man" ? Colors.white : Colors.black,
-                        size: 18,
-                      ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center, // Added
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              gender = "man";
+                            });
+                          },
+                          style: IconButton.styleFrom(
+                            backgroundColor: gender == "man"
+                                ? Colors.deepPurple
+                                : Colors.grey.shade200,
+                            fixedSize: const Size(50, 50),
+                          ),
+                          icon: const Icon(
+                            Ionicons.male,
+                            size: 18,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        const Text(
+                          "Laki-laki",
+                          style: TextStyle(
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(width: 20),
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          gender = "woman";
-                        });
-                      },
-                      style: IconButton.styleFrom(
-                        backgroundColor: gender == "woman"
-                            ? Colors.deepPurple
-                            : Colors.grey.shade200,
-                        fixedSize: const Size(50, 50),
-                      ),
-                      icon: Icon(
-                        Ionicons.female,
-                        color: gender == "woman" ? Colors.white : Colors.black,
-                        size: 18,
-                      ),
-                    )
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center, // Added
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              gender = "woman";
+                            });
+                          },
+                          style: IconButton.styleFrom(
+                            backgroundColor: gender == "woman"
+                                ? Colors.deepPurple
+                                : Colors.grey.shade200,
+                            fixedSize: const Size(50, 50),
+                          ),
+                          icon: const Icon(
+                            Ionicons.female,
+                            size: 18,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        const Text(
+                          "Perempuan",
+                          style: TextStyle(
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -120,6 +143,33 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class EditItem extends StatelessWidget {
+  final String title;
+  final Widget widget;
+
+  const EditItem({Key? key, required this.title, required this.widget})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center, // Added
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 10),
+        widget,
+      ],
     );
   }
 }
