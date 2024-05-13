@@ -27,7 +27,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
         child: Padding(
           padding: const EdgeInsets.all(30),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Text(
                 "Account",
@@ -37,9 +37,8 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                 ),
               ),
               const SizedBox(height: 40),
-              EditItem(
-                title: "Photo",
-                widget: Column(
+              Center(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
@@ -56,10 +55,6 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                     )
                   ],
                 ),
-              ),
-              const EditItem(
-                title: "Name",
-                widget: RoundedTextField(),
               ),
               const SizedBox(height: 40),
               EditItem(
@@ -131,12 +126,17 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
               ),
               const SizedBox(height: 40),
               EditItem(
-                title: "Age",
+                title: "Nama",
                 widget: RoundedTextField(),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
               EditItem(
                 title: "Email",
+                widget: RoundedTextField(),
+              ),
+              const SizedBox(height: 20),
+              EditItem(
+                title: "Umur",
                 widget: RoundedTextField(),
               ),
             ],
