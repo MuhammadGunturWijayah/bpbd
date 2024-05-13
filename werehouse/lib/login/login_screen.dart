@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:werehouse/dashboard/HomePage.dart';
 import 'package:werehouse/login/forgot_password_screen.dart';
-import 'package:werehouse/login/register_screen.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -11,34 +11,28 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  Future<void> _showSuccessDialog(BuildContext context) async {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Login Successful'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: const <Widget>[
-                Text('You have successfully logged in.'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomePage()),
-                );
-              },
-            ),
-          ],
-        );
-      },
+  void _showSuccessSnackBar(BuildContext context) {
+    final snackBar = SnackBar(
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.transparent,
+      content: AwesomeSnackbarContent(
+        title: 'Login Successful',
+        message: 'You have successfully logged in.',
+        contentType: ContentType.success,
+      ),
     );
+
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+    // Navigate to HomePage after 2 seconds
+    Future.delayed(const Duration(seconds: 2), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
+    });
   }
 
   @override
@@ -79,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width * 0.8,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.end, // Geser teks ke kanan
                     children: const [
                       Expanded(
                         child: Text(
@@ -173,10 +167,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: GestureDetector(
                   onTap: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                const ForgotPasswordScreen()));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ForgotPasswordScreen(),
+                      ),
+                    );
                   },
                   child: const Text(
                     "Forgot Password?",
@@ -203,7 +198,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       onPressed: () {
-                        _showSuccessDialog(context);
+                        _showSuccessSnackBar(context);
                       },
                       child: const Padding(
                         padding: EdgeInsets.all(15.0),
