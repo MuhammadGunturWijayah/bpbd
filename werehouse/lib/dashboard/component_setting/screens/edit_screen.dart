@@ -40,7 +40,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
               EditItem(
                 title: "Photo",
                 widget: Column(
-                  mainAxisAlignment: MainAxisAlignment.center, // Added
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
                       "assets/avatar.png",
@@ -59,16 +59,16 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
               ),
               const EditItem(
                 title: "Name",
-                widget: TextField(),
+                widget: RoundedTextField(),
               ),
               const SizedBox(height: 40),
               EditItem(
                 title: "Gender",
                 widget: Row(
-                  mainAxisAlignment: MainAxisAlignment.center, // Added
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Column(
-                      mainAxisAlignment: MainAxisAlignment.center, // Added
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         IconButton(
                           onPressed: () {
@@ -98,7 +98,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                     ),
                     const SizedBox(width: 20),
                     Column(
-                      mainAxisAlignment: MainAxisAlignment.center, // Added
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         IconButton(
                           onPressed: () {
@@ -130,14 +130,14 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                 ),
               ),
               const SizedBox(height: 40),
-              const EditItem(
-                widget: TextField(),
+              EditItem(
                 title: "Age",
+                widget: RoundedTextField(),
               ),
               const SizedBox(height: 40),
-              const EditItem(
-                widget: TextField(),
+              EditItem(
                 title: "Email",
+                widget: RoundedTextField(),
               ),
             ],
           ),
@@ -158,7 +158,7 @@ class EditItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center, // Added
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
           title,
@@ -170,6 +170,38 @@ class EditItem extends StatelessWidget {
         const SizedBox(height: 10),
         widget,
       ],
+    );
+  }
+}
+
+class RoundedTextField extends StatelessWidget {
+  const RoundedTextField({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 7,
+            offset: const Offset(0, 3), // changes position of shadow
+          ),
+        ],
+      ),
+      child: TextField(
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.white,
+          hintText: 'Enter your text',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide.none,
+          ),
+        ),
+      ),
     );
   }
 }
