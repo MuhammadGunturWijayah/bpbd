@@ -18,13 +18,9 @@ class lanjutan extends StatefulWidget {
 class _lanjutanState extends State<lanjutan> {
   final TextEditingController _expiredController = TextEditingController();
   final TextEditingController _inputGambar = TextEditingController();
-
   final TextEditingController _inputNomor = TextEditingController();
   final TextEditingController _inputKeterangan = TextEditingController();
-  final TextEditingController _namaBarangController = TextEditingController();
-  final TextEditingController _jumlahController = TextEditingController();
-  final TextEditingController _satuanController = TextEditingController();
-
+  
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
@@ -182,23 +178,6 @@ class _lanjutanState extends State<lanjutan> {
     );
   }
 
-// Memperbarui _sendLocationViaWhatsApp() untuk menggunakan lokasi saat ini
-  void _sendLocationViaWhatsApp(String location) async {
-    // Membuat link Google Maps dengan lokasi saat ini
-    String googleMapsUrl =
-        'https://www.google.com/maps/search/?api=1&query=$location';
-
-    // Pesan yang berisi link Google Maps
-    String message = 'Lokasi: $googleMapsUrl';
-
-    // Membuka WhatsApp dan menyiapkan pesan dengan link Google Maps
-    String whatsappUrl = 'https://wa.me/?text=${Uri.encodeComponent(message)}';
-    if (await canLaunch(whatsappUrl)) {
-      await launch(whatsappUrl);
-    } else {
-      throw 'Could not launch $whatsappUrl';
-    }
-  }
 
   Widget _inkWell({required VoidCallback onTap, required Widget child}) {
     return InkWell(
