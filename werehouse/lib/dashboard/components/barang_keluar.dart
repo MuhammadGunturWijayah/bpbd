@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:werehouse/dashboard/components/barang_keluar_lanjutan.dart';
 
 var selectedService = 0;
 
@@ -108,7 +109,7 @@ class _barang_keluarState extends State<barang_keluar> {
                         onButtonTap: () {
                           _tambahBarang();
                         },
-                         addSpacing: true,
+                        addSpacing: true,
                       ),
                       SizedBox(height: 10),
                       _FieldListBarang(
@@ -364,184 +365,184 @@ class _barang_keluarState extends State<barang_keluar> {
   }
 
   Widget _buildThreeFieldsInRow({
-  required String hintText1,
-  required String hintText2,
-  required String hintText3,
-  required String label1,
-  required String label2,
-  required String label3,
-  TextEditingController? controller1,
-  TextEditingController? controller2,
-  TextEditingController? controller3,
-  VoidCallback? onTap1,
-  VoidCallback? onTap2,
-  VoidCallback? onTap3,
-  required VoidCallback onButtonTap,
-  bool addSpacing = false, // Add a boolean parameter to determine whether to add spacing
-}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label1,
-                  style: TextStyle(
-                    color: Colors.grey,
-                  ),
-                ),
-                SizedBox(height: 5),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 1,
-                        blurRadius: 7,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: TextFormField(
-                    controller: controller1,
-                    onTap: onTap1,
-                    readOnly: true,
-                    decoration: InputDecoration(
-                      hintText: hintText1,
-                      border: InputBorder.none,
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+    required String hintText1,
+    required String hintText2,
+    required String hintText3,
+    required String label1,
+    required String label2,
+    required String label3,
+    TextEditingController? controller1,
+    TextEditingController? controller2,
+    TextEditingController? controller3,
+    VoidCallback? onTap1,
+    VoidCallback? onTap2,
+    VoidCallback? onTap3,
+    required VoidCallback onButtonTap,
+    bool addSpacing =
+        false, // Add a boolean parameter to determine whether to add spacing
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label1,
+                    style: TextStyle(
+                      color: Colors.grey,
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label2,
-                  style: TextStyle(
-                    color: Colors.grey,
-                  ),
-                ),
-                SizedBox(height: 5),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 1,
-                        blurRadius: 7,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: TextField(
-                    controller: controller2,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      hintText: hintText2,
-                      border: InputBorder.none,
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                  SizedBox(height: 5),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 1,
+                          blurRadius: 7,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
                     ),
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label3,
-                  style: TextStyle(
-                    color: Colors.grey,
-                  ),
-                ),
-                SizedBox(height: 5),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 1,
-                        blurRadius: 7,
-                        offset: Offset(0, 3),
+                    child: TextFormField(
+                      controller: controller1,
+                      onTap: onTap1,
+                      readOnly: true,
+                      decoration: InputDecoration(
+                        hintText: hintText1,
+                        border: InputBorder.none,
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                       ),
-                    ],
-                  ),
-                  child: TextFormField(
-                    controller: controller3,
-                    onTap: onTap3,
-                    readOnly: true,
-                    decoration: InputDecoration(
-                      hintText: hintText3,
-                      border: InputBorder.none,
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-      SizedBox(height: addSpacing ? 15 : 0), // Add spacing conditionally
-      // Menambahkan tombol di bawah field
-      _inkWell(
-        onTap: onButtonTap,
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.blue,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 1,
-                blurRadius: 7,
-                offset: Offset(0, 3),
+                ],
               ),
-            ],
-          ),
-          child: Center(
-            child: Text(
-              'Tambah Ke List Barang',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+            ),
+            SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label2,
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 1,
+                          blurRadius: 7,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: TextField(
+                      controller: controller2,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        hintText: hintText2,
+                        border: InputBorder.none,
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                      ),
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label3,
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 1,
+                          blurRadius: 7,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: TextFormField(
+                      controller: controller3,
+                      onTap: onTap3,
+                      readOnly: true,
+                      decoration: InputDecoration(
+                        hintText: hintText3,
+                        border: InputBorder.none,
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: addSpacing ? 15 : 0), // Add spacing conditionally
+        // Menambahkan tombol di bawah field
+        _inkWell(
+          onTap: onButtonTap,
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 1,
+                  blurRadius: 7,
+                  offset: Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Center(
+              child: Text(
+                'Tambah Ke List Barang',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
         ),
-      ),
-    ],
-  );
-}
-
+      ],
+    );
+  }
 
   Widget _inkWell({required VoidCallback onTap, required Widget child}) {
     return InkWell(
@@ -550,108 +551,111 @@ class _barang_keluarState extends State<barang_keluar> {
     );
   }
 
- Widget _FieldListBarang({
-  required String hintText,
-  required String label,
-  TextEditingController? controller,
-  VoidCallback? onTap,
-  required VoidCallback onButtonTaps,
-  required List<Barang> listBarang,
-}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        label,
-        style: TextStyle(
-          color: Color.fromARGB(255, 171, 171, 171),
-          fontSize: 12,
+  Widget _FieldListBarang({
+    required String hintText,
+    required String label,
+    TextEditingController? controller,
+    VoidCallback? onTap,
+    required VoidCallback onButtonTaps,
+    required List<Barang> listBarang,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Color.fromARGB(255, 171, 171, 171),
+            fontSize: 12,
+          ),
         ),
-      ),
-      SizedBox(height: 5),
-      ListView.builder(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: listBarang.length,
-        itemBuilder: (context, index) {
-          final barang = listBarang[index];
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 255, 255, 255),
-                  borderRadius: BorderRadius.circular(10.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 7,
-                      offset: Offset(0, 3),
+        SizedBox(height: 5),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: listBarang.length,
+          itemBuilder: (context, index) {
+            final barang = listBarang[index];
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 255, 255, 255),
+                    borderRadius: BorderRadius.circular(10.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 1,
+                        blurRadius: 7,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: ListTile(
+                    title: Text(
+                      'Barang : ${barang.nama}\nJumlah: ${barang.jumlah} \nSatuan : ${barang.satuan}',
                     ),
-                  ],
-                ),
-                child: ListTile(
-                  title: Text(
-                    'Barang : ${barang.nama}\nJumlah: ${barang.jumlah} \nSatuan : ${barang.satuan}',
-                  ),
-                  onTap: onTap,
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () {
-                      _deleteItem(index);
-                    },
+                    onTap: onTap,
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        _deleteItem(index);
+                      },
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(height: 10), // Add spacing between items
-            ],
-          );
-        },
-      ),
-      SizedBox(height: 20),
-      // Menambahkan tombol di bawah field
-      _inkWell(
-        onTap: onButtonTaps,
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.blue,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 1,
-                blurRadius: 7,
-                offset: Offset(0, 3),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Lanjutkan',
-                style: TextStyle(
+                SizedBox(height: 10), // Add spacing between items
+              ],
+            );
+          },
+        ),
+        SizedBox(height: 20),
+        // Menambahkan tombol di bawah field
+        _inkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => lanjutan()),
+            );
+          },
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 1,
+                  blurRadius: 7,
+                  offset: Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Lanjutkan Pengisian Data',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Icon(
+                  Icons.arrow_forward,
                   color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
                 ),
-              ),
-              Icon(
-                Icons.arrow_forward,
-                color: Colors.white,
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-    ],
-  );
-}
-
-
+      ],
+    );
+  }
 
   void _deleteItem(int index) {
     setState(() {
