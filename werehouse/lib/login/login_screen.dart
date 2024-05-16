@@ -1,7 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:werehouse/dashboard/HomePage.dart';
 import 'package:werehouse/login/forgot_password_screen.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:dio/dio.dart';
+import 'package:get/get.dart' hide Response;
+import 'package:werehouse/shared/global.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -11,6 +16,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final dio = Dio();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
   void _showSuccessSnackBar(BuildContext context) {
     final snackBar = SnackBar(
       elevation: 0,
@@ -33,6 +41,22 @@ class _LoginScreenState extends State<LoginScreen> {
         MaterialPageRoute(builder: (context) => const HomePage()),
       );
     });
+  }
+
+  void _showFailedSnackBar(BuildContext context, message) {
+    final snackBar = SnackBar(
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.transparent,
+      content: AwesomeSnackbarContent(
+        title: 'Login gagal',
+        message: message,
+        contentType: ContentType.failure,
+      ),
+    );
+
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
@@ -73,7 +97,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width * 0.8,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end, // Geser teks ke kanan
+                    mainAxisAlignment:
+                        MainAxisAlignment.end, // Geser teks ke kanan
                     children: const [
                       Expanded(
                         child: Text(
@@ -110,6 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     right: 10,
                   ),
                   child: TextFormField(
+                    controller: _emailController,
                     decoration: const InputDecoration(
                       border: InputBorder.none,
                       hintText: 'Enter your email',
@@ -141,6 +167,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     right: 10,
                   ),
                   child: TextFormField(
+                    obscureText: true,
+                    controller: _passwordController,
                     decoration: const InputDecoration(
                       border: InputBorder.none,
                       hintText: 'Enter your password',
@@ -198,7 +226,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       onPressed: () {
-                        _showSuccessSnackBar(context);
+                        // _showSuccessSnackBar(context);
+                        login();
                       },
                       child: const Padding(
                         padding: EdgeInsets.all(15.0),
@@ -278,5 +307,39 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  void login() async {
+    String email = _emailController.text.toString();
+    String password = _passwordController.text.toString();
+    Response response;
+    response = await dio.get(
+      Global.baseUrl + Global.signInPath,
+      queryParameters: {
+        'email': email,
+        'password': password,
+      },
+    );
+
+    final body = response.data;
+
+    // Handle the response
+    if (response.statusCode == 200) {
+      // debugPrint('Sign in successful: ${response.data}');
+      if (body.containsKey('data')) {
+        _showSuccessSnackBar(context);
+      } else {
+        _showFailedSnackBar(context, 'Email atau password anda salah!');
+      }
+      // _showSuccessSnackBar(context);
+      // debugPrint(jsonEncode(userList));
+      // if(response.data)
+    } else {
+      _showFailedSnackBar(context, 'Sign In gagal. Hubungi teknisi');
+      debugPrint('Sign in failed: ${response.statusCode}');
+    }
+
+    // debugPrint(email);
+    // debugPrint(password);
   }
 }
