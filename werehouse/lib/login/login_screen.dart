@@ -19,14 +19,15 @@ class _LoginScreenState extends State<LoginScreen> {
   final dio = Dio();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+
   void _showSuccessSnackBar(BuildContext context) {
     final snackBar = SnackBar(
       elevation: 0,
       behavior: SnackBarBehavior.floating,
       backgroundColor: Colors.transparent,
       content: AwesomeSnackbarContent(
-        title: 'Loginn Berhasil',
-        message: 'Selamat anda berhasil login !!',
+        title: 'Login Berhasil',
+        message: 'Selamat, Anda berhasil login!',
         contentType: ContentType.success,
       ),
     );
@@ -43,13 +44,13 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
-  void _showFailedSnackBar(BuildContext context, message) {
+  void _showFailedSnackBar(BuildContext context, String message) {
     final snackBar = SnackBar(
       elevation: 0,
       behavior: SnackBarBehavior.floating,
       backgroundColor: Colors.transparent,
       content: AwesomeSnackbarContent(
-        title: 'Login gagal',
+        title: 'Login Gagal',
         message: message,
         contentType: ContentType.failure,
       ),
@@ -57,6 +58,60 @@ class _LoginScreenState extends State<LoginScreen> {
 
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  void _showEmailValidationErrorSnackBar(BuildContext context, String message) {
+    final snackBar = SnackBar(
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.transparent,
+      content: AwesomeSnackbarContent(
+        title: 'Kesalahan Pada Email',
+        message: message,
+        contentType: ContentType.failure,
+      ),
+    );
+
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  void _showPasswordValidationErrorSnackBar(BuildContext context, String message) {
+    final snackBar = SnackBar(
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.transparent,
+      content: AwesomeSnackbarContent(
+        title: 'Kesalahan Pada Password',
+        message: message,
+        contentType: ContentType.failure,
+      ),
+    );
+
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  void _validateAndLogin() {
+    String emailError = '';
+    String passwordError = '';
+
+    if (_emailController.text.isEmpty) {
+      emailError = 'Email tidak boleh kosong';
+      _showEmailValidationErrorSnackBar(context, emailError);
+    } else if (!_emailController.text.contains('@')) {
+      emailError = 'Email harus mengandung @';
+      _showEmailValidationErrorSnackBar(context, emailError);
+    }
+
+    if (_passwordController.text.isEmpty) {
+      passwordError = 'Password tidak boleh kosong';
+      _showPasswordValidationErrorSnackBar(context, passwordError);
+    }
+
+    if (emailError.isEmpty && passwordError.isEmpty) {
+      login();
+    }
   }
 
   @override
@@ -102,7 +157,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: const [
                       Expanded(
                         child: Text(
-                          "Silahkan Login ! Werehouse BPBD !",
+                          "Silahkan Login! Werehouse BPBD!",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 30,
@@ -116,7 +171,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             const SizedBox(height: 40),
-            //email
+            // email
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 20,
@@ -148,7 +203,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             const SizedBox(height: 15),
-            //password
+            // password
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 20,
@@ -184,7 +239,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-            //forgot password
+            // forgot password
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 20,
@@ -211,7 +266,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             const SizedBox(height: 25),
-            //login button
+            // login button
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 20,
@@ -225,10 +280,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      onPressed: () {
-                        // _showSuccessSnackBar(context);
-                        login();
-                      },
+                      onPressed: _validateAndLogin,
                       child: const Padding(
                         padding: EdgeInsets.all(15.0),
                         child: Text(
@@ -329,7 +381,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (body.containsKey('data')) {
         _showSuccessSnackBar(context);
       } else {
-        _showFailedSnackBar(context, 'Email atau password anda salah!');
+        _showFailedSnackBar(context, 'Email atau password Anda salah!');
       }
       // _showSuccessSnackBar(context);
       // debugPrint(jsonEncode(userList));
