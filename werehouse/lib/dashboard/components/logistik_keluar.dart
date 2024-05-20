@@ -6,7 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:werehouse/dashboard/components/barang_keluar_lanjutan.dart';
+import 'package:werehouse/dashboard/components/logistik_keluar_lanjutan.dart';
 
 var selectedService = 0;
 

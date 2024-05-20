@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import 'package:werehouse/shared/global.dart';
 
 
@@ -11,7 +10,7 @@ import 'package:werehouse/shared/global.dart';
 var selectedService = 0;
 DateTime? selectedDate;
 
-class BarangMasuk extends StatelessWidget {
+class data_logistik extends StatelessWidget {
   final Key? key;
   final TextEditingController _namaBarangController = TextEditingController();
    final TextEditingController _kodelogistikController = TextEditingController();
@@ -27,7 +26,7 @@ class BarangMasuk extends StatelessWidget {
 
   String? selectedSatuan;
 
-  BarangMasuk({this.key}) : super(key: key);
+  data_logistik({this.key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -298,7 +297,7 @@ class BarangMasuk extends StatelessWidget {
   }
 
   final response = await http.post(
-    Uri.parse('${Global.baseUrl}${Global.addItemPath}'),
+    Uri.parse('${Global.baseUrl}${Global.logistik_masuk}'),
     body: {
       'nama_barang': namaBarang,
       'kode_logistik': kodeLogistik,

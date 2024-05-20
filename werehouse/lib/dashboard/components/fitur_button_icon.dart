@@ -3,8 +3,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:werehouse/dashboard/component_laporan/fitur_laporan.dart';
 import 'package:werehouse/dashboard/component_pengiriman_barang/accept_barang.dart';
 import 'package:werehouse/dashboard/component_setting/screens/account_screen.dart';
-import 'package:werehouse/dashboard/components/barang_keluar.dart';
-import 'package:werehouse/dashboard/components/barang_masuk.dart';
+import 'package:werehouse/dashboard/components/logistik_keluar.dart';
+import 'package:werehouse/dashboard/components/data_logistik.dart';
+import 'package:werehouse/dashboard/components/logistik_masuk.dart';
 import 'package:werehouse/login/register_screen.dart';
 import 'package:werehouse/dashboard/profile.dart';
 
@@ -58,20 +59,9 @@ List<ButtonIcon> menuIcons = [
     },
   ),
   ButtonIcon(
-    icon: 'scan',
-    title: 'Scan',
-    color: Colors.blue,
-    onPressed: (context) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => RootApp()),
-      );
-    },
-  ),
-  ButtonIcon(
     icon: 'bantuan',
-    title: 'Barang Keluar',
-    color: Colors.red,
+    title: 'Logistik Keluar',
+    color: Colors.blue,
     onPressed: (context) {
       Navigator.push(
         context,
@@ -82,25 +72,36 @@ List<ButtonIcon> menuIcons = [
       });
     },
   ),
+  ButtonIcon(
+    icon: 'scan',
+    title: 'Scan',
+    color: Colors.red,
+    onPressed: (context) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => RootApp()),
+      );
+    },
+  ),
    ButtonIcon(
     icon: 'akun',
-    title: 'Buat Akun',
+    title: 'Logistik Masuk',
     color: Colors.green,
     onPressed: (context) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => RegisterScreen()),
+        MaterialPageRoute(builder: (context) => LogistikMasuk()),
       );
     },
   ),
   ButtonIcon(
     icon: 'barang',
-    title: 'Barang Masuk',
+    title: 'Data Logistik',
     color: Colors.green,
     onPressed: (context) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => BarangMasuk()),
+        MaterialPageRoute(builder: (context) => data_logistik()),
       );
     },
   ),
@@ -115,10 +116,21 @@ List<ButtonIcon> menuIcons = [
       );
     },
   ),
+  ButtonIcon(
+    icon: 'barang',
+    title: 'Data Supplier',
+    color: Colors.red,
+    onPressed: (context) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => LogistikMasuk()),
+      );
+    },
+  ),
    ButtonIcon(
     icon: 'setting',
     title: 'Pengaturan',
-    color: Colors.red,
+    color: Colors.green,
     onPressed: (context) {
       Navigator.push(
         context,

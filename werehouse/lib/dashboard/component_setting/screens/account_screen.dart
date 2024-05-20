@@ -1,12 +1,14 @@
+import 'package:flutter/material.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:werehouse/dashboard/component_setting/screens/edit_screen.dart';
 import 'package:werehouse/dashboard/component_setting/widgets/forward_button.dart';
 import 'package:werehouse/dashboard/component_setting/widgets/setting_item.dart';
 import 'package:werehouse/dashboard/component_setting/widgets/setting_switch.dart';
-import 'package:flutter/material.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:werehouse/login/login_screen.dart';
+ // Pastikan menyesuaikan dengan path halaman LoginScreen
 
 class AccountScreen extends StatefulWidget {
-  const AccountScreen({super.key});
+  const AccountScreen({Key? key}) : super(key: key);
 
   @override
   State<AccountScreen> createState() => _AccountScreenState();
@@ -14,6 +16,37 @@ class AccountScreen extends StatefulWidget {
 
 class _AccountScreenState extends State<AccountScreen> {
   bool isDarkMode = false;
+
+  void _logout() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Konfirmasi Logout'),
+          content: Text('Apakah Anda yakin ingin keluar?'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Batal'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Keluar'),
+              onPressed: () {
+                // Implement logout logic
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                  (Route<dynamic> route) => false, // Clear all routes
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,6 +160,14 @@ class _AccountScreenState extends State<AccountScreen> {
                 bgColor: Colors.red.shade100,
                 iconColor: Colors.red,
                 onTap: () {},
+              ),
+              const SizedBox(height: 20),
+              SettingItem(
+                title: "Logout",
+                icon: Ionicons.log_out_sharp,
+                bgColor: Colors.orange.shade100,
+                iconColor: const Color.fromARGB(255, 0, 0, 0),
+                onTap: _logout,
               ),
             ],
           ),
