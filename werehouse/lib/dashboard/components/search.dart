@@ -8,13 +8,13 @@ class Search extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 50, left: 15, right: 15),
+      padding: const EdgeInsets.only(top: 20, left: 15, right: 15),
       child: Row(
         children: [
           Flexible(
             fit: FlexFit.tight,
             child: Text(
-              'Hallo, Muhammad Guntur Wijaya',
+              '',
               style: TextStyle(
                 fontSize: 18, // Ubah ukuran font di sini
                 fontWeight: FontWeight.bold, // Tambahkan tebal
@@ -25,21 +25,7 @@ class Search extends StatelessWidget {
           const SizedBox(
             width: 15,
           ),
-          SizedBox(
-            width: 35,
-            height: 35,
-            child: Stack(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(35 / 2),
-                  ),
-                  clipBehavior: Clip.hardEdge,
-                  child: Image.asset('assets/images/avatar.png'),
-                ),
-              ],
-            ),
-          ),
+          
         ],
       ),
     );

@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/cupertino.dart'; // Import untuk showDatePicker
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+import 'package:werehouse/shared/global.dart';
+
+
 
 var selectedService = 0;
-DateTime? selectedDate; // Change to nullable DateTime
+DateTime? selectedDate;
 
-class Barang_masuk extends StatelessWidget {
+class BarangMasuk extends StatelessWidget {
   final Key? key;
-  final TextEditingController _expiredController = TextEditingController();
+  final TextEditingController _namaBarangController = TextEditingController();
+   final TextEditingController _kodelogistikController = TextEditingController();
   final List<String> satuanOptions = [
     'Pieces (pcs)',
     'Kilogram (kg)',
@@ -17,19 +23,11 @@ class Barang_masuk extends StatelessWidget {
     'Centimeter (cm)',
     'Liter (L)',
     'Mililiter (ml)',
-    'Box',
-    'Botol',
-    'Dus',
-    'Rol',
-    'Lembar',
-    'Set',
-    'Buah',
-    'Pak',
   ];
 
   String? selectedSatuan;
 
-  Barang_masuk({this.key}) : super(key: key);
+  BarangMasuk({this.key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +43,6 @@ class Barang_masuk extends StatelessWidget {
                 const SizedBox(
                   height: 30,
                 ),
-                _greetings(),
-                const SizedBox(
-                  height: 16,
-                ),
                 _card(),
                 const SizedBox(
                   height: 20,
@@ -58,33 +52,22 @@ class Barang_masuk extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildTextField(
-                        hintText: 'Dari',
-                        label: 'Bantuan Dari :',
-                      ),
                       const SizedBox(height: 10),
                       _buildTextField(
-                        hintText: 'Jenis',
-                        label: 'Jenis Terima :',
+                        controller: _kodelogistikController,
+                        hintText: 'kode barang',
+                        label: 'kode logistik :',
                       ),
                       const SizedBox(height: 10),
-                      _buildTextField(
-                        hintText: 'Jumlah ',
-                        label: 'Jumlah :',
+                       _buildTextField(
+                        controller: _namaBarangController,
+                        hintText: 'nama',
+                        label: 'Nama Barang :',
                       ),
                       const SizedBox(height: 10),
                       _buildSatuanDropdown(
-                       hintText: '(satuan)', 
-                       label: 'Satuan :',
-                      ),
-                      const SizedBox(height: 10),
-                      _buildTextField(
-                        hintText: 'Kadaluarsa',
-                        label: 'Tanggal Kadaluarsa :',
-                        controller: _expiredController,
-                        onTap: () {
-                          _selectDate(context);
-                        },
+                        hintText: '(satuan)',
+                        label: 'Satuan :',
                       ),
                       const SizedBox(height: 20),
                       Row(
@@ -93,7 +76,7 @@ class Barang_masuk extends StatelessWidget {
                           _customButton(
                             text: 'Simpan',
                             onPressed: () {
-                              // Tambahkan fungsi untuk menyimpan data
+                              _simpanData(context);
                             },
                             color: Colors.green,
                           ),
@@ -118,50 +101,49 @@ class Barang_masuk extends StatelessWidget {
   }
 
   Widget _buildTextField({
-  required String hintText,
-  required String label,
-  TextEditingController? controller,
-  VoidCallback? onTap,
-}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        label,
-        style: TextStyle(
-          color: Colors.grey,
-          fontSize: 12,
-        ),
-      ),
-      SizedBox(height: 5),
-      Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10.0),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 1,
-              blurRadius: 7,
-              offset: Offset(0, 3),
-            ),
-          ],
-        ),
-        child: TextFormField(
-          controller: controller,
-          onTap: onTap,
-          maxLines: null, // Set maxLines menjadi null untuk mengizinkan teks turun ke baris baru
-          decoration: InputDecoration(
-            hintText: hintText,
-            border: InputBorder.none,
-            contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+    required String hintText,
+    required String label,
+    TextEditingController? controller,
+    VoidCallback? onTap,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 12,
           ),
         ),
-      ),
-    ],
-  );
-}
-
+        SizedBox(height: 5),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 1,
+                blurRadius: 7,
+                offset: Offset(0, 3),
+              ),
+            ],
+          ),
+          child: TextFormField(
+            controller: controller,
+            onTap: onTap,
+            maxLines: null, // Set maxLines menjadi null untuk mengizinkan teks turun ke baris baru
+            decoration: InputDecoration(
+              hintText: hintText,
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
   Widget _buildSatuanDropdown({required String hintText, required String label}) {
     return Column(
@@ -208,7 +190,6 @@ class Barang_masuk extends StatelessWidget {
       ],
     );
   }
-
 
   AspectRatio _card() {
     return AspectRatio(
@@ -273,25 +254,6 @@ class Barang_masuk extends StatelessWidget {
     );
   }
 
-  Padding _greetings() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Input Barang ',
-            style: GoogleFonts.manrope(
-              fontSize: 24,
-              fontWeight: FontWeight.w800,
-              color: const Color(0xFF3F3E3F),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _customButton({required String text, required VoidCallback onPressed, required Color color}) {
     return ElevatedButton(
       onPressed: onPressed,
@@ -312,17 +274,87 @@ class Barang_masuk extends StatelessWidget {
     );
   }
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
+  Future<void> _simpanData(BuildContext context) async {
+  final namaBarang = _namaBarangController.text;
+  final kodeLogistik = _kodelogistikController.text;
+  final satuan = selectedSatuan;
+
+  if (namaBarang.isEmpty ||kodeLogistik.isEmpty || satuan == null) {
+    // Tampilkan pesan error jika nama barang atau satuan kosong
+    showDialog(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
+      builder: (context) => AlertDialog(
+        title: Text('Error'),
+        content: Text('Nama barang dan satuan tidak boleh kosong'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('OK'),
+          ),
+        ],
+      ),
     );
-    if (picked != null) {
-      selectedDate = picked;
-      // Update the value of the TextFormField using the controller
-      _expiredController.text = "${picked.day}-${picked.month}-${picked.year}";
-    }
+    return;
   }
+
+  final response = await http.post(
+    Uri.parse('${Global.baseUrl}${Global.addItemPath}'),
+    body: {
+      'nama_barang': namaBarang,
+      'kode_logistik': kodeLogistik,
+      'satuan': satuan,
+      
+    },
+  );
+
+  if (response.statusCode == 200) {
+    final responseData = json.decode(response.body);
+    if (responseData['success']) {
+      // Tampilkan pesan sukses
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Sukses'),
+          content: Text('Barang berhasil ditambahkan'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    } else {
+      // Tampilkan pesan error dari server
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Error'),
+          content: Text(responseData['error']),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  } else {
+    // Tampilkan pesan error jika server tidak merespon
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Error'),
+        content: Text('Gagal terhubung ke server'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+}
 }
