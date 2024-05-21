@@ -6,7 +6,7 @@ import 'package:werehouse/dashboard/component_setting/screens/account_screen.dar
 import 'package:werehouse/dashboard/components/logistik_keluar.dart';
 import 'package:werehouse/dashboard/components/data_logistik.dart';
 import 'package:werehouse/dashboard/components/logistik_masuk.dart';
-import 'package:werehouse/login/register_screen.dart';
+import 'package:werehouse/dashboard/components/data_supplier.dart';
 import 'package:werehouse/dashboard/profile.dart';
 
 class ButtonIcon {
@@ -123,7 +123,7 @@ List<ButtonIcon> menuIcons = [
     onPressed: (context) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => LogistikMasuk()),
+        MaterialPageRoute(builder: (context) => data_supplier()),
       );
     },
   ),

@@ -11,9 +11,13 @@ class LogistikMasuk extends StatefulWidget {
 }
 
 class _LogistikMasukState extends State<LogistikMasuk> {
-  final TextEditingController _namaBarangController = TextEditingController();
-  final TextEditingController _kodelogistikController = TextEditingController();
-  List<String> _supplierList = [];
+  final TextEditingController _namaSupplierController = TextEditingController();
+  final TextEditingController _kode_supplierController =
+      TextEditingController();
+  final TextEditingController _fieldLainnyaController = TextEditingController();
+
+  List<Map<String, String>> _supplierList =
+      []; // List untuk menyimpan data supplier
 
   @override
   void initState() {
@@ -22,32 +26,81 @@ class _LogistikMasukState extends State<LogistikMasuk> {
   }
 
   Future<void> _fetchSuppliers() async {
-  final response = await http.get(Uri.parse('${Global.baseUrl}${Global.tambah_logistik_masuk}'));
-  if (response.statusCode == 200) {
-    final data = json.decode(response.body);
-    if (data['success']) {
-      setState(() {
-        _supplierList = List<String>.from(data['data'].map((item) => item['nama_supplier']));
-      });
-    }
-  } else {
-    // Error handling
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Error'),
-        content: Text('Gagal mengambil data supplier'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text('OK'),
-          ),
-        ],
-      ),
-    );
-  }
-}
+    try {
+      final response = await http
+          .get(Uri.parse('${Global.baseUrl}${Global.tambah_logistik_masuk}'));
 
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+
+        if (data != null && data['success']) {
+          List<Map<String, String>> suppliers = [];
+
+          for (var item in data['data']) {
+            String namaSupplier = item['nama_supplier'] ??
+                ''; // Defaultkan ke string kosong jika null
+            String kodeSupplier = item['kode_supplier'] ??
+                ''; // Defaultkan ke string kosong jika null
+
+            suppliers.add({
+              'nama_supplier': namaSupplier,
+              'kode_supplier': kodeSupplier,
+            });
+          }
+
+          setState(() {
+            _supplierList = suppliers;
+          });
+        } else {
+          // Handle case when data['success'] is false or data is null
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Error'),
+              content: Text('Gagal mengambil data supplier'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('OK'),
+                ),
+              ],
+            ),
+          );
+        }
+      } else {
+        // Handle HTTP error status codes
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Error'),
+            content:
+                Text('Gagal terhubung ke server (HTTP ${response.statusCode})'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      // Handle general exceptions
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Error'),
+          content: Text('Terjadi kesalahan: ${e.toString()}'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,12 +130,19 @@ class _LogistikMasukState extends State<LogistikMasuk> {
                     children: [
                       const SizedBox(height: 10),
                       _buildTextField(
-                        controller: _namaBarangController,
+                        controller: _namaSupplierController,
                         hintText: 'Pilih nama supplier',
                         label: 'Nama Supplier:',
                         onTap: () {
                           _showSupplierDialog();
                         },
+                      ),
+                      const SizedBox(height: 10),
+                      _fieldLainnya1(
+                        controller: _fieldLainnyaController,
+                        hintText: 'Kode Supplier',
+                        label: 'Kode Supplier :',
+                      
                       ),
                       const SizedBox(height: 20),
                       Row(
@@ -112,6 +172,53 @@ class _LogistikMasukState extends State<LogistikMasuk> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _fieldLainnya1({
+    required String hintText,
+    required String label,
+    TextEditingController? controller,
+    VoidCallback? onTap,
+
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 12,
+          ),
+        ),
+        SizedBox(height: 5),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 1,
+                blurRadius: 7,
+                offset: Offset(0, 3),
+              ),
+            ],
+          ),
+          child: TextFormField(
+            controller: controller,
+       
+            maxLines: null,
+            decoration: InputDecoration(
+              hintText: hintText,
+              border: InputBorder.none,
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -150,11 +257,15 @@ class _LogistikMasukState extends State<LogistikMasuk> {
             controller: controller,
             onTap: onTap,
             readOnly: true,
-            maxLines: null, // Set maxLines menjadi null untuk mengizinkan teks turun ke baris baru
+            maxLines:
+                null, // Set maxLines menjadi null untuk mengizinkan teks turun ke baris baru
             decoration: InputDecoration(
               hintText: hintText,
               border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+              suffixIcon:
+                  Icon(Icons.arrow_drop_down), // Icon panah ke bawah di sini
             ),
           ),
         ),
@@ -175,10 +286,13 @@ class _LogistikMasukState extends State<LogistikMasuk> {
               itemCount: _supplierList.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(_supplierList[index]),
+                  title: Text(_supplierList[index]['nama_supplier']!),
                   onTap: () {
                     setState(() {
-                      _namaBarangController.text = _supplierList[index];
+                      _namaSupplierController.text =
+                          _supplierList[index]['nama_supplier']!;
+                      _fieldLainnyaController.text = _supplierList[index][
+                          'kode_supplier']!; // Mengatur kode_supplier yang sesuai
                     });
                     Navigator.of(context).pop();
                   },
@@ -216,16 +330,16 @@ class _LogistikMasukState extends State<LogistikMasuk> {
   }
 
   Future<void> _simpanData(BuildContext context) async {
-    final namaBarang = _namaBarangController.text;
-    final kodeLogistik = _kodelogistikController.text;
+    final namaSupplier = _namaSupplierController.text;
+    final kodeSupplier = _fieldLainnyaController.text;
 
-    if (namaBarang.isEmpty || kodeLogistik.isEmpty) {
-      // Tampilkan pesan error jika nama barang atau satuan kosong
+    if (namaSupplier.isEmpty || kodeSupplier.isEmpty) {
+      // Tampilkan pesan error jika nama supplier atau kode logistik kosong
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: Text('Error'),
-          content: Text('Kolom tidak boleh kosong'),
+          content: Text('Nama supplier dan kode logistik tidak boleh kosong'),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -240,8 +354,8 @@ class _LogistikMasukState extends State<LogistikMasuk> {
     final response = await http.post(
       Uri.parse('${Global.baseUrl}${Global.tambah_logistik_masuk}'),
       body: {
-        'nama_barang': namaBarang,
-        'kode_logistik': kodeLogistik,
+        'nama_supplier': namaSupplier,
+        'kode_supplier': kodeSupplier,
         // Tambahkan field lain jika diperlukan
       },
     );
