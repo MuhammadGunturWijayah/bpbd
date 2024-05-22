@@ -181,9 +181,10 @@ class _LogistikMasukState extends State<LogistikMasuk> {
                             onPressed: () {
                               _simpanData(context);
                             },
-                            color: Colors.green,
+                            color: Colors.blue,
+                            textColor: const Color.fromARGB(255, 255, 255, 255), // Mengubah warna teks
+                            icon: Icons.save, // Menambahkan ikon
                           ),
-                          
                         ],
                       ),
                     ],
@@ -332,28 +333,33 @@ class _LogistikMasukState extends State<LogistikMasuk> {
   }
 
   Widget _customButton({
-    required String text,
-    required VoidCallback onPressed,
-    required Color color,
-  }) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-        ),
+  required String text,
+  required VoidCallback onPressed,
+  required Color color,
+  Color textColor = Colors.white,
+  IconData? icon,
+}) {
+  return ElevatedButton.icon(
+    onPressed: onPressed,
+    icon: icon != null ? Icon(icon, color: textColor) : SizedBox.shrink(),
+    label: Text(
+      text,
+      style: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+        color: textColor,
       ),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: color,
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
+    ),
+    style: ElevatedButton.styleFrom(
+      backgroundColor: color,
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: BorderSide(color: Colors.white, width: 2),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Future<void> _simpanData(BuildContext context) async {
     final namaSupplier = _namaSupplierController.text;
@@ -362,8 +368,11 @@ class _LogistikMasukState extends State<LogistikMasuk> {
     final teleponSupplier = _teleponSupplierController.text;
     final instansiSupplier = _instansiSupplierController.text;
 
-
-    if (namaSupplier.isEmpty || kodeSupplier.isEmpty || emailSupplier.isEmpty || teleponSupplier.isEmpty || instansiSupplier.isEmpty) {
+    if (namaSupplier.isEmpty ||
+        kodeSupplier.isEmpty ||
+        emailSupplier.isEmpty ||
+        teleponSupplier.isEmpty ||
+        instansiSupplier.isEmpty) {
       // Tampilkan pesan error jika nama supplier atau kode logistik kosong
       showDialog(
         context: context,
@@ -386,10 +395,10 @@ class _LogistikMasukState extends State<LogistikMasuk> {
       body: {
         'nama_supplier': namaSupplier,
         'kode_supplier': kodeSupplier,
-        'email_supplier' : emailSupplier,
-        'telepon_supplier' : teleponSupplier,
-        'instansi_supplier' : instansiSupplier,
-        
+        'email_supplier': emailSupplier,
+        'telepon_supplier': teleponSupplier,
+        'instansi_supplier': instansiSupplier,
+
         // Tambahkan field lain jika diperlukan
       },
     );
