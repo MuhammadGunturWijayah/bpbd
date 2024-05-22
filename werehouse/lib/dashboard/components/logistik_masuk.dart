@@ -12,10 +12,13 @@ class LogistikMasuk extends StatefulWidget {
 
 class _LogistikMasukState extends State<LogistikMasuk> {
   final TextEditingController _namaSupplierController = TextEditingController();
-  final TextEditingController _kode_supplierController =
+  final TextEditingController _kodeSupplierController = TextEditingController();
+  final TextEditingController _emailSupplierController =
       TextEditingController();
-  final TextEditingController _fieldLainnyaController = TextEditingController();
-
+  final TextEditingController _teleponSupplierController =
+      TextEditingController();
+  final TextEditingController _instansiSupplierController =
+      TextEditingController();
   List<Map<String, String>> _supplierList =
       []; // List untuk menyimpan data supplier
 
@@ -41,10 +44,18 @@ class _LogistikMasukState extends State<LogistikMasuk> {
                 ''; // Defaultkan ke string kosong jika null
             String kodeSupplier = item['kode_supplier'] ??
                 ''; // Defaultkan ke string kosong jika null
-
+            String emailSupplier = item['email_supplier'] ??
+                ''; // Defaultkan ke string kosong jika null
+            String teleponSupplier = item['telepon_supplier'] ??
+                ''; // Defaultkan ke string kosong jika null
+            String instansiSupplier = item['instansi_supplier'] ??
+                ''; // Defaultkan ke string kosong jika null
             suppliers.add({
               'nama_supplier': namaSupplier,
               'kode_supplier': kodeSupplier,
+              'email_supplier': emailSupplier,
+              'telepon_supplier': teleponSupplier,
+              'instansi_supplier': instansiSupplier,
             });
           }
 
@@ -139,10 +150,27 @@ class _LogistikMasukState extends State<LogistikMasuk> {
                       ),
                       const SizedBox(height: 10),
                       _fieldLainnya1(
-                        controller: _fieldLainnyaController,
+                        controller: _kodeSupplierController,
                         hintText: 'Kode Supplier',
                         label: 'Kode Supplier :',
-                      
+                      ),
+                      const SizedBox(height: 10),
+                      _fieldLainnya1(
+                        controller: _emailSupplierController,
+                        hintText: 'Email Supplier',
+                        label: 'Email Supplier :',
+                      ),
+                      const SizedBox(height: 10),
+                      _fieldLainnya1(
+                        controller: _teleponSupplierController,
+                        hintText: 'Telepon Supplier',
+                        label: 'Telepon Supplier :',
+                      ),
+                      const SizedBox(height: 10),
+                      _fieldLainnya1(
+                        controller: _instansiSupplierController,
+                        hintText: 'Instansi Supplier',
+                        label: 'Instansi Supplier :',
                       ),
                       const SizedBox(height: 20),
                       Row(
@@ -155,13 +183,7 @@ class _LogistikMasukState extends State<LogistikMasuk> {
                             },
                             color: Colors.green,
                           ),
-                          _customButton(
-                            text: 'Hapus',
-                            onPressed: () {
-                              // Tambahkan fungsi untuk menghapus data
-                            },
-                            color: Colors.red,
-                          ),
+                          
                         ],
                       ),
                     ],
@@ -180,7 +202,6 @@ class _LogistikMasukState extends State<LogistikMasuk> {
     required String label,
     TextEditingController? controller,
     VoidCallback? onTap,
-
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -208,7 +229,6 @@ class _LogistikMasukState extends State<LogistikMasuk> {
           ),
           child: TextFormField(
             controller: controller,
-       
             maxLines: null,
             decoration: InputDecoration(
               hintText: hintText,
@@ -291,8 +311,14 @@ class _LogistikMasukState extends State<LogistikMasuk> {
                     setState(() {
                       _namaSupplierController.text =
                           _supplierList[index]['nama_supplier']!;
-                      _fieldLainnyaController.text = _supplierList[index][
-                          'kode_supplier']!; // Mengatur kode_supplier yang sesuai
+                      _kodeSupplierController.text =
+                          _supplierList[index]['kode_supplier']!;
+                      _emailSupplierController.text =
+                          _supplierList[index]['email_supplier']!;
+                      _teleponSupplierController.text =
+                          _supplierList[index]['telepon_supplier']!;
+                      _instansiSupplierController.text =
+                          _supplierList[index]['instansi_supplier']!;
                     });
                     Navigator.of(context).pop();
                   },
@@ -331,9 +357,13 @@ class _LogistikMasukState extends State<LogistikMasuk> {
 
   Future<void> _simpanData(BuildContext context) async {
     final namaSupplier = _namaSupplierController.text;
-    final kodeSupplier = _fieldLainnyaController.text;
+    final kodeSupplier = _kodeSupplierController.text;
+    final emailSupplier = _emailSupplierController.text;
+    final teleponSupplier = _teleponSupplierController.text;
+    final instansiSupplier = _instansiSupplierController.text;
 
-    if (namaSupplier.isEmpty || kodeSupplier.isEmpty) {
+
+    if (namaSupplier.isEmpty || kodeSupplier.isEmpty || emailSupplier.isEmpty || teleponSupplier.isEmpty || instansiSupplier.isEmpty) {
       // Tampilkan pesan error jika nama supplier atau kode logistik kosong
       showDialog(
         context: context,
@@ -356,6 +386,10 @@ class _LogistikMasukState extends State<LogistikMasuk> {
       body: {
         'nama_supplier': namaSupplier,
         'kode_supplier': kodeSupplier,
+        'email_supplier' : emailSupplier,
+        'telepon_supplier' : teleponSupplier,
+        'instansi_supplier' : instansiSupplier,
+        
         // Tambahkan field lain jika diperlukan
       },
     );
