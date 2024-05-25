@@ -260,7 +260,7 @@ class data_supplier extends StatelessWidget {
     }
 
     final response = await http.post(
-      Uri.parse('${Global.baseUrl}${Global.supplier}'),
+      Uri.parse('${Global.baseUrl}${Global.supplierPath}'),
       body: {
         'kode_supplier': kodeSupplier,
         'nama_supplier': namaSupplier,

@@ -297,7 +297,7 @@ class data_logistik extends StatelessWidget {
   }
 
   final response = await http.post(
-    Uri.parse('${Global.baseUrl}${Global.logistik_masuk}'),
+    Uri.parse('${Global.baseUrl}${Global.tambahLogistikMasukPath}'),
     body: {
       'nama_barang': namaBarang,
       'kode_logistik': kodeLogistik,

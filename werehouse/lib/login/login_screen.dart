@@ -131,38 +131,36 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void login() async {
-    _showLoadingDialog(context); // Show loading dialog
+  _showLoadingDialog(context); // Show loading dialog
 
-    String email = _emailController.text.toString();
-    String password = _passwordController.text.toString();
-    Response response;
-    try {
-      response = await dio.get(
-        Global.baseUrl + Global.signInPath,
-        queryParameters: {
-          'email': email,
-          'password': password,
-        },
-      );
+  String email = _emailController.text.trim();
+  String password = _passwordController.text.trim();
+  Response response;
 
-      final body = response.data;
+  try {
+    response = await dio.post(
+      '${Global.baseUrl}${Global.signInPath}',
+      data: {
+        'email': email,
+        'password': password,
+      },
+    );
 
-      // Handle the response
-      if (response.statusCode == 200) {
-        if (body.containsKey('data')) {
-          _showSuccessSnackBar(context);
-        } else {
-          _showFailedSnackBar(context, 'Email atau password Anda salah!');
-        }
-      } else {
-        _showFailedSnackBar(context, 'Sign In gagal. Hubungi teknisi');
-      }
-    } catch (e) {
-      _showFailedSnackBar(context, 'Terjadi kesalahan, coba lagi nanti');
-    } finally {
-      _hideLoadingDialog(context); // Hide loading dialog
+    final body = response.data;
+
+    // Handle the response
+    if (response.statusCode == 200 && body.containsKey('success')) {
+      _showSuccessSnackBar(context);
+    } else {
+      _showFailedSnackBar(context, 'Email atau password Anda salah!');
     }
+  } catch (e) {
+    _showFailedSnackBar(context, 'Terjadi kesalahan, coba lagi nanti');
+  } finally {
+    _hideLoadingDialog(context); // Hide loading dialog
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
