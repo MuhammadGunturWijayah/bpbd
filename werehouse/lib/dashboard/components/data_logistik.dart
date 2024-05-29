@@ -3,11 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:werehouse/shared/global.dart'; // Sesuaikan dengan nama proyek Anda
 
-class data_logistik extends StatelessWidget {
+class DataLogistik extends StatelessWidget {
   final TextEditingController _namaBarangController = TextEditingController();
-  final TextEditingController _kodelogistikController = TextEditingController();
+  final TextEditingController _kodeLogistikController = TextEditingController();
   final List<String> satuanOptions = [
     'Pieces (pcs)',
     'Kilogram (kg)',
@@ -20,7 +21,7 @@ class data_logistik extends StatelessWidget {
 
   String? selectedSatuan;
 
-  data_logistik({Key? key}) : super(key: key);
+  DataLogistik({Key? key}) : super(key: key);
 
   void _showLoadingDialog(BuildContext context) {
     showDialog(
@@ -36,6 +37,86 @@ class data_logistik extends StatelessWidget {
 
   void _hideLoadingDialog(BuildContext context) {
     Navigator.of(context).pop();
+  }
+
+  void _showSuccessSnackBar(BuildContext context) {
+    final snackBar = SnackBar(
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.transparent,
+      content: AwesomeSnackbarContent(
+        title: 'Success',
+        message: 'Data barang berhasil disimpan!',
+        contentType: ContentType.success,
+      ),
+    );
+
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  void _showFailedSnackBar(BuildContext context, String message) {
+    final snackBar = SnackBar(
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.transparent,
+      content: AwesomeSnackbarContent(
+        title: 'Error',
+        message: message,
+        contentType: ContentType.failure,
+      ),
+    );
+
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  void _simpanData(BuildContext context) async {
+    String namaBarang = _namaBarangController.text;
+    String kodeLogistik = _kodeLogistikController.text;
+    final satuan = selectedSatuan;
+
+    if (namaBarang.isEmpty || kodeLogistik.isEmpty || satuan == null) {
+      _showFailedSnackBar(context, 'Nama barang dan satuan tidak boleh kosong');
+      return;
+    }
+
+    _showLoadingDialog(context); // Show loading dialog
+
+    try {
+      final url = Uri.parse('${Global.baseUrl}${Global.logistikMasukPath}');
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'nama_logistik': namaBarang,
+          'kode_logistik': kodeLogistik,
+          'satuan_logistik': satuan,
+        }),
+      );
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 201) {
+        final responseData = jsonDecode(response.body);
+        if (responseData['success']) {
+          _hideLoadingDialog(context);
+          _showSuccessSnackBar(context);
+        } else {
+          _hideLoadingDialog(context);
+          _showFailedSnackBar(context, responseData['error'] ?? 'Terjadi kesalahan tidak diketahui');
+        }
+      } else {
+        _hideLoadingDialog(context);
+        _showFailedSnackBar(context, 'Gagal terhubung ke server dengan status ${response.statusCode}');
+      }
+    } catch (e) {
+      _hideLoadingDialog(context);
+      _showFailedSnackBar(context, 'Terjadi kesalahan: $e');
+    }
   }
 
   @override
@@ -63,7 +144,7 @@ class data_logistik extends StatelessWidget {
                     children: [
                       const SizedBox(height: 10),
                       _buildTextField(
-                        controller: _kodelogistikController,
+                        controller: _kodeLogistikController,
                         hintText: 'kode barang',
                         label: 'kode logistik :',
                       ),
@@ -288,128 +369,4 @@ class data_logistik extends StatelessWidget {
       ),
     );
   }
-
- void _simpanData(BuildContext context) async {
-  String namaBarang = _namaBarangController.text;
-  String kodeLogistik = _kodelogistikController.text;
-  final satuan = selectedSatuan;
-
-  if (namaBarang.isEmpty || kodeLogistik.isEmpty || satuan == null) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Error'),
-        content: const Text('Nama barang dan satuan tidak boleh kosong'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
-    return;
-  }
-
-  _showLoadingDialog(context); // Show loading dialog
-
-  try {
-    final url = Uri.parse('${Global.baseUrl}${Global.logistikMasukPath}');
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
-        'nama_logistik': namaBarang,
-        'kode_logistik': kodeLogistik,
-        'satuan_logistik': satuan,
-      }),
-    );
-
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
-
-    if (response.statusCode == 201) {
-      final responseData = jsonDecode(response.body);
-      if (responseData['success']) {
-        // Menutup dialog loading sebelum menampilkan dialog sukses
-        _hideLoadingDialog(context);
-
-        // Menampilkan dialog sukses
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Sukses'),
-            content: Text('Barang berhasil ditambahkan'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('OK'),
-              ),
-            ],
-          ),
-        );
-      } else {
-        // Menutup dialog loading karena ada kesalahan
-        _hideLoadingDialog(context);
-
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Error'),
-            content: Text(
-                responseData['error'] ?? 'Terjadi kesalahan tidak diketahui'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('OK'),
-              ),
-            ],
-          ),
-        );
-      }
-    } else {
-      // Menutup dialog loading karena ada kesalahan
-      _hideLoadingDialog(context);
-
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Error'),
-          content: Text(
-              'Gagal terhubung ke server dengan status ${response.statusCode}'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
-    }
-  } catch (e) {
-    // Menutup dialog loading karena terjadi kesalahan
-    _hideLoadingDialog(context);
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Error'),
-        content: Text('Terjadi kesalahan: $e'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text('OK'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 }
