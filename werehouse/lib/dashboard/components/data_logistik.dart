@@ -22,6 +22,22 @@ class data_logistik extends StatelessWidget {
 
   data_logistik({Key? key}) : super(key: key);
 
+  void _showLoadingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+  }
+
+  void _hideLoadingDialog(BuildContext context) {
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
@@ -104,12 +120,12 @@ class data_logistik extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.grey,
             fontSize: 12,
           ),
         ),
-        SizedBox(height: 5),
+        const SizedBox(height: 5),
         Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -119,7 +135,7 @@ class data_logistik extends StatelessWidget {
                 color: Colors.grey.withOpacity(0.5),
                 spreadRadius: 1,
                 blurRadius: 7,
-                offset: Offset(0, 3),
+                offset: const Offset(0, 3),
               ),
             ],
           ),
@@ -131,7 +147,7 @@ class data_logistik extends StatelessWidget {
               hintText: hintText,
               border: InputBorder.none,
               contentPadding:
-                  EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                  const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
             ),
           ),
         ),
@@ -146,12 +162,12 @@ class data_logistik extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.grey,
             fontSize: 12,
           ),
         ),
-        SizedBox(height: 5),
+        const SizedBox(height: 5),
         Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -161,7 +177,7 @@ class data_logistik extends StatelessWidget {
                 color: Colors.grey.withOpacity(0.5),
                 spreadRadius: 1,
                 blurRadius: 7,
-                offset: Offset(0, 3),
+                offset: const Offset(0, 3),
               ),
             ],
           ),
@@ -179,7 +195,7 @@ class data_logistik extends StatelessWidget {
             decoration: InputDecoration(
               border: InputBorder.none,
               contentPadding:
-                  EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                  const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
             ),
           ),
         ),
@@ -216,7 +232,7 @@ class data_logistik extends StatelessWidget {
                       text: "Hallo, ",
                       style: GoogleFonts.manrope(
                         fontSize: 14,
-                        color: Color.fromARGB(255, 255, 255, 255),
+                        color: const Color.fromARGB(255, 255, 255, 255),
                         height: 150 / 100,
                       ),
                       children: const [
@@ -258,14 +274,14 @@ class data_logistik extends StatelessWidget {
       onPressed: onPressed,
       child: Text(
         text,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.bold,
         ),
       ),
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -273,7 +289,7 @@ class data_logistik extends StatelessWidget {
     );
   }
 
-  Future<void> _simpanData(BuildContext context) async {
+ void _simpanData(BuildContext context) async {
   String namaBarang = _namaBarangController.text;
   String kodeLogistik = _kodelogistikController.text;
   final satuan = selectedSatuan;
@@ -282,12 +298,12 @@ class data_logistik extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Error'),
-        content: Text('Nama barang dan satuan tidak boleh kosong'),
+        title: const Text('Error'),
+        content: const Text('Nama barang dan satuan tidak boleh kosong'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text('OK'),
+            child: const Text('OK'),
           ),
         ],
       ),
@@ -295,10 +311,10 @@ class data_logistik extends StatelessWidget {
     return;
   }
 
+  _showLoadingDialog(context); // Show loading dialog
+
   try {
     final url = Uri.parse('${Global.baseUrl}${Global.logistikMasukPath}');
-    print('URL: $url');
-
     final response = await http.post(
       url,
       headers: {
@@ -316,8 +332,11 @@ class data_logistik extends StatelessWidget {
 
     if (response.statusCode == 201) {
       final responseData = jsonDecode(response.body);
-      // Asumsikan 'success' adalah kunci yang menunjukkan keberhasilan
       if (responseData['success']) {
+        // Menutup dialog loading sebelum menampilkan dialog sukses
+        _hideLoadingDialog(context);
+
+        // Menampilkan dialog sukses
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -325,21 +344,29 @@ class data_logistik extends StatelessWidget {
             content: Text('Barang berhasil ditambahkan'),
             actions: [
               TextButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
                 child: Text('OK'),
               ),
             ],
           ),
         );
       } else {
+        // Menutup dialog loading karena ada kesalahan
+        _hideLoadingDialog(context);
+
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
             title: Text('Error'),
-            content: Text(responseData['error'] ?? 'Terjadi kesalahan tidak diketahui'),
+            content: Text(
+                responseData['error'] ?? 'Terjadi kesalahan tidak diketahui'),
             actions: [
               TextButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
                 child: Text('OK'),
               ),
             ],
@@ -347,11 +374,15 @@ class data_logistik extends StatelessWidget {
         );
       }
     } else {
+      // Menutup dialog loading karena ada kesalahan
+      _hideLoadingDialog(context);
+
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: Text('Error'),
-          content: Text('Gagal terhubung ke server dengan status ${response.statusCode}'),
+          content: Text(
+              'Gagal terhubung ke server dengan status ${response.statusCode}'),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -362,6 +393,9 @@ class data_logistik extends StatelessWidget {
       );
     }
   } catch (e) {
+    // Menutup dialog loading karena terjadi kesalahan
+    _hideLoadingDialog(context);
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
