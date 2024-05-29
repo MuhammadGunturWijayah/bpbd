@@ -13,6 +13,7 @@ class Global {
   static const signInPath = '/login';
   static const registerPath = '/register'; // Tambahkan endpoint register jika diperlukan
   static const tambahLogistikMasukPath = '/tambah_logistik_masuk';
-  static const logistikMasukPath = '/logistik_masuk';
+  static const logistikMasukPath = '/logistics';
   static const supplierPath = '/supplier';
+  
 }

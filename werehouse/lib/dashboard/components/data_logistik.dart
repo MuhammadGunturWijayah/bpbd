@@ -3,17 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:werehouse/shared/global.dart';
-
-
-
-var selectedService = 0;
-DateTime? selectedDate;
+import 'package:werehouse/shared/global.dart'; // Sesuaikan dengan nama proyek Anda
 
 class data_logistik extends StatelessWidget {
-  final Key? key;
   final TextEditingController _namaBarangController = TextEditingController();
-   final TextEditingController _kodelogistikController = TextEditingController();
+  final TextEditingController _kodelogistikController = TextEditingController();
   final List<String> satuanOptions = [
     'Pieces (pcs)',
     'Kilogram (kg)',
@@ -26,7 +20,7 @@ class data_logistik extends StatelessWidget {
 
   String? selectedSatuan;
 
-  data_logistik({this.key}) : super(key: key);
+  data_logistik({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +52,7 @@ class data_logistik extends StatelessWidget {
                         label: 'kode logistik :',
                       ),
                       const SizedBox(height: 10),
-                       _buildTextField(
+                      _buildTextField(
                         controller: _namaBarangController,
                         hintText: 'nama',
                         label: 'Nama Barang :',
@@ -132,11 +126,12 @@ class data_logistik extends StatelessWidget {
           child: TextFormField(
             controller: controller,
             onTap: onTap,
-            maxLines: null, // Set maxLines menjadi null untuk mengizinkan teks turun ke baris baru
+            maxLines: null,
             decoration: InputDecoration(
               hintText: hintText,
               border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 15, horizontal: 20),
             ),
           ),
         ),
@@ -144,7 +139,8 @@ class data_logistik extends StatelessWidget {
     );
   }
 
-  Widget _buildSatuanDropdown({required String hintText, required String label}) {
+  Widget _buildSatuanDropdown(
+      {required String hintText, required String label}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -182,7 +178,8 @@ class data_logistik extends StatelessWidget {
             }).toList(),
             decoration: InputDecoration(
               border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 15, horizontal: 20),
             ),
           ),
         ),
@@ -253,7 +250,10 @@ class data_logistik extends StatelessWidget {
     );
   }
 
-  Widget _customButton({required String text, required VoidCallback onPressed, required Color color}) {
+  Widget _customButton(
+      {required String text,
+      required VoidCallback onPressed,
+      required Color color}) {
     return ElevatedButton(
       onPressed: onPressed,
       child: Text(
@@ -274,12 +274,11 @@ class data_logistik extends StatelessWidget {
   }
 
   Future<void> _simpanData(BuildContext context) async {
-  final namaBarang = _namaBarangController.text;
-  final kodeLogistik = _kodelogistikController.text;
+  String namaBarang = _namaBarangController.text;
+  String kodeLogistik = _kodelogistikController.text;
   final satuan = selectedSatuan;
 
-  if (namaBarang.isEmpty ||kodeLogistik.isEmpty || satuan == null) {
-    // Tampilkan pesan error jika nama barang atau satuan kosong
+  if (namaBarang.isEmpty || kodeLogistik.isEmpty || satuan == null) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -296,40 +295,63 @@ class data_logistik extends StatelessWidget {
     return;
   }
 
-  final response = await http.post(
-    Uri.parse('${Global.baseUrl}${Global.tambahLogistikMasukPath}'),
-    body: {
-      'nama_barang': namaBarang,
-      'kode_logistik': kodeLogistik,
-      'satuan': satuan,
-      
-    },
-  );
+  try {
+    final url = Uri.parse('${Global.baseUrl}${Global.logistikMasukPath}');
+    print('URL: $url');
 
-  if (response.statusCode == 200) {
-    final responseData = json.decode(response.body);
-    if (responseData['success']) {
-      // Tampilkan pesan sukses
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Sukses'),
-          content: Text('Barang berhasil ditambahkan'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'nama_logistik': namaBarang,
+        'kode_logistik': kodeLogistik,
+        'satuan_logistik': satuan,
+      }),
+    );
+
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    if (response.statusCode == 201) {
+      final responseData = jsonDecode(response.body);
+      // Asumsikan 'success' adalah kunci yang menunjukkan keberhasilan
+      if (responseData['success']) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Sukses'),
+            content: Text('Barang berhasil ditambahkan'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Error'),
+            content: Text(responseData['error'] ?? 'Terjadi kesalahan tidak diketahui'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
     } else {
-      // Tampilkan pesan error dari server
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: Text('Error'),
-          content: Text(responseData['error']),
+          content: Text('Gagal terhubung ke server dengan status ${response.statusCode}'),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -339,13 +361,12 @@ class data_logistik extends StatelessWidget {
         ),
       );
     }
-  } else {
-    // Tampilkan pesan error jika server tidak merespon
+  } catch (e) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Error'),
-        content: Text('Gagal terhubung ke server'),
+        content: Text('Terjadi kesalahan: $e'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -356,4 +377,5 @@ class data_logistik extends StatelessWidget {
     );
   }
 }
+
 }
