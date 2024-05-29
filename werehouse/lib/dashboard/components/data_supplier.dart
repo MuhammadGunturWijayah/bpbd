@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:werehouse/shared/global.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
-var selectedService = 0;
-DateTime? selectedDate;
+class DataSupplier extends StatefulWidget {
+  const DataSupplier({Key? key}) : super(key: key);
 
-class data_supplier extends StatelessWidget {
-  final Key? key;
+  @override
+  _DataSupplierState createState() => _DataSupplierState();
+}
+
+class _DataSupplierState extends State<DataSupplier> {
   final TextEditingController _kodeSupplierController = TextEditingController();
   final TextEditingController _namaSupplierController = TextEditingController();
-  final TextEditingController _EmailController = TextEditingController();
-  final TextEditingController _TeleponController = TextEditingController();
-  final TextEditingController _Instansi_Supplier = TextEditingController();
-  data_supplier({this.key}) : super(key: key);
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _teleponController = TextEditingController();
+  final TextEditingController _instansiSupplier = TextEditingController();
+
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +48,7 @@ class data_supplier extends StatelessWidget {
                       _buildTextField(
                         controller: _kodeSupplierController,
                         hintText: 'Masukan Kode',
-                        label: 'kode supplier :',
+                        label: 'Kode Supplier :',
                       ),
                       const SizedBox(height: 10),
                       _buildTextField(
@@ -54,42 +58,44 @@ class data_supplier extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       _buildTextField(
-                        controller: _EmailController,
+                        controller: _emailController,
                         hintText: 'Masukan Email',
                         label: 'Email :',
                       ),
                       const SizedBox(height: 10),
                       _buildTextField(
-                        controller: _TeleponController,
+                        controller: _teleponController,
                         hintText: 'Masukan Nomor Telepon',
                         label: 'Nomor Telepon :',
                       ),
-                       const SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       _buildTextField(
-                        controller: _Instansi_Supplier,
+                        controller: _instansiSupplier,
                         hintText: 'Masukan Instansi',
                         label: 'Instansi Supplier :',
                       ),
                       const SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _customButton(
-                            text: 'Simpan',
-                            onPressed: () {
-                              _simpanData(context);
-                            },
-                            color: Colors.green,
-                          ),
-                          _customButton(
-                            text: 'Hapus',
-                            onPressed: () {
-                              // Tambahkan fungsi untuk menghapus data
-                            },
-                            color: Colors.red,
-                          ),
-                        ],
-                      ),
+                      _isLoading
+                          ? CircularProgressIndicator()
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _customButton(
+                                  text: 'Simpan',
+                                  onPressed: () {
+                                    _simpanData(context);
+                                  },
+                                  color: Colors.green,
+                                ),
+                                _customButton(
+                                  text: 'Hapus',
+                                  onPressed: () {
+                                    // Tambahkan fungsi untuk menghapus data
+                                  },
+                                  color: Colors.red,
+                                ),
+                              ],
+                            ),
                     ],
                   ),
                 ),
@@ -105,7 +111,6 @@ class data_supplier extends StatelessWidget {
     required String hintText,
     required String label,
     TextEditingController? controller,
-    VoidCallback? onTap,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -133,9 +138,7 @@ class data_supplier extends StatelessWidget {
           ),
           child: TextFormField(
             controller: controller,
-            onTap: onTap,
-            maxLines:
-                null, // Set maxLines menjadi null untuk mengizinkan teks turun ke baris baru
+            maxLines: null,
             decoration: InputDecoration(
               hintText: hintText,
               border: InputBorder.none,
@@ -175,7 +178,7 @@ class data_supplier extends StatelessWidget {
                   RichText(
                     text: TextSpan(
                       text: "Hallo, ",
-                      style: GoogleFonts.manrope(
+                      style: TextStyle(
                         fontSize: 14,
                         color: Color.fromARGB(255, 255, 255, 255),
                         height: 150 / 100,
@@ -234,90 +237,98 @@ class data_supplier extends StatelessWidget {
     );
   }
 
-  Future<void> _simpanData(BuildContext context) async {
-   
-    final kodeSupplier = _kodeSupplierController.text;
-    final namaSupplier = _namaSupplierController.text;
-    final emailSupplier = _EmailController.text;
-    final teleponSupplier = _TeleponController.text;
-    final instansiSupplier= _Instansi_Supplier.text;
-    if ( kodeSupplier.isEmpty || namaSupplier.isEmpty || emailSupplier.isEmpty || teleponSupplier.isEmpty || instansiSupplier.isEmpty) {
-      // Tampilkan pesan error jika nama barang atau satuan kosong
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Error'),
-          content: Text('kolom tidak boleh kosong!!'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
-      return;
-    }
-
-    final response = await http.post(
-      Uri.parse('${Global.baseUrl}${Global.supplierPath}'),
-      body: {
-        'kode_supplier': kodeSupplier,
-        'nama_supplier': namaSupplier,
-        'email_supplier' : emailSupplier,
-        'telepon_supplier' : teleponSupplier,
-        'instansi_supplier' : instansiSupplier,
-      },
+  void _showSuccessSnackBar(BuildContext context) {
+    final snackBar = SnackBar(
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.transparent,
+      content: AwesomeSnackbarContent(
+        title: 'Success',
+        message: 'Data supplier berhasil disimpan!',
+        contentType: ContentType.success,
+      ),
     );
 
-    if (response.statusCode == 200) {
-      final responseData = json.decode(response.body);
-      if (responseData['success']) {
-        // Tampilkan pesan sukses
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Sukses'),
-            content: Text('Barang berhasil ditambahkan'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text('OK'),
-              ),
-            ],
-          ),
-        );
-      } else {
-        // Tampilkan pesan error dari server
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Error'),
-            content: Text(responseData['error']),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text('OK'),
-              ),
-            ],
-          ),
-        );
-      }
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  void _showFailedSnackBar(BuildContext context, String message) {
+    final snackBar = SnackBar(
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.transparent,
+      content: AwesomeSnackbarContent(
+        title: 'Error',
+        message: message,
+        contentType: ContentType.failure,
+      ),
+    );
+
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  void _simpanData(BuildContext context) async {
+  String kodeSupplier = _kodeSupplierController.text;
+  String namaSupplier = _namaSupplierController.text;
+  String emailSupplier = _emailController.text;
+  String teleponSupplier = _teleponController.text;
+  String instansiSupplier = _instansiSupplier.text;
+
+  if (kodeSupplier.isEmpty ||
+      namaSupplier.isEmpty ||
+      emailSupplier.isEmpty ||
+      teleponSupplier.isEmpty ||
+      instansiSupplier.isEmpty) {
+    _showFailedSnackBar(context, 'Semua kolom harus diisi');
+    return;
+  }
+
+  _showLoadingDialog(context); // Show loading dialog
+
+  try {
+    final response = await http.post(
+      Uri.parse('${Global.baseUrl}${Global.supplierPath}'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'kode_supplier': kodeSupplier,
+        'nama_supplier': namaSupplier,
+        'email_supplier': emailSupplier,
+        'telepon_supplier': teleponSupplier,
+        'instansi_supplier': instansiSupplier,
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      _hideLoadingDialog(context);
+      _showSuccessSnackBar(context);
     } else {
-      // Tampilkan pesan error jika server tidak merespon
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Error'),
-          content: Text('Gagal terhubung ke server'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
+      _hideLoadingDialog(context);
+      _showFailedSnackBar(context, 'Gagal terhubung ke server dengan status ${response.statusCode}');
     }
+  } catch (e) {
+    _hideLoadingDialog(context);
+    _showFailedSnackBar(context, 'Terjadi kesalahan: $e');
+  }
+}
+
+
+  void _hideLoadingDialog(BuildContext context) {
+    Navigator.of(context).pop();
+  }
+
+  void _showLoadingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
   }
 }
