@@ -22,6 +22,11 @@ class Supplier {
   Supplier({required this.nama});
 }
 
+class Logistik {
+  final String nama;
+  Logistik({required this.nama});
+}
+
 class _logistikmasukstate extends State<LogistikMasuk> {
   final TextEditingController _tanggalKadaluarsaController =
       TextEditingController();
@@ -33,6 +38,7 @@ class _logistikmasukstate extends State<LogistikMasuk> {
       TextEditingController();
   final TextEditingController _dokumentasiController = TextEditingController();
   final TextEditingController _ListSupplier = TextEditingController();
+  final TextEditingController _ListLogistik = TextEditingController();
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
@@ -87,11 +93,20 @@ class _logistikmasukstate extends State<LogistikMasuk> {
                             listSupplier, // Pass the list of items here
                       ),
                       const SizedBox(height: 10),
-                      _fieldKeterangan(
+                      _fieldNamaLogistik(
                         hintText: 'Nama Logistik',
                         label: 'Pilih Nama Logistik :',
                         controller: _namaLogistikController,
+                        onTap: () {
+                          _showDaftarLogistik(context);
+                        },
+                      ),
+                      _fieldListLogistik(
+                        controller: _ListLogistik,
                         onTap: () {},
+                        onButtonTaps: () {},
+                        listLogistik:
+                            listLogistik, // Pass the list of items here
                       ),
                       const SizedBox(height: 10),
                       _fieldKeterangan(
@@ -353,10 +368,10 @@ class _logistikmasukstate extends State<LogistikMasuk> {
 
   void onTap() {
     _showDaftarSupplier(context);
+    _showDaftarLogistik(context);
   }
 
-  List<Map<String, dynamic>> selectedItems =
-      [];
+  List<Map<String, dynamic>> selectedItems = [];
 
   List<Supplier> listSupplier = [];
   final List<String> DaftarSupplier = [
@@ -476,8 +491,7 @@ class _logistikmasukstate extends State<LogistikMasuk> {
 
     // Update controller _ListBarang agar menampilkan data baru
     _ListSupplier.text = listSupplier
-        .map((supplier) =>
-            'Supplier : ${supplier.nama}')
+        .map((supplier) => 'Supplier : ${supplier.nama}')
         .join('\n\n');
   }
 
@@ -539,7 +553,6 @@ class _logistikmasukstate extends State<LogistikMasuk> {
   }
 
   Widget _fieldListSupplier({
-   
     TextEditingController? controller,
     VoidCallback? onTap,
     required VoidCallback onButtonTaps,
@@ -548,7 +561,6 @@ class _logistikmasukstate extends State<LogistikMasuk> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-       
         ListView.builder(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
@@ -574,6 +586,222 @@ class _logistikmasukstate extends State<LogistikMasuk> {
                   child: ListTile(
                     title: Text(
                       'Supplier : ${supplier.nama}',
+                    ),
+                    onTap: onTap,
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  List<Logistik> listLogistik = [];
+  final List<String> DaftarLogistik = [
+    'Sapu',
+    'Keran',
+  ];
+
+  void _showDaftarLogistik(BuildContext context) {
+    List<String> filteredDaftarLogistik = List.from(DaftarLogistik);
+
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext builder) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Container(
+              height: MediaQuery.of(context).size.height / 1,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListTile(
+                      leading: new Icon(Icons.arrow_back_ios),
+                      title: new Text(
+                        'Pilih Nama Logistik',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 1,
+                            blurRadius: 7,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Pencarian',
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 16),
+                          prefixIcon: Icon(Icons.search),
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            filteredDaftarLogistik = DaftarLogistik.where(
+                                (barang) => barang
+                                    .toLowerCase()
+                                    .contains(value.toLowerCase())).toList();
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: filteredDaftarLogistik.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          title: Text(filteredDaftarLogistik[index]),
+                          onTap: () {
+                            _namaLogistikController.text =
+                                filteredDaftarLogistik[index];
+                            Navigator.pop(context);
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _tambahLogistik() {
+
+    // Buat objek Barang baru
+    Logistik LogistikBaru = Logistik(
+      nama: _namaLogistikController.text,
+    );
+
+    // Tambahkan barang ke dalam list selectedItems
+    setState(() {
+      selectedItems.add({
+        'nama': LogistikBaru.nama,
+      });
+      listLogistik.add(LogistikBaru); // Tambahkan barang ke dalam listBarang
+    });
+
+    // Reset field setelah menambahkan barang
+    _namaLogistikController.clear();
+
+    // Update controller _ListBarang agar menampilkan data baru
+    _ListLogistik.text = listLogistik
+        .map((logistik) => 'Supplier : ${logistik.nama}')
+        .join('\n\n');
+  }
+
+  Widget _fieldNamaLogistik({
+    required String hintText,
+    required String label,
+    TextEditingController? controller,
+    VoidCallback? onTap,
+    VoidCallback? onButtonTap,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 12,
+          ),
+        ),
+        SizedBox(height: 5),
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 7,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: TextFormField(
+                  controller: controller,
+                  onTap: onTap,
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    hintText: hintText,
+                    border: InputBorder.none,
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                    suffixIcon: Icon(
+                      Icons.keyboard_arrow_down,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _fieldListLogistik({
+    TextEditingController? controller,
+    VoidCallback? onTap,
+    required VoidCallback onButtonTaps,
+    required List<Logistik> listLogistik,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: listLogistik.length,
+          itemBuilder: (context, index) {
+            final Logistik = listLogistik[index];
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 255, 255, 255),
+                    borderRadius: BorderRadius.circular(10.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 1,
+                        blurRadius: 7,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: ListTile(
+                    title: Text(
+                      'Logistik : ${Logistik.nama}',
                     ),
                     onTap: onTap,
                   ),
