@@ -195,11 +195,6 @@ void saveUserToken(String token) async {
   }
 }
 
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

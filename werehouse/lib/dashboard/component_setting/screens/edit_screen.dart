@@ -4,6 +4,85 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:werehouse/shared/global.dart';
 
+enum ContentType {
+  success,
+  error,
+}
+
+class AwesomeSnackbarContent extends StatelessWidget {
+  final String title;
+  final String message;
+  final ContentType contentType;
+
+  const AwesomeSnackbarContent({
+    Key? key,
+    required this.title,
+    required this.message,
+    required this.contentType,
+  }) : super(key: key);
+
+  Color get _backgroundColor {
+    switch (contentType) {
+      case ContentType.success:
+        return Colors.green;
+      case ContentType.error:
+        return Colors.red;
+      default:
+        return Colors.blue;
+    }
+  }
+
+  IconData get _iconData {
+    switch (contentType) {
+      case ContentType.success:
+        return Icons.check_circle;
+      case ContentType.error:
+        return Icons.error;
+      default:
+        return Icons.info;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: _backgroundColor,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        children: [
+          Icon(
+            _iconData,
+            color: Colors.white,
+            size: 24,
+          ),
+          const SizedBox(width: 12),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                message,
+                style: const TextStyle(color: Colors.white),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class EditAccountScreen extends StatefulWidget {
   const EditAccountScreen({Key? key}) : super(key: key);
 
@@ -66,7 +145,8 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
     }
   }
 
-  Future<void> updatePassword(String currentPassword, String newPassword, String confirmPassword, String token) async {
+  Future<void> updatePassword(String currentPassword, String newPassword,
+      String confirmPassword, String token) async {
     final url = Uri.parse('${Global.baseUrl}${Global.updatePasswordPath}');
 
     final response = await http.put(
@@ -83,11 +163,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
     );
 
     if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Password berhasil diperbarui.'),
-        ),
-      );
+      _showSnackBar(context, 'Password berhasil diperbarui.', ContentType.success);
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('userPassword', newPassword);
@@ -96,12 +172,24 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
       _newPasswordController.clear();
       _confirmPasswordController.clear();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Gagal memperbarui password: ${response.body}'),
-        ),
-      );
+      _showSnackBar(context, 'Gagal memperbarui password ', ContentType.error);
+      //_showSnackBar(context, 'Gagal memperbarui password ${response.body}', ContentType.error);
     }
+  }
+
+  void _showSnackBar(BuildContext context, String message, ContentType type) {
+    final snackBar = SnackBar(
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.transparent,
+      content: AwesomeSnackbarContent(
+        title: type == ContentType.success ? 'Sukses' : 'Error',
+        message: message,
+        contentType: type,
+      ),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
@@ -194,12 +282,9 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
-                if (_newPasswordController.text != _confirmPasswordController.text) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Password baru dan konfirmasi password tidak cocok.'),
-                    ),
-                  );
+                if (_newPasswordController.text !=
+                    _confirmPasswordController.text) {
+                  _showSnackBar(context, 'Password baru dan konfirmasi password tidak cocok.', ContentType.error);
                   return;
                 }
                 await saveUserData();
@@ -212,14 +297,19 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                       _confirmPasswordController.text,
                       savedToken);
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Token tidak tersedia.'),
-                    ),
-                  );
+                  _showSnackBar(context, 'Token tidak tersedia.', ContentType.error);
                 }
               },
-              child: const Text('Simpan'),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                minimumSize: MaterialStateProperty.all<Size>(Size(double.infinity, 50)),
+              ),
+              child: Text(
+                'Simpan',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
             ),
           ],
         ),
