@@ -9,11 +9,13 @@
 //  static const supplier = 'supplier/data_supplier.php';
 //}
 class Global {
-  static const baseUrl = 'http://127.0.0.1:8000/api/apiTest'; 
+  static const baseUrl = 'http://127.0.0.1:8000/api/apiTest';
   static const signInPath = '/login';
-  static const registerPath = '/register'; // Tambahkan endpoint register jika diperlukan
+  static const registerPath =
+      '/register'; // Tambahkan endpoint register jika diperlukan
   static const tambahLogistikMasukPath = '/tambah_logistik_masuk';
   static const logistikMasukPath = '/logistics';
-  static const supplierPath = '/Supplier';
+  static const supplierPath = '/addSupplier';
   static const inlogistikpath = '/addInlogistic';
+  static const usersPath = '/users';
 }

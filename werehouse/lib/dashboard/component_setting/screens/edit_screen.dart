@@ -46,81 +46,6 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                       height: 100,
                       width: 100,
                     ),
-                    TextButton(
-                      onPressed: () {},
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.lightBlueAccent,
-                      ),
-                      child: const Text("Upload Image"),
-                    )
-                  ],
-                ),
-              ),
-              const SizedBox(height: 40),
-              EditItem(
-                title: "Gender",
-                widget: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              gender = "man";
-                            });
-                          },
-                          style: IconButton.styleFrom(
-                            backgroundColor: gender == "man"
-                                ? Colors.deepPurple
-                                : Colors.grey.shade200,
-                            fixedSize: const Size(50, 50),
-                          ),
-                          icon: const Icon(
-                            Ionicons.male,
-                            size: 18,
-                          ),
-                        ),
-                        const SizedBox(height: 5),
-                        const Text(
-                          "Laki-laki",
-                          style: TextStyle(
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(width: 20),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              gender = "woman";
-                            });
-                          },
-                          style: IconButton.styleFrom(
-                            backgroundColor: gender == "woman"
-                                ? Colors.deepPurple
-                                : Colors.grey.shade200,
-                            fixedSize: const Size(50, 50),
-                          ),
-                          icon: const Icon(
-                            Ionicons.female,
-                            size: 18,
-                          ),
-                        ),
-                        const SizedBox(height: 5),
-                        const Text(
-                          "Perempuan",
-                          style: TextStyle(
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
                   ],
                 ),
               ),
@@ -136,7 +61,12 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
               ),
               const SizedBox(height: 20),
               EditItem(
-                title: "Umur",
+                title: "Password",
+                widget: RoundedTextField(),
+              ),
+              const SizedBox(height: 20),
+              EditItem(
+                title: "Confirm Password",
                 widget: RoundedTextField(),
               ),
             ],

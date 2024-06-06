@@ -5,6 +5,7 @@ import 'package:werehouse/dashboard/component_setting/widgets/forward_button.dar
 import 'package:werehouse/dashboard/component_setting/widgets/setting_item.dart';
 import 'package:werehouse/dashboard/component_setting/widgets/setting_switch.dart';
 import 'package:werehouse/login/login_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
  // Pastikan menyesuaikan dengan path halaman LoginScreen
 
 class AccountScreen extends StatefulWidget {
@@ -16,6 +17,20 @@ class AccountScreen extends StatefulWidget {
 
 class _AccountScreenState extends State<AccountScreen> {
   bool isDarkMode = false;
+  String userName = ''; // Variabel untuk menyimpan nama pengguna
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserName(); // Panggil method untuk memuat nama pengguna saat widget diinisialisasi
+  }
+
+  void _loadUserName() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userName = prefs.getString('userName') ?? ''; // Ambil nama pengguna dari SharedPreferences
+    });
+  }
 
   void _logout() {
     showDialog(
@@ -48,7 +63,7 @@ class _AccountScreenState extends State<AccountScreen> {
     );
   }
 
-  @override
+ @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -81,11 +96,12 @@ class _AccountScreenState extends State<AccountScreen> {
                   children: [
                     Image.asset("assets/avatar.png", width: 70, height: 70),
                     const SizedBox(width: 20),
-                    const Column(
+                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Guntur",
+                          // Gunakan nilai userName yang sudah dimuat
+                          userName,
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w500,

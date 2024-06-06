@@ -7,7 +7,7 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide Response;
 import 'package:werehouse/shared/global.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -20,29 +20,30 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
-  void _showSuccessSnackBar(BuildContext context) {
-    final snackBar = SnackBar(
-      elevation: 0,
-      behavior: SnackBarBehavior.floating,
-      backgroundColor: Colors.transparent,
-      content: AwesomeSnackbarContent(
-        title: 'Login Berhasil',
-        message: 'Selamat, Anda berhasil login!',
-        contentType: ContentType.success,
-      ),
+ void _showSuccessSnackBar(BuildContext context, String name) {
+  final snackBar = SnackBar(
+    elevation: 0,
+    behavior: SnackBarBehavior.floating,
+    backgroundColor: Colors.transparent,
+    content: AwesomeSnackbarContent(
+      title: 'Login Berhasil',
+      message: 'Selamat, $name berhasil login!',
+      contentType: ContentType.success,
+    ),
+  );
+
+  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+  // Navigasi ke HomePage setelah 2 detik
+  Future.delayed(const Duration(seconds: 2), () {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const HomePage()),
     );
+  });
+}
 
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-    // Navigate to HomePage after 2 seconds
-    Future.delayed(const Duration(seconds: 2), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
-      );
-    });
-  }
 
   void _showFailedSnackBar(BuildContext context, String message) {
     final snackBar = SnackBar(
@@ -130,15 +131,21 @@ class _LoginScreenState extends State<LoginScreen> {
     Navigator.of(context).pop();
   }
 
-  void login() async {
+  // Fungsi untuk menyimpan ID pengguna setelah login
+void saveUserId(String userId) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString('userId', userId);
+  print('User ID saved: $userId'); // Debugging statement
+}
+
+void login() async {
   _showLoadingDialog(context); // Show loading dialog
 
   String email = _emailController.text.trim();
   String password = _passwordController.text.trim();
-  Response response;
 
   try {
-    response = await dio.post(
+    Response response = await dio.post(
       '${Global.baseUrl}${Global.signInPath}',
       data: {
         'email': email,
@@ -149,8 +156,12 @@ class _LoginScreenState extends State<LoginScreen> {
     final body = response.data;
 
     // Handle the response
-    if (response.statusCode == 200 && body.containsKey('success')) {
-      _showSuccessSnackBar(context);
+    if (response.statusCode == 200 && body['success'] == true) {
+      // Simpan ID pengguna dan nama setelah login berhasil
+      saveUserId(body['data']['id'].toString());
+      saveUserName(body['data']['name']); // Simpan nama pengguna
+
+      _showSuccessSnackBar(context, body['data']['name']);
     } else {
       _showFailedSnackBar(context, 'Email atau password Anda salah!');
     }
@@ -161,6 +172,11 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
+void saveUserName(String userName) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString('userName', userName);
+  print('User name saved: $userName'); // Debugging statement
+}
 
   @override
   Widget build(BuildContext context) {

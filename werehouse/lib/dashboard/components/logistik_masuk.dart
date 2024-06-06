@@ -169,6 +169,238 @@ class _logistikmasukstate extends State<LogistikMasuk> {
     );
   }
 
+   void onTap() {
+    _showDaftarSupplier(context);
+    _showDaftarLogistik(context);
+  }
+
+  List<Map<String, dynamic>> selectedItems = [];
+
+  List<Supplier> listSupplier = [];
+  final List<String> DaftarSupplier = [
+    '1',
+    'Lukman',
+  ];
+    void _showDaftarSupplier(BuildContext context) {
+    List<String> filteredDaftarSupplier = List.from(DaftarSupplier);
+
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext builder) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Container(
+              height: MediaQuery.of(context).size.height / 1,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListTile(
+                      leading: new Icon(Icons.arrow_back_ios),
+                      title: new Text(
+                        'Pilih Nama Supplier',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 1,
+                            blurRadius: 7,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Pencarian',
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 16),
+                          prefixIcon: Icon(Icons.search),
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            filteredDaftarSupplier = DaftarSupplier.where(
+                                (barang) => barang
+                                    .toLowerCase()
+                                    .contains(value.toLowerCase())).toList();
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: filteredDaftarSupplier.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          title: Text(filteredDaftarSupplier[index]),
+                          onTap: () {
+                            _namaSupplierController.text =
+                                filteredDaftarSupplier[index];
+                            Navigator.pop(context);
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _tambahSupplier() {
+    if (_namaSupplierController.text.isEmpty) {
+      // Jika salah satu field tidak terisi, tampilkan notifikasi
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Lengkapi kolom terlebih dahulu'),
+        ),
+      );
+      return; // Hentikan proses tambah barang
+    }
+
+    // Buat objek Barang baru
+    Supplier SupplierBaru = Supplier(
+      nama: _namaSupplierController.text,
+    );
+
+    // Tambahkan barang ke dalam list selectedItems
+    setState(() {
+      selectedItems.add({
+        'nama': SupplierBaru.nama,
+      });
+      listSupplier.add(SupplierBaru); // Tambahkan barang ke dalam listBarang
+    });
+
+    // Reset field setelah menambahkan barang
+    _namaSupplierController.clear();
+
+    // Update controller _ListBarang agar menampilkan data baru
+    _ListSupplier.text = listSupplier
+        .map((supplier) => 'Supplier : ${supplier.nama}')
+        .join('\n\n');
+  }
+
+    Widget _fieldNamaSupplier({
+    required String hintText,
+    required String label,
+    TextEditingController? controller,
+    VoidCallback? onTap,
+    VoidCallback? onButtonTap,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 12,
+          ),
+        ),
+        SizedBox(height: 5),
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 7,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: TextFormField(
+                  controller: controller,
+                  onTap: onTap,
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    hintText: hintText,
+                    border: InputBorder.none,
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                    suffixIcon: Icon(
+                      Icons.keyboard_arrow_down,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _fieldListSupplier({
+    TextEditingController? controller,
+    VoidCallback? onTap,
+    required VoidCallback onButtonTaps,
+    required List<Supplier> listSupplier,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: listSupplier.length,
+          itemBuilder: (context, index) {
+            final supplier = listSupplier[index];
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 255, 255, 255),
+                    borderRadius: BorderRadius.circular(10.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 1,
+                        blurRadius: 7,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: ListTile(
+                    title: Text(
+                      'Supplier : ${supplier.nama}',
+                    ),
+                    onTap: onTap,
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+
   Widget _buildTextFieldWithButton({
     required String hintText,
     required String label,
@@ -366,241 +598,9 @@ class _logistikmasukstate extends State<LogistikMasuk> {
     );
   }
 
-  void onTap() {
-    _showDaftarSupplier(context);
-    _showDaftarLogistik(context);
-  }
-
-  List<Map<String, dynamic>> selectedItems = [];
-
-  List<Supplier> listSupplier = [];
-  final List<String> DaftarSupplier = [
-    'Adi',
-    'Lukman',
-  ];
-
-  void _showDaftarSupplier(BuildContext context) {
-    List<String> filteredDaftarSupplier = List.from(DaftarSupplier);
-
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext builder) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return Container(
-              height: MediaQuery.of(context).size.height / 1,
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListTile(
-                      leading: new Icon(Icons.arrow_back_ios),
-                      title: new Text(
-                        'Pilih Nama Supplier',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 1,
-                            blurRadius: 7,
-                            offset: Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Pencarian',
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 16),
-                          prefixIcon: Icon(Icons.search),
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            filteredDaftarSupplier = DaftarSupplier.where(
-                                (barang) => barang
-                                    .toLowerCase()
-                                    .contains(value.toLowerCase())).toList();
-                          });
-                        },
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: filteredDaftarSupplier.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(filteredDaftarSupplier[index]),
-                          onTap: () {
-                            _namaSupplierController.text =
-                                filteredDaftarSupplier[index];
-                            Navigator.pop(context);
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  void _tambahSupplier() {
-    if (_namaSupplierController.text.isEmpty) {
-      // Jika salah satu field tidak terisi, tampilkan notifikasi
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Lengkapi kolom terlebih dahulu'),
-        ),
-      );
-      return; // Hentikan proses tambah barang
-    }
-
-    // Buat objek Barang baru
-    Supplier SupplierBaru = Supplier(
-      nama: _namaSupplierController.text,
-    );
-
-    // Tambahkan barang ke dalam list selectedItems
-    setState(() {
-      selectedItems.add({
-        'nama': SupplierBaru.nama,
-      });
-      listSupplier.add(SupplierBaru); // Tambahkan barang ke dalam listBarang
-    });
-
-    // Reset field setelah menambahkan barang
-    _namaSupplierController.clear();
-
-    // Update controller _ListBarang agar menampilkan data baru
-    _ListSupplier.text = listSupplier
-        .map((supplier) => 'Supplier : ${supplier.nama}')
-        .join('\n\n');
-  }
-
-  Widget _fieldNamaSupplier({
-    required String hintText,
-    required String label,
-    TextEditingController? controller,
-    VoidCallback? onTap,
-    VoidCallback? onButtonTap,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.grey,
-            fontSize: 12,
-          ),
-        ),
-        SizedBox(height: 5),
-        Row(
-          children: [
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 7,
-                      offset: Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: TextFormField(
-                  controller: controller,
-                  onTap: onTap,
-                  readOnly: true,
-                  decoration: InputDecoration(
-                    hintText: hintText,
-                    border: InputBorder.none,
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                    suffixIcon: Icon(
-                      Icons.keyboard_arrow_down,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _fieldListSupplier({
-    TextEditingController? controller,
-    VoidCallback? onTap,
-    required VoidCallback onButtonTaps,
-    required List<Supplier> listSupplier,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ListView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: listSupplier.length,
-          itemBuilder: (context, index) {
-            final supplier = listSupplier[index];
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 255, 255, 255),
-                    borderRadius: BorderRadius.circular(10.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 1,
-                        blurRadius: 7,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: ListTile(
-                    title: Text(
-                      'Supplier : ${supplier.nama}',
-                    ),
-                    onTap: onTap,
-                  ),
-                ),
-              ],
-            );
-          },
-        ),
-      ],
-    );
-  }
-
   List<Logistik> listLogistik = [];
   final List<String> DaftarLogistik = [
-    'Sapu',
+    '1',
     'Keran',
   ];
 
