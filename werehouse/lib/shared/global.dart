@@ -18,4 +18,6 @@ class Global {
   static const supplierPath = '/addSupplier';
   static const inlogistikpath = '/addInlogistic';
   static const usersPath = '/users';
+  static const updatePasswordPath = '/password';
+
 }

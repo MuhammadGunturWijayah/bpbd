@@ -129,33 +129,37 @@ class _LoginScreenState extends State<LoginScreen> {
 
   // Fungsi untuk menyimpan ID pengguna setelah login
   void saveUserId(String userId) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('userId', userId);
-    print('User ID saved: $userId'); // Debugging statement
-  }
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString('userId', userId);
+  print('User ID saved: $userId'); // Debugging statement
+}
 
-  void saveUserEmail(String userEmail) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('userEmail', userEmail);
-    print('User email saved: $userEmail'); // Debugging statement
-  }
+void saveUserEmail(String userEmail) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString('userEmail', userEmail);
+  print('User email saved: $userEmail'); // Debugging statement
+}
 
-  void saveUserName(String userName) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('userName', userName);
-    print('User name saved: $userName'); // Debugging statement
-  }
+void saveUserName(String userName) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString('userName', userName);
+  print('User name saved: $userName'); // Debugging statement
+}
 
-  
+void saveUserToken(String token) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString('token', token);
+  print('Token saved: $token'); // Debugging statement
+}
+
 
   void login() async {
-  _showLoadingDialog(context); // Tampilkan dialog loading
+  _showLoadingDialog(context);
 
   String email = _emailController.text.trim();
   String password = _passwordController.text.trim();
 
   try {
-    // Kirim request ke API dengan Dio
     Response response = await dio.post(
       '${Global.baseUrl}${Global.signInPath}',
       data: {
@@ -164,50 +168,33 @@ class _LoginScreenState extends State<LoginScreen> {
       },
     );
 
-    // Ambil data dari respons
     Map<String, dynamic> body = response.data;
 
-    // Periksa status kode dan 'success' dari respons
     if (response.statusCode == 200 && body['success'] == true) {
-  // Simpan ID pengguna, nama, dan email setelah login berhasil
-  saveUserId(body['data']['id'].toString());
+      saveUserId(body['data']['id'].toString());
+      saveUserName(body['data']['name']);
+      saveUserEmail(body['data']['email']);
+      saveUserToken(body['data']['access_token']); // Simpan token
 
-  if (body['data']['name'] != null) {
-    saveUserName(body['data']['name']);
-  } else {
-    // Handle jika nama kosong
-    saveUserName('');
-  }
+      _showSuccessSnackBar(context, body['data']['name']);
 
-  if (body['data']['email'] != null) {
-    saveUserEmail(body['data']['email']);
-  } else {
-    // Handle jika email kosong
-    saveUserEmail('');
-  }
-
-  // Tampilkan snackbar login berhasil
-  _showSuccessSnackBar(context, body['data']['name']);
-
-  // Navigasi ke halaman beranda setelah login berhasil
-  Future.delayed(const Duration(seconds: 2), () {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const HomePage()),
-    );
-  });
+      Future.delayed(const Duration(seconds: 2), () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomePage()),
+        );
+      });
     } else {
-      // Tampilkan snackbar login gagal dengan pesan dari server
       _showFailedSnackBar(context, body['message'] ?? 'Unknown error');
     }
   } catch (e) {
-    // Tangani kesalahan
     print('Exception during login: $e');
     _showFailedSnackBar(context, 'Terjadi kesalahan, coba lagi nanti: $e');
   } finally {
-    _hideLoadingDialog(context); // Sembunyikan dialog loading
+    _hideLoadingDialog(context);
   }
 }
+
 
 
 
