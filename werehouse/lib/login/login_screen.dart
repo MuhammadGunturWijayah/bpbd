@@ -1,13 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:werehouse/dashboard/HomePage.dart';
 import 'package:werehouse/login/forgot_password_screen.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:dio/dio.dart';
-import 'package:get/get.dart' hide Response;
 import 'package:werehouse/shared/global.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -20,30 +17,29 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
- void _showSuccessSnackBar(BuildContext context, String name) {
-  final snackBar = SnackBar(
-    elevation: 0,
-    behavior: SnackBarBehavior.floating,
-    backgroundColor: Colors.transparent,
-    content: AwesomeSnackbarContent(
-      title: 'Login Berhasil',
-      message: 'Selamat, $name berhasil login!',
-      contentType: ContentType.success,
-    ),
-  );
-
-  ScaffoldMessenger.of(context).hideCurrentSnackBar();
-  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-  // Navigasi ke HomePage setelah 2 detik
-  Future.delayed(const Duration(seconds: 2), () {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const HomePage()),
+  void _showSuccessSnackBar(BuildContext context, String name) {
+    final snackBar = SnackBar(
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.transparent,
+      content: AwesomeSnackbarContent(
+        title: 'Login Berhasil',
+        message: 'Selamat, $name berhasil login!',
+        contentType: ContentType.success,
+      ),
     );
-  });
-}
 
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+    // Navigasi ke HomePage setelah 2 detik
+    Future.delayed(const Duration(seconds: 2), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
+    });
+  }
 
   void _showFailedSnackBar(BuildContext context, String message) {
     final snackBar = SnackBar(
@@ -132,19 +128,34 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   // Fungsi untuk menyimpan ID pengguna setelah login
-void saveUserId(String userId) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setString('userId', userId);
-  print('User ID saved: $userId'); // Debugging statement
-}
+  void saveUserId(String userId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userId', userId);
+    print('User ID saved: $userId'); // Debugging statement
+  }
 
-void login() async {
-  _showLoadingDialog(context); // Show loading dialog
+  void saveUserEmail(String userEmail) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userEmail', userEmail);
+    print('User email saved: $userEmail'); // Debugging statement
+  }
+
+  void saveUserName(String userName) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userName', userName);
+    print('User name saved: $userName'); // Debugging statement
+  }
+
+  
+
+  void login() async {
+  _showLoadingDialog(context); // Tampilkan dialog loading
 
   String email = _emailController.text.trim();
   String password = _passwordController.text.trim();
 
   try {
+    // Kirim request ke API dengan Dio
     Response response = await dio.post(
       '${Global.baseUrl}${Global.signInPath}',
       data: {
@@ -153,30 +164,54 @@ void login() async {
       },
     );
 
-    final body = response.data;
+    // Ambil data dari respons
+    Map<String, dynamic> body = response.data;
 
-    // Handle the response
+    // Periksa status kode dan 'success' dari respons
     if (response.statusCode == 200 && body['success'] == true) {
-      // Simpan ID pengguna dan nama setelah login berhasil
-      saveUserId(body['data']['id'].toString());
-      saveUserName(body['data']['name']); // Simpan nama pengguna
+  // Simpan ID pengguna, nama, dan email setelah login berhasil
+  saveUserId(body['data']['id'].toString());
 
-      _showSuccessSnackBar(context, body['data']['name']);
+  if (body['data']['name'] != null) {
+    saveUserName(body['data']['name']);
+  } else {
+    // Handle jika nama kosong
+    saveUserName('');
+  }
+
+  if (body['data']['email'] != null) {
+    saveUserEmail(body['data']['email']);
+  } else {
+    // Handle jika email kosong
+    saveUserEmail('');
+  }
+
+  // Tampilkan snackbar login berhasil
+  _showSuccessSnackBar(context, body['data']['name']);
+
+  // Navigasi ke halaman beranda setelah login berhasil
+  Future.delayed(const Duration(seconds: 2), () {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const HomePage()),
+    );
+  });
     } else {
-      _showFailedSnackBar(context, 'Email atau password Anda salah!');
+      // Tampilkan snackbar login gagal dengan pesan dari server
+      _showFailedSnackBar(context, body['message'] ?? 'Unknown error');
     }
   } catch (e) {
-    _showFailedSnackBar(context, 'Terjadi kesalahan, coba lagi nanti');
+    // Tangani kesalahan
+    print('Exception during login: $e');
+    _showFailedSnackBar(context, 'Terjadi kesalahan, coba lagi nanti: $e');
   } finally {
-    _hideLoadingDialog(context); // Hide loading dialog
+    _hideLoadingDialog(context); // Sembunyikan dialog loading
   }
 }
 
-void saveUserName(String userName) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setString('userName', userName);
-  print('User name saved: $userName'); // Debugging statement
-}
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -216,8 +251,7 @@ void saveUserName(String userName) async {
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width * 0.8,
                   child: Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.end, // Geser teks ke kanan
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: const [
                       Expanded(
                         child: Text(
@@ -425,4 +459,3 @@ void saveUserName(String userName) async {
     );
   }
 }
-

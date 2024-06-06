@@ -6,7 +6,7 @@ import 'package:werehouse/dashboard/component_setting/widgets/setting_item.dart'
 import 'package:werehouse/dashboard/component_setting/widgets/setting_switch.dart';
 import 'package:werehouse/login/login_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
- // Pastikan menyesuaikan dengan path halaman LoginScreen
+// Pastikan menyesuaikan dengan path halaman LoginScreen
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({Key? key}) : super(key: key);
@@ -18,6 +18,7 @@ class AccountScreen extends StatefulWidget {
 class _AccountScreenState extends State<AccountScreen> {
   bool isDarkMode = false;
   String userName = ''; // Variabel untuk menyimpan nama pengguna
+  String userEmail = '';
 
   @override
   void initState() {
@@ -28,7 +29,9 @@ class _AccountScreenState extends State<AccountScreen> {
   void _loadUserName() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      userName = prefs.getString('userName') ?? ''; // Ambil nama pengguna dari SharedPreferences
+      userName = prefs.getString('userName') ??
+          ''; // Ambil nama pengguna dari SharedPreferences
+      userEmail = prefs.getString('userEmail') ?? '';
     });
   }
 
@@ -63,7 +66,7 @@ class _AccountScreenState extends State<AccountScreen> {
     );
   }
 
- @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -96,7 +99,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   children: [
                     Image.asset("assets/avatar.png", width: 70, height: 70),
                     const SizedBox(width: 20),
-                     Column(
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
@@ -109,7 +112,7 @@ class _AccountScreenState extends State<AccountScreen> {
                         ),
                         SizedBox(height: 10),
                         Text(
-                          "Admin",
+                          userEmail,
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.grey,
