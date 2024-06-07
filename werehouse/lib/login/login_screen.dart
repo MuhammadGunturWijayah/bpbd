@@ -5,6 +5,7 @@ import 'package:werehouse/dashboard/HomePage.dart';
 import 'package:werehouse/login/forgot_password_screen.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:werehouse/shared/global.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -73,7 +74,8 @@ class _LoginScreenState extends State<LoginScreen> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  void _showPasswordValidationErrorSnackBar(BuildContext context, String message) {
+  void _showPasswordValidationErrorSnackBar(
+      BuildContext context, String message) {
     final snackBar = SnackBar(
       elevation: 0,
       behavior: SnackBarBehavior.floating,
@@ -129,86 +131,84 @@ class _LoginScreenState extends State<LoginScreen> {
 
   // Fungsi untuk menyimpan ID pengguna setelah login
   void saveUserId(String userId) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setString('userId', userId);
-  print('User ID saved: $userId'); // Debugging statement
-}
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userId', userId);
+    print('User ID saved: $userId'); // Debugging statement
+  }
 
-void saveUserEmail(String userEmail) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setString('userEmail', userEmail);
-  print('User email saved: $userEmail'); // Debugging statement
-}
+  void saveUserEmail(String userEmail) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userEmail', userEmail);
+    print('User email saved: $userEmail'); // Debugging statement
+  }
 
-void saveUserName(String userName) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setString('userName', userName);
-  print('User name saved: $userName'); // Debugging statement
-}
+  void saveUserName(String userName) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userName', userName);
+    print('User name saved: $userName'); // Debugging statement
+  }
 
-void saveUserToken(String token) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setString('token', token);
-  print('Token saved: $token'); // Debugging statement
-}
-
+  void saveUserToken(String token) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('token', token);
+    print('Token saved: $token'); // Debugging statement
+  }
 
   void login() async {
-  _showLoadingDialog(context);
+    _showLoadingDialog(context);
 
-  String email = _emailController.text.trim();
-  String password = _passwordController.text.trim();
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
 
-  try {
-    Response response = await dio.post(
-      '${Global.baseUrl}${Global.signInPath}',
-      data: {
-        'email': email,
-        'password': password,
-      },
-    );
+    try {
+      Response response = await dio.post(
+        '${Global.baseUrl}${Global.signInPath}',
+        data: {
+          'email': email,
+          'password': password,
+        },
+      );
 
-    Map<String, dynamic> body = response.data;
+      Map<String, dynamic> body = response.data;
 
-    if (response.statusCode == 200 && body['success'] == true) {
-      saveUserId(body['data']['id'].toString());
-      saveUserName(body['data']['name']);
-      saveUserEmail(body['data']['email']);
-      saveUserToken(body['data']['access_token']); // Simpan token
+      if (response.statusCode == 200 && body['success'] == true) {
+        saveUserId(body['data']['id'].toString());
+        saveUserName(body['data']['name']);
+        saveUserEmail(body['data']['email']);
+        saveUserToken(body['data']['access_token']); // Simpan token
 
-      _showSuccessSnackBar(context, body['data']['name']);
+        _showSuccessSnackBar(context, body['data']['name']);
 
-      Future.delayed(const Duration(seconds: 2), () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
-        );
-      });
-    } else {
-      _showFailedSnackBar(context, body['message'] ?? 'Unknown error');
+        Future.delayed(const Duration(seconds: 2), () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomePage()),
+          );
+        });
+      } else {
+        _showFailedSnackBar(context, body['message'] ?? 'Unknown error');
+      }
+    } catch (e) {
+      print('Exception during login: $e');
+      _showFailedSnackBar(context, 'Terjadi kesalahan, coba lagi nanti: $e');
+    } finally {
+      _hideLoadingDialog(context);
     }
-  } catch (e) {
-    print('Exception during login: $e');
-    _showFailedSnackBar(context, 'Terjadi kesalahan, coba lagi nanti: $e');
-  } finally {
-    _hideLoadingDialog(context);
   }
-}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
         backgroundColor: Colors.white,
-        elevation: 0,
-        iconTheme: const IconThemeData(
-          color: Colors.black,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          iconTheme: const IconThemeData(
+            color: Colors.black,
+          ),
         ),
-      ),
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        body: ListView(
+          scrollDirection: Axis.vertical,
           children: [
             const SizedBox(height: 20),
             Padding(
@@ -434,10 +434,8 @@ void saveUserToken(String token) async {
                 ],
               ),
             ),
-            const Spacer(),
+            const SizedBox( height: 50,),
           ],
-        ),
-      ),
-    );
+        ));
   }
 }

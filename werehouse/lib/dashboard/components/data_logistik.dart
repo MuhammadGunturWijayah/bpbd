@@ -159,7 +159,7 @@ class DataLogistik extends StatelessWidget {
                         hintText: '(satuan)',
                         label: 'Satuan :',
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 30),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -168,14 +168,7 @@ class DataLogistik extends StatelessWidget {
                             onPressed: () {
                               _simpanData(context);
                             },
-                            color: Colors.green,
-                          ),
-                          _customButton(
-                            text: 'Hapus',
-                            onPressed: () {
-                              // Tambahkan fungsi untuk menghapus data
-                            },
-                            color: Colors.red,
+                            color: Colors.blue,
                           ),
                         ],
                       ),
@@ -350,7 +343,8 @@ class DataLogistik extends StatelessWidget {
   Widget _customButton(
       {required String text,
       required VoidCallback onPressed,
-      required Color color}) {
+      required Color color
+      }) {
     return ElevatedButton(
       onPressed: onPressed,
       child: Text(
@@ -358,11 +352,12 @@ class DataLogistik extends StatelessWidget {
         style: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.bold,
+          color: Colors.white
         ),
       ),
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 132),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),

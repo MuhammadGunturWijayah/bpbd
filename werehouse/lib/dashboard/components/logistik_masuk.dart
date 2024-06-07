@@ -524,6 +524,10 @@ class _logistikmasukstate extends State<LogistikMasuk> {
     );
   }
 
+  void readSupplier() async{
+
+  }
+
   Widget _fieldKeterangan({
     required String hintText,
     required String label,
