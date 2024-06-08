@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -39,6 +38,26 @@ class _logistikmasukstate extends State<LogistikMasuk> {
   final TextEditingController _dokumentasiController = TextEditingController();
   final TextEditingController _ListSupplier = TextEditingController();
   final TextEditingController _ListLogistik = TextEditingController();
+   void initState() {
+  super.initState();
+  fetchLogistik().then((logistik) {
+    setState(() {
+      DaftarLogistik = logistik;
+    });
+  }).catchError((error) {
+    print('Error: $error');
+    // Handle error fetching data
+  });
+
+  fetchSuppliers().then((suppliers) {
+    setState(() {
+      DaftarSupplier = suppliers;
+    });
+  }).catchError((error) {
+    print('Error: $error');
+    // Handle error fetching data
+  });
+}
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
@@ -169,21 +188,43 @@ class _logistikmasukstate extends State<LogistikMasuk> {
     );
   }
 
+   Future<List<String>> fetchLogistik() async {
+  final response = await http.get(Uri.parse('${Global.baseUrl}${Global.getLogistikMasuk}'));
+
+  if (response.statusCode == 200) {
+    final List<dynamic> jsonResponse = jsonDecode(response.body)['data'];
+    
+    List<String> daftarSuppliers = jsonResponse.map((item) => item['id'].toString()).toList();
+    return daftarSuppliers;
+  } else {
+    throw Exception('Failed to load suppliers');
+  }
+}
+
+Future<List<String>> fetchSuppliers() async {
+  final response = await http.get(Uri.parse('${Global.baseUrl}${Global.getSupplierMasuk}'));
+
+  if (response.statusCode == 200) {
+    final List<dynamic> jsonResponse = jsonDecode(response.body)['data'];
+    
+    List<String> daftarSuppliers = jsonResponse.map((item) => item['id'].toString()).toList();
+    return daftarSuppliers;
+  } else {
+    throw Exception('Failed to load suppliers');
+  }
+}
+
+
    void onTap() {
     _showDaftarSupplier(context);
     _showDaftarLogistik(context);
   }
 
   List<Map<String, dynamic>> selectedItems = [];
-
   List<Supplier> listSupplier = [];
-  final List<String> DaftarSupplier = [
-    '1',
-    'Lukman',
-  ];
+  List<String> DaftarSupplier = [];
     void _showDaftarSupplier(BuildContext context) {
     List<String> filteredDaftarSupplier = List.from(DaftarSupplier);
-
     showModalBottomSheet(
       context: context,
       builder: (BuildContext builder) {
@@ -266,32 +307,27 @@ class _logistikmasukstate extends State<LogistikMasuk> {
 
   void _tambahSupplier() {
     if (_namaSupplierController.text.isEmpty) {
-      // Jika salah satu field tidak terisi, tampilkan notifikasi
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Lengkapi kolom terlebih dahulu'),
         ),
       );
-      return; // Hentikan proses tambah barang
+      return;
     }
 
-    // Buat objek Barang baru
     Supplier SupplierBaru = Supplier(
       nama: _namaSupplierController.text,
     );
 
-    // Tambahkan barang ke dalam list selectedItems
     setState(() {
       selectedItems.add({
         'nama': SupplierBaru.nama,
       });
-      listSupplier.add(SupplierBaru); // Tambahkan barang ke dalam listBarang
+      listSupplier.add(SupplierBaru);
     });
 
-    // Reset field setelah menambahkan barang
     _namaSupplierController.clear();
 
-    // Update controller _ListBarang agar menampilkan data baru
     _ListSupplier.text = listSupplier
         .map((supplier) => 'Supplier : ${supplier.nama}')
         .join('\n\n');
@@ -603,13 +639,10 @@ class _logistikmasukstate extends State<LogistikMasuk> {
   }
 
   List<Logistik> listLogistik = [];
-  final List<String> DaftarLogistik = [
-    '1',
-    'Keran',
-  ];
+  List<String> DaftarLogistik = [];
 
   void _showDaftarLogistik(BuildContext context) {
-    List<String> filteredDaftarLogistik = List.from(DaftarLogistik);
+     List<String> filteredDaftarLogistik = List.from(DaftarLogistik);
 
     showModalBottomSheet(
       context: context,
@@ -714,6 +747,7 @@ class _logistikmasukstate extends State<LogistikMasuk> {
         .map((logistik) => 'Supplier : ${logistik.nama}')
         .join('\n\n');
   }
+
 
   Widget _fieldNamaLogistik({
     required String hintText,

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server/gmail.dart';
 import 'package:werehouse/login/login_screen.dart';
 import 'package:werehouse/login/otp_screen.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
-  const ForgotPasswordScreen({Key? key}) : super(key: key);
+   ForgotPasswordScreen({Key? key}) : super(key: key);
+
+  final TextEditingController emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +74,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                     right: 10,
                   ),
                   child: TextFormField(
+                    controller: emailController,
                     decoration: const InputDecoration(
                       border: InputBorder.none,
                       hintText: 'Enter your email',
@@ -96,10 +101,16 @@ class ForgotPasswordScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const OTPScreen()));
+                        String email = emailController.text.trim();
+                        if (_isValidEmail(email)) {
+                          _sendOTP(context, email);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Please enter a valid email address.'),
+                            ),
+                          );
+                        }
                       },
                       child: const Padding(
                         padding: EdgeInsets.all(15.0),
@@ -130,9 +141,11 @@ class ForgotPasswordScreen extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const LoginScreen()));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LoginScreen(),
+                      ),
+                    );
                   },
                   child: const Text(
                     "Login",
@@ -149,5 +162,54 @@ class ForgotPasswordScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  bool _isValidEmail(String email) {
+    // Validasi sederhana, dapat disesuaikan sesuai kebutuhan
+    return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
+  }
+
+ void _sendOTP(BuildContext context, String email) async {
+  String username = 'your-email@gmail.com'; // Ganti dengan email Anda
+  String password = 'your-password'; // Ganti dengan password email Anda
+
+  final smtpServer = gmail(username, password);
+
+  // Generate OTP (dummy example)
+  String otpCode = _generateOTP();
+
+  final message = Message()
+    ..from = Address(username, 'Your Name')
+    ..recipients.add(email) // Menggunakan alamat email yang dimasukkan pengguna
+    ..subject = 'Your OTP Code'
+    ..text = 'Your OTP code is: $otpCode';
+
+  try {
+    final sendReport = await send(message, smtpServer);
+    print('Message sent: ' + sendReport.toString());
+    // Navigasi ke halaman untuk memasukkan OTP
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => OTPScreen(),
+        settings: RouteSettings(arguments: otpCode), // Mengirim OTP sebagai argument
+      ),
+    );
+  } catch (e) {
+    print('Error occurred: $e');
+    // Tampilkan pesan kesalahan kepada pengguna
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Failed to send OTP. Please try again later. Error: $e'),
+      ),
+    );
+  }
+}
+
+
+  String _generateOTP() {
+    // Implementasi penghasilan OTP secara acak (bisa menggunakan library seperti `otp` package)
+    // Contoh sederhana:
+    return '123456'; // Ini hanya contoh, biasanya OTP harus dihasilkan secara acak
   }
 }

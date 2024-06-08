@@ -53,13 +53,6 @@ class _barang_keluarState extends State<barang_keluar> {
   // Deklarasi daftar barang
   final List<String> daftarBarang = [
     'Sapu',
-    'Sapu',
-    'Sapu',
-    'Sendok',
-    'Sendok cangkul',
-    'Handuk',
-    'Handuk',
-    'Tas',
     'Tas',
   ];
 

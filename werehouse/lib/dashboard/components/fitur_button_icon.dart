@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:werehouse/dashboard/component_laporan/fitur_laporan.dart';
 import 'package:werehouse/dashboard/component_pengiriman_barang/accept_barang.dart';
 import 'package:werehouse/dashboard/component_setting/screens/account_screen.dart';
+import 'package:werehouse/dashboard/components/cobaLogistikMasuk.dart';
 import 'package:werehouse/dashboard/components/logistik_keluar.dart';
 import 'package:werehouse/dashboard/components/data_logistik.dart';
 import 'package:werehouse/dashboard/components/logistik_masuk.dart';
