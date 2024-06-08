@@ -11,19 +11,45 @@ import 'package:werehouse/shared/global.dart';
 var selectedService = 0;
 DateTime? selectedDate; // Change to nullable DateTime
 
-class LogistikMasuk extends StatefulWidget {
-  @override
-  _logistikmasukstate createState() => _logistikmasukstate();
-}
-
 class Supplier {
-  final String nama;
-  Supplier({required this.nama});
+  final int id;
+  final String namaSupplier;
+
+  Supplier({
+    required this.id,
+    required this.namaSupplier,
+  });
+
+  factory Supplier.fromJson(Map<String, dynamic> json) {
+    return Supplier(
+      id: json['id'], // Sesuaikan dengan key yang mengandung id di dalam JSON
+      namaSupplier: json[
+          'nama_supplier'], // Sesuaikan dengan key yang mengandung nama_logistik di dalam JSON
+    );
+  }
 }
 
 class Logistik {
-  final String nama;
-  Logistik({required this.nama});
+  final int id;
+  final String namaLogistik;
+
+  Logistik({
+    required this.id,
+    required this.namaLogistik,
+  });
+
+  factory Logistik.fromJson(Map<String, dynamic> json) {
+    return Logistik(
+      id: json['id'], // Sesuaikan dengan key yang mengandung id di dalam JSON
+      namaLogistik: json[
+          'nama_logistik'], // Sesuaikan dengan key yang mengandung nama_logistik di dalam JSON
+    );
+  }
+}
+
+class LogistikMasuk extends StatefulWidget {
+  @override
+  _logistikmasukstate createState() => _logistikmasukstate();
 }
 
 class _logistikmasukstate extends State<LogistikMasuk> {
@@ -38,26 +64,39 @@ class _logistikmasukstate extends State<LogistikMasuk> {
   final TextEditingController _dokumentasiController = TextEditingController();
   final TextEditingController _ListSupplier = TextEditingController();
   final TextEditingController _ListLogistik = TextEditingController();
-   void initState() {
-  super.initState();
-  fetchLogistik().then((logistik) {
-    setState(() {
-      DaftarLogistik = logistik;
-    });
-  }).catchError((error) {
-    print('Error: $error');
-    // Handle error fetching data
-  });
+  List<Map<String, dynamic>> selectedItems = [];
+  List<Supplier> listSupplier = [];
+  List<String> daftarSupplier = [];
 
-  fetchSuppliers().then((suppliers) {
-    setState(() {
-      DaftarSupplier = suppliers;
+  List<Logistik> listLogistik = [];
+  List<String> DaftarLogistik = [];
+  void initState() {
+    super.initState();
+
+    fetchLogistik().then((logistik) {
+      setState(() {
+        listLogistik = logistik;
+        // Mengambil id dan namaLogistik dari setiap objek Logistik
+        DaftarLogistik = logistik
+            .map((logistik) => '${logistik.id}: ${logistik.namaLogistik}')
+            .toList();
+      });
+    }).catchError((error) {
+      print('Error fetching logistik: $error');
     });
-  }).catchError((error) {
-    print('Error: $error');
-    // Handle error fetching data
-  });
-}
+
+    fetchSuppliers().then((suppliers) {
+      setState(() {
+        listSupplier = suppliers;
+        daftarSupplier = suppliers
+            .map((supplier) => '${supplier.id}: ${supplier.namaSupplier}')
+            .toList();
+      });
+    }).catchError((error) {
+      print('Error fetching suppliers: $error');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
@@ -188,43 +227,56 @@ class _logistikmasukstate extends State<LogistikMasuk> {
     );
   }
 
-   Future<List<String>> fetchLogistik() async {
-  final response = await http.get(Uri.parse('${Global.baseUrl}${Global.getLogistikMasuk}'));
+  Future<List<Supplier>> fetchSuppliers() async {
+    try {
+      final response = await http
+          .get(Uri.parse('${Global.baseUrl}${Global.getSupplierMasuk}'));
 
-  if (response.statusCode == 200) {
-    final List<dynamic> jsonResponse = jsonDecode(response.body)['data'];
-    
-    List<String> daftarSuppliers = jsonResponse.map((item) => item['id'].toString()).toList();
-    return daftarSuppliers;
-  } else {
-    throw Exception('Failed to load suppliers');
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonResponse = jsonDecode(response.body)['data'];
+        print(
+            'Suppliers Response: $jsonResponse'); // Print response for debugging
+
+        List<Supplier> daftarSuppliers =
+            jsonResponse.map((item) => Supplier.fromJson(item)).toList();
+        return daftarSuppliers;
+      } else {
+        throw Exception('Failed to load suppliers: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to load suppliers: $e');
+    }
   }
-}
 
-Future<List<String>> fetchSuppliers() async {
-  final response = await http.get(Uri.parse('${Global.baseUrl}${Global.getSupplierMasuk}'));
+  Future<List<Logistik>> fetchLogistik() async {
+    try {
+      final response = await http
+          .get(Uri.parse('${Global.baseUrl}${Global.getLogistikMasuk}'));
 
-  if (response.statusCode == 200) {
-    final List<dynamic> jsonResponse = jsonDecode(response.body)['data'];
-    
-    List<String> daftarSuppliers = jsonResponse.map((item) => item['id'].toString()).toList();
-    return daftarSuppliers;
-  } else {
-    throw Exception('Failed to load suppliers');
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonResponse = jsonDecode(response.body)['data'];
+        print(
+            'Logistik Response: $jsonResponse'); // Print response for debugging
+
+        List<Logistik> daftarLogistik =
+            jsonResponse.map((item) => Logistik.fromJson(item)).toList();
+        return daftarLogistik;
+      } else {
+        throw Exception('Gagal memuat data logistik: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Gagal memuat data logistik: $e');
+    }
   }
-}
 
-
-   void onTap() {
+  void onTap() {
     _showDaftarSupplier(context);
     _showDaftarLogistik(context);
   }
 
-  List<Map<String, dynamic>> selectedItems = [];
-  List<Supplier> listSupplier = [];
   List<String> DaftarSupplier = [];
-    void _showDaftarSupplier(BuildContext context) {
-    List<String> filteredDaftarSupplier = List.from(DaftarSupplier);
+  void _showDaftarSupplier(BuildContext context) {
+    List<String> filteredDaftarSupplier = daftarSupplier;
     showModalBottomSheet(
       context: context,
       builder: (BuildContext builder) {
@@ -273,7 +325,7 @@ Future<List<String>> fetchSuppliers() async {
                         onChanged: (value) {
                           setState(() {
                             filteredDaftarSupplier = DaftarSupplier.where(
-                                (barang) => barang
+                                (supplier) => supplier
                                     .toLowerCase()
                                     .contains(value.toLowerCase())).toList();
                           });
@@ -289,7 +341,9 @@ Future<List<String>> fetchSuppliers() async {
                           title: Text(filteredDaftarSupplier[index]),
                           onTap: () {
                             _namaSupplierController.text =
-                                filteredDaftarSupplier[index];
+                                filteredDaftarSupplier[index]
+                                    .split(':')[0]
+                                    .trim();
                             Navigator.pop(context);
                           },
                         );
@@ -305,35 +359,7 @@ Future<List<String>> fetchSuppliers() async {
     );
   }
 
-  void _tambahSupplier() {
-    if (_namaSupplierController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Lengkapi kolom terlebih dahulu'),
-        ),
-      );
-      return;
-    }
-
-    Supplier SupplierBaru = Supplier(
-      nama: _namaSupplierController.text,
-    );
-
-    setState(() {
-      selectedItems.add({
-        'nama': SupplierBaru.nama,
-      });
-      listSupplier.add(SupplierBaru);
-    });
-
-    _namaSupplierController.clear();
-
-    _ListSupplier.text = listSupplier
-        .map((supplier) => 'Supplier : ${supplier.nama}')
-        .join('\n\n');
-  }
-
-    Widget _fieldNamaSupplier({
+  Widget _fieldNamaSupplier({
     required String hintText,
     required String label,
     TextEditingController? controller,
@@ -421,12 +447,6 @@ Future<List<String>> fetchSuppliers() async {
                       ),
                     ],
                   ),
-                  child: ListTile(
-                    title: Text(
-                      'Supplier : ${supplier.nama}',
-                    ),
-                    onTap: onTap,
-                  ),
                 ),
               ],
             );
@@ -435,7 +455,6 @@ Future<List<String>> fetchSuppliers() async {
       ],
     );
   }
-
 
   Widget _buildTextFieldWithButton({
     required String hintText,
@@ -560,9 +579,7 @@ Future<List<String>> fetchSuppliers() async {
     );
   }
 
-  void readSupplier() async{
-
-  }
+  void readSupplier() async {}
 
   Widget _fieldKeterangan({
     required String hintText,
@@ -638,11 +655,8 @@ Future<List<String>> fetchSuppliers() async {
     );
   }
 
-  List<Logistik> listLogistik = [];
-  List<String> DaftarLogistik = [];
-
   void _showDaftarLogistik(BuildContext context) {
-     List<String> filteredDaftarLogistik = List.from(DaftarLogistik);
+    List<String> filteredDaftarLogistik = List.from(DaftarLogistik);
 
     showModalBottomSheet(
       context: context,
@@ -708,7 +722,7 @@ Future<List<String>> fetchSuppliers() async {
                           title: Text(filteredDaftarLogistik[index]),
                           onTap: () {
                             _namaLogistikController.text =
-                                filteredDaftarLogistik[index];
+                                filteredDaftarLogistik[index].split(':')[0].trim();
                             Navigator.pop(context);
                           },
                         );
@@ -723,31 +737,6 @@ Future<List<String>> fetchSuppliers() async {
       },
     );
   }
-
-  void _tambahLogistik() {
-
-    // Buat objek Barang baru
-    Logistik LogistikBaru = Logistik(
-      nama: _namaLogistikController.text,
-    );
-
-    // Tambahkan barang ke dalam list selectedItems
-    setState(() {
-      selectedItems.add({
-        'nama': LogistikBaru.nama,
-      });
-      listLogistik.add(LogistikBaru); // Tambahkan barang ke dalam listBarang
-    });
-
-    // Reset field setelah menambahkan barang
-    _namaLogistikController.clear();
-
-    // Update controller _ListBarang agar menampilkan data baru
-    _ListLogistik.text = listLogistik
-        .map((logistik) => 'Supplier : ${logistik.nama}')
-        .join('\n\n');
-  }
-
 
   Widget _fieldNamaLogistik({
     required String hintText,
@@ -836,12 +825,6 @@ Future<List<String>> fetchSuppliers() async {
                         offset: Offset(0, 3),
                       ),
                     ],
-                  ),
-                  child: ListTile(
-                    title: Text(
-                      'Logistik : ${Logistik.nama}',
-                    ),
-                    onTap: onTap,
                   ),
                 ),
               ],
@@ -1055,8 +1038,9 @@ Future<List<String>> fetchSuppliers() async {
         },
         body: jsonEncode({
           'tanggal_masuk': tanggalMasuk,
-          'id_supplier': namaSupplier,
-          'id_logistik': namaLogistik,
+          'id_supplier':
+              int.parse(namaSupplier), // Ubah menjadi integer jika perlu
+          'id_logistik': int.parse(namaLogistik),
           'jumlah_logistik_masuk': jumlahLogistik,
           'keterangan_masuk': keteranganMasuk,
           'dokumentasi_masuk': dokumentasi,
