@@ -165,7 +165,7 @@ class _logistikmasukstate extends State<LogistikMasuk> {
                             listLogistik, // Pass the list of items here
                       ),
                       const SizedBox(height: 10),
-                      _fieldKeterangan(
+                      _fieldJumlah(
                         hintText: 'Jumlah',
                         label: 'Jumlah Logistik :',
                         controller: _jumlahLogistikController,
@@ -179,11 +179,11 @@ class _logistikmasukstate extends State<LogistikMasuk> {
                         onTap: () {},
                       ),
                       const SizedBox(height: 10),
-                      _fieldKeterangan(
+                      _fieldDokumentasi(
                         hintText: 'Dokumentasi',
                         label: 'Dokumentasi :',
                         controller: _dokumentasiController,
-                        onTap: () {},
+                        onTap: ()  => _pickImageFromGallery(_dokumentasiController),
                       ),
                       const SizedBox(height: 10),
                       _buildTextFieldWithButton2(
@@ -658,6 +658,164 @@ class _logistikmasukstate extends State<LogistikMasuk> {
       ],
     );
   }
+
+   Widget _fieldJumlah({
+    required String hintText,
+    required String label,
+    TextEditingController? controller,
+    VoidCallback? onTap,
+    VoidCallback? onButtonTap,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 12,
+          ),
+        ),
+        SizedBox(height: 5),
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 7,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: TextFormField(
+                  controller: controller,
+                  keyboardType: TextInputType.number,
+                  onTap: onTap,
+                  maxLines: null,
+                  style: TextStyle(
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: hintText,
+                    border: InputBorder.none,
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                    suffixIcon: onButtonTap != null
+                        ? InkWell(
+                            onTap: onButtonTap,
+                            child: Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Icon(
+                                Icons.add,
+                                size: 24,
+                                color: Colors.white,
+                              ),
+                            ),
+                          )
+                        : null,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+  
+
+Future<void> _pickImageFromGallery(TextEditingController controller) async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      controller.text = image.path;
+    }
+  }
+Widget _fieldDokumentasi({
+  required String hintText,
+  required String label,
+  TextEditingController? controller,
+  VoidCallback? onTap,
+  VoidCallback? onButtonTap,
+}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        label,
+        style: TextStyle(
+          color: Colors.grey,
+          fontSize: 12,
+        ),
+      ),
+      SizedBox(height: 5),
+      Row(
+        children: [
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 1,
+                    blurRadius: 7,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: TextFormField(
+                controller: controller,
+                readOnly: true,
+                onTap: onTap, // Panggil onTap yang telah ditetapkan
+                maxLines: 1,
+                style: TextStyle(
+                  overflow: TextOverflow.ellipsis,
+                ),
+                decoration: InputDecoration(
+                  hintText: hintText,
+                  border: InputBorder.none,
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                  suffixIcon: onButtonTap != null
+                      ? InkWell(
+                          onTap: onButtonTap,
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: Colors.blue,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Icon(
+                              Icons.photo_library,
+                              color: Colors.white,
+                            ),
+                          ),
+                        )
+                      : null,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ],
+  );
+}
 
   void _showDaftarLogistik(BuildContext context) {
     List<String> filteredDaftarLogistik = List.from(DaftarLogistik);
