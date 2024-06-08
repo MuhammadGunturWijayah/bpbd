@@ -76,10 +76,9 @@ class _logistikmasukstate extends State<LogistikMasuk> {
     fetchLogistik().then((logistik) {
       setState(() {
         listLogistik = logistik;
-        // Mengambil id dan namaLogistik dari setiap objek Logistik
-        DaftarLogistik = logistik
-            .map((logistik) => '${logistik.id}: ${logistik.namaLogistik}')
-            .toList();
+        // Hanya ambil namaLogistik untuk ditampilkan
+        DaftarLogistik =
+            logistik.map((logistik) => logistik.namaLogistik).toList();
       });
     }).catchError((error) {
       print('Error fetching logistik: $error');
@@ -88,9 +87,8 @@ class _logistikmasukstate extends State<LogistikMasuk> {
     fetchSuppliers().then((suppliers) {
       setState(() {
         listSupplier = suppliers;
-        daftarSupplier = suppliers
-            .map((supplier) => '${supplier.id}: ${supplier.namaSupplier}')
-            .toList();
+        daftarSupplier =
+            suppliers.map((suppliers) => suppliers.namaSupplier).toList();
       });
     }).catchError((error) {
       print('Error fetching suppliers: $error');
@@ -275,89 +273,95 @@ class _logistikmasukstate extends State<LogistikMasuk> {
   }
 
   List<String> DaftarSupplier = [];
-  void _showDaftarSupplier(BuildContext context) {
-    List<String> filteredDaftarSupplier = daftarSupplier;
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext builder) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return Container(
-              height: MediaQuery.of(context).size.height / 1,
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListTile(
-                      leading: new Icon(Icons.arrow_back_ios),
-                      title: new Text(
-                        'Pilih Nama Supplier',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
+ void _showDaftarSupplier(BuildContext context) {
+  List<String> filteredDaftarSupplier = daftarSupplier;
+
+  // Menampilkan modal bottom sheet
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext builder) {
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return Container(
+            height: MediaQuery.of(context).size.height / 1,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    leading: new Icon(Icons.arrow_back_ios),
+                    title: new Text(
+                      'Pilih Nama Supplier',
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 1,
-                            blurRadius: 7,
-                            offset: Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Pencarian',
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 16),
-                          prefixIcon: Icon(Icons.search),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 1,
+                          blurRadius: 7,
+                          offset: Offset(0, 3),
                         ),
-                        onChanged: (value) {
-                          setState(() {
-                            filteredDaftarSupplier = DaftarSupplier.where(
-                                (supplier) => supplier
-                                    .toLowerCase()
-                                    .contains(value.toLowerCase())).toList();
-                          });
-                        },
-                      ),
+                      ],
                     ),
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: filteredDaftarSupplier.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(filteredDaftarSupplier[index]),
-                          onTap: () {
-                            _namaSupplierController.text =
-                                filteredDaftarSupplier[index]
-                                    .split(':')[0]
-                                    .trim();
-                            Navigator.pop(context);
-                          },
-                        );
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Pencarian',
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 12,
+                          horizontal: 16,
+                        ),
+                        prefixIcon: Icon(Icons.search),
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          filteredDaftarSupplier = daftarSupplier.where(
+                            (supplier) => supplier
+                                .toLowerCase()
+                                .contains(value.toLowerCase()),
+                          ).toList();
+                        });
                       },
                     ),
                   ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: filteredDaftarSupplier.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(filteredDaftarSupplier[index]),
+                        onTap: () {
+                          _namaSupplierController.text =
+                              filteredDaftarSupplier[index]
+                                  .split(':')[0]
+                                  .trim();
+                          Navigator.pop(context);
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    },
+  );
+}
+
 
   Widget _fieldNamaSupplier({
     required String hintText,
@@ -704,12 +708,13 @@ class _logistikmasukstate extends State<LogistikMasuk> {
                           prefixIcon: Icon(Icons.search),
                         ),
                         onChanged: (value) {
-                          setState(() {
-                            filteredDaftarLogistik = DaftarLogistik.where(
-                                (barang) => barang
-                                    .toLowerCase()
-                                    .contains(value.toLowerCase())).toList();
-                          });
+                        setState(() {
+                          filteredDaftarLogistik = DaftarLogistik.where(
+                            (logistik) => logistik
+                                .toLowerCase()
+                                .contains(value.toLowerCase()),
+                          ).toList();
+                        });
                         },
                       ),
                     ),
@@ -722,7 +727,9 @@ class _logistikmasukstate extends State<LogistikMasuk> {
                           title: Text(filteredDaftarLogistik[index]),
                           onTap: () {
                             _namaLogistikController.text =
-                                filteredDaftarLogistik[index].split(':')[0].trim();
+                                filteredDaftarLogistik[index]
+                                    .split(':')[0]
+                                    .trim();
                             Navigator.pop(context);
                           },
                         );
@@ -1038,9 +1045,10 @@ class _logistikmasukstate extends State<LogistikMasuk> {
         },
         body: jsonEncode({
           'tanggal_masuk': tanggalMasuk,
-          'id_supplier':
-              int.parse(namaSupplier), // Ubah menjadi integer jika perlu
-          'id_logistik': int.parse(namaLogistik),
+          'id_supplier': listSupplier.firstWhere((supplier) => supplier.namaSupplier == namaSupplier).id,
+          'id_logistik': listLogistik
+              .firstWhere((logistik) => logistik.namaLogistik == namaLogistik)
+              .id,
           'jumlah_logistik_masuk': jumlahLogistik,
           'keterangan_masuk': keteranganMasuk,
           'dokumentasi_masuk': dokumentasi,
