@@ -1,14 +1,14 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/cupertino.dart'; // Import untuk showDatePicker
+import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:werehouse/dashboard/components/logistik_keluar_lanjutan.dart';
-
-var selectedService = 0;
+import 'package:werehouse/shared/global.dart';
 
 class barang_keluar extends StatefulWidget {
   @override
@@ -18,43 +18,92 @@ class barang_keluar extends StatefulWidget {
 class Barang {
   final String nama;
   final int jumlah;
-  final String satuan;
 
-  Barang({required this.nama, required this.jumlah, required this.satuan});
+  Barang({required this.nama, required this.jumlah});
+}
+
+class Logistik {
+  final int id;
+  final String namaLogistik;
+  final int jumlahLogistikMasuk;
+
+  Logistik({
+    required this.id,
+    required this.namaLogistik,
+    required this.jumlahLogistikMasuk,
+  });
+
+  factory Logistik.fromJson(Map<String, dynamic> json) {
+    // Add debug print statements to inspect the JSON data
+    print('Parsing Logistik from JSON: $json');
+
+    // Adjust the fields to correctly reflect the types in the JSON response
+    return Logistik(
+      id: json['id'],
+      namaLogistik: json['id_logistik']?.toString() ?? '',
+      jumlahLogistikMasuk: json['jumlah_logistik_masuk'] ?? 0,
+    );
+  }
 }
 
 class _barang_keluarState extends State<barang_keluar> {
-  final TextEditingController _namaBarangController = TextEditingController();
+  final TextEditingController _namaLogistikController = TextEditingController();
   final TextEditingController _jumlahController = TextEditingController();
-  final TextEditingController _satuanController = TextEditingController();
   final TextEditingController _ListBarang = TextEditingController();
-  final List<String> satuanOptions = [
-    'Pieces (pcs)',
-    'Kilogram (kg)',
-    'Gram (g)',
-    'Meter (m)',
-    'Centimeter (cm)',
-    'Liter (L)',
-    'Mililiter (ml)',
-    'Box',
-    'Botol',
-    'Dus',
-    'Rol',
-    'Lembar',
-    'Set',
-    'Buah',
-    'Pak',
-  ];
+  String userName = '';
+  String userEmail = '';
+  List<Map<String, dynamic>> selectedItems = [];
+  List<Logistik> listLogistik = [];
+  List<String> DaftarLogistik = [];
 
-  String? selectedSatuan;
-  List<Map<String, dynamic>> selectedItems =
-      []; // List untuk menyimpan detail barang
+  @override
+  void initState() {
+    super.initState();
+    _loadUserName();
+
+    fetchLogistik().then((logistik) {
+      setState(() {
+        listLogistik = logistik;
+        DaftarLogistik =    logistik.map((logistik) => logistik.namaLogistik).toList();
+      });
+    }).catchError((error) {
+      print('Error fetching logistik: $error');
+    });
+  }
+
+  void _loadUserName() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userName = prefs.getString('userName') ?? '';
+    });
+  }
+
+  Widget _greetings() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            ' hai, $userName',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 5),
+          Text(
+            'Ayo lakukan pengiriman barang !',
+            style: TextStyle(
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   List<Barang> listBarang = [];
-  // Deklarasi daftar barang
-  final List<String> daftarBarang = [
-    'Sapu',
-    'Tas',
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -86,18 +135,12 @@ class _barang_keluarState extends State<barang_keluar> {
                       _buildThreeFieldsInRow(
                         hintText1: 'Nama',
                         hintText2: 'Jumlah',
-                        hintText3: 'Satuan',
                         label1: 'Nama Barang :',
                         label2: 'Jumlah :',
-                        label3: 'Satuan :',
-                        controller1: _namaBarangController,
+                        controller1: _namaLogistikController,
                         controller2: _jumlahController,
-                        controller3: _satuanController,
                         onTap1: () {
                           _showDaftarBarang(context);
-                        },
-                        onTap3: () {
-                          ShowsatuanOptions(context);
                         },
                         onButtonTap: () {
                           _tambahBarang();
@@ -111,7 +154,7 @@ class _barang_keluarState extends State<barang_keluar> {
                         controller: _ListBarang,
                         onTap: () {},
                         onButtonTaps: () {},
-                        listBarang: listBarang, // Pass the list of items here
+                        listBarang: listBarang,
                       ),
                       const SizedBox(height: 10),
                     ],
@@ -125,49 +168,77 @@ class _barang_keluarState extends State<barang_keluar> {
     );
   }
 
-  void _tambahBarang() {
-    if (_namaBarangController.text.isEmpty ||
-        _jumlahController.text.isEmpty ||
-        _satuanController.text.isEmpty) {
-      // Jika salah satu field tidak terisi, tampilkan notifikasi
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Lengkapi kolom terlebih dahulu'),
-        ),
-      );
-      return; // Hentikan proses tambah barang
+  Future<List<Logistik>> fetchLogistik() async {
+    try {
+      final response = await http.get(Uri.parse('${Global.baseUrl}${Global.getInLogistikMasuk}'));
+
+      if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.body);
+
+        if (jsonResponse == null || jsonResponse['data'] == null) {
+          throw Exception('Invalid response format: ${response.body}');
+        }
+
+        final List<dynamic> jsonData = jsonResponse['data'];
+        print('Logistik Response: $jsonData');
+
+        List<Logistik> daftarLogistik = jsonData.map((item) => Logistik.fromJson(item)).toList();
+        return daftarLogistik;
+      } else {
+        throw Exception('Gagal memuat data logistik: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Gagal memuat data logistik: $e');
     }
+  }
+  
 
-    // Buat objek Barang baru
-    Barang barangBaru = Barang(
-      nama: _namaBarangController.text,
-      jumlah: int.parse(_jumlahController.text),
-      satuan: _satuanController.text,
+  void _tambahBarang() {
+  if (_namaLogistikController.text.isEmpty || _jumlahController.text.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Lengkapi kolom terlebih dahulu'),
+      ),
     );
-
-    // Tambahkan barang ke dalam list selectedItems
-    setState(() {
-      selectedItems.add({
-        'nama': barangBaru.nama,
-        'jumlah': barangBaru.jumlah,
-        'satuan': barangBaru.satuan,
-      });
-      listBarang.add(barangBaru); // Tambahkan barang ke dalam listBarang
-    });
-
-    // Reset field setelah menambahkan barang
-    _namaBarangController.clear();
-    _jumlahController.clear();
-    _satuanController.clear();
-
-    // Update controller _ListBarang agar menampilkan data baru
-    _ListBarang.text = listBarang
-        .map((barang) =>
-            'Barang : ${barang.nama}\nJumlah : ${barang.jumlah} \nSatuan : ${barang.satuan}')
-        .join('\n\n');
+    return;
   }
 
-//
+  int jumlahLogistikMasuk = listLogistik
+      .firstWhere((logistik) => logistik.namaLogistik == _namaLogistikController.text, orElse: () => Logistik(id: 0, namaLogistik: '', jumlahLogistikMasuk: 0))
+      .jumlahLogistikMasuk;
+
+  int jumlahBarang = int.parse(_jumlahController.text);
+
+  if (jumlahBarang > jumlahLogistikMasuk) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Jumlah barang melebihi stok yang tersedia (${jumlahLogistikMasuk})'),
+      ),
+    );
+    return;
+  }
+
+  Barang barangBaru = Barang(
+    nama: _namaLogistikController.text,
+    jumlah: jumlahBarang,
+  );
+
+  setState(() {
+    selectedItems.add({
+      'nama': barangBaru.nama,
+      'jumlah': barangBaru.jumlah,
+    });
+    listBarang.add(barangBaru);
+  });
+
+  _namaLogistikController.clear();
+  _jumlahController.clear();
+
+  _ListBarang.text = listBarang
+      .map((barang) => 'Barang : ${barang.nama}\nJumlah : ${barang.jumlah}')
+      .join('\n\n');
+}
+
 
   Widget _buildTextFieldWithButton({
     required String hintText,
@@ -206,7 +277,7 @@ class _barang_keluarState extends State<barang_keluar> {
                 child: TextFormField(
                   controller: controller,
                   onTap: onTap,
-                  readOnly: true, // Set field menjadi tidak bisa ditulis
+                  readOnly: true,
                   maxLines: null,
                   decoration: InputDecoration(
                     hintText: hintText,
@@ -261,7 +332,7 @@ class _barang_keluarState extends State<barang_keluar> {
                   ],
                 ),
                 child: TextFormField(
-                  controller: _namaBarangController,
+                  controller: _namaLogistikController,
                   onTap: onTap1,
                   readOnly: true,
                   decoration: InputDecoration(
@@ -360,13 +431,13 @@ class _barang_keluarState extends State<barang_keluar> {
   Widget _buildThreeFieldsInRow({
     required String hintText1,
     required String hintText2,
-    required String hintText3,
+    
     required String label1,
     required String label2,
-    required String label3,
+ 
     TextEditingController? controller1,
     TextEditingController? controller2,
-    TextEditingController? controller3,
+   
     VoidCallback? onTap1,
     VoidCallback? onTap2,
     VoidCallback? onTap3,
@@ -460,46 +531,6 @@ class _barang_keluarState extends State<barang_keluar> {
                 ],
               ),
             ),
-            SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label3,
-                    style: TextStyle(
-                      color: Colors.grey,
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 1,
-                          blurRadius: 7,
-                          offset: Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: TextFormField(
-                      controller: controller3,
-                      onTap: onTap3,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        hintText: hintText3,
-                        border: InputBorder.none,
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
           ],
         ),
         SizedBox(height: addSpacing ? 15 : 0), // Add spacing conditionally
@@ -587,7 +618,7 @@ class _barang_keluarState extends State<barang_keluar> {
                   ),
                   child: ListTile(
                     title: Text(
-                      'Barang : ${barang.nama}\nJumlah: ${barang.jumlah} \nSatuan : ${barang.satuan}',
+                      'Barang : ${barang.nama}\nJumlah: ${barang.jumlah}',
                     ),
                     onTap: onTap,
                     trailing: IconButton(
@@ -656,54 +687,6 @@ class _barang_keluarState extends State<barang_keluar> {
     });
   }
 
-  Widget _buildSatuanDropdown(
-      {required String hintText, required String label}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.grey,
-            fontSize: 12,
-          ),
-        ),
-        SizedBox(height: 5),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10.0),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 1,
-                blurRadius: 7,
-                offset: Offset(0, 3),
-              ),
-            ],
-          ),
-          child: DropdownButtonFormField<String>(
-            value: selectedSatuan,
-            onChanged: (newValue) {
-              selectedSatuan = newValue;
-            },
-            items: satuanOptions.map((satuan) {
-              return DropdownMenuItem<String>(
-                value: satuan,
-                child: Text(satuan),
-              );
-            }).toList(),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding:
-                  EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
   AspectRatio _card() {
     return AspectRatio(
       aspectRatio: 336 / 184,
@@ -756,163 +739,98 @@ class _barang_keluarState extends State<barang_keluar> {
   }
 
   void _showDaftarBarang(BuildContext context) {
-    List<String> filteredDaftarBarang = List.from(daftarBarang);
+  List<String> filteredDaftarLogistik = List.from(DaftarLogistik);
 
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext builder) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return Container(
-              height: MediaQuery.of(context).size.height / 1,
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListTile(
-                      leading: new Icon(Icons.arrow_back_ios),
-                      title: new Text(
-                        'Pilih Barang',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext builder) {
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return Container(
+            height: MediaQuery.of(context).size.height / 1,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    leading: new Icon(Icons.arrow_back_ios),
+                    title: new Text(
+                      'Pilih ID Logistik',
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 1,
-                            blurRadius: 7,
-                            offset: Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Cari Barang',
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 16),
-                          prefixIcon: Icon(Icons.search),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 1,
+                          blurRadius: 7,
+                          offset: Offset(0, 3),
                         ),
-                        onChanged: (value) {
-                          setState(() {
-                            filteredDaftarBarang = daftarBarang
-                                .where((barang) => barang
-                                    .toLowerCase()
-                                    .contains(value.toLowerCase()))
-                                .toList();
-                          });
-                        },
+                      ],
+                    ),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Pencarian',
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 12, horizontal: 16),
+                        prefixIcon: Icon(Icons.search),
                       ),
-                    ),
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: filteredDaftarBarang.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(filteredDaftarBarang[index]),
-                          onTap: () {
-                            _namaBarangController.text =
-                                filteredDaftarBarang[index];
-                            Navigator.pop(context);
-                          },
-                        );
+                      onChanged: (value) {
+                        setState(() {
+                          filteredDaftarLogistik = DaftarLogistik.where(
+                            (logistik) => logistik
+                                .toLowerCase()
+                                .contains(value.toLowerCase()),
+                          ).toList();
+                        });
                       },
                     ),
                   ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  void ShowsatuanOptions(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext builder) {
-        return Container(
-          height: MediaQuery.of(context).size.height / 1,
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListTile(
-                  leading: new Icon(Icons.arrow_back_ios),
-                  title: new Text(
-                    'Pilih Satuan',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: filteredDaftarLogistik.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(filteredDaftarLogistik[index]),
+                        onTap: () {
+                          _namaLogistikController.text =
+                              filteredDaftarLogistik[index].split(':')[0].trim();
+                          Navigator.pop(context);
+                        },
+                      );
+                    },
                   ),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
                 ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: satuanOptions.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(satuanOptions[index]),
-                      onTap: () {
-                        _satuanController.text = satuanOptions[index];
-                        Navigator.pop(context);
-                      },
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
-
-Widget _greetings() {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Hai, Guntur!',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 5),
-        Text(
-          'Ayo lakukan pengiriman barang !',
-          style: TextStyle(
-            fontSize: 16,
-          ),
-        ),
-      ],
-    ),
+              ],
+            ),
+          );
+        },
+      );
+    },
   );
 }
 
-void main() {
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    theme: ThemeData(
-      textTheme: GoogleFonts.poppinsTextTheme(),
-    ),
-    home: barang_keluar(),
-  ));
+
+
+  void main() {
+    runApp(MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        textTheme: GoogleFonts.poppinsTextTheme(),
+      ),
+      home: barang_keluar(),
+    ));
+  }
 }

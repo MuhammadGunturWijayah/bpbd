@@ -155,9 +155,9 @@ class Menus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 27, right: 27, top: 32),
+      padding: const EdgeInsets.only(left: 27, right: 27, top: 0),
       child: SizedBox(
-        height: 157,
+        height: 200,
         child: GridView.count(
           crossAxisCount: 4,
           mainAxisSpacing: 8,

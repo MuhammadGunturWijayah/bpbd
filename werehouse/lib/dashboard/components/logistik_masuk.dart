@@ -801,7 +801,7 @@ Widget _fieldDokumentasi({
                               borderRadius: BorderRadius.circular(5),
                             ),
                             child: Icon(
-                              Icons.photo_library,
+                              Icons.camera_alt,
                               color: Colors.white,
                             ),
                           ),

@@ -114,7 +114,7 @@ class _AccountScreenState extends State<AccountScreen> {
                         Text(
                           userEmail,
                           style: TextStyle(
-                            fontSize: 14,
+                            fontSize: 12,
                             color: Colors.grey,
                           ),
                         )
