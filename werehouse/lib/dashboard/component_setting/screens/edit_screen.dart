@@ -52,31 +52,34 @@ class AwesomeSnackbarContent extends StatelessWidget {
       ),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
+  children: [
+    Icon(
+      _iconData,
+      color: Colors.white,
+      size: 24,
+    ),
+    const SizedBox(width: 12),
+    Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            _iconData,
-            color: Colors.white,
-            size: 24,
+          Text(
+            title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-          const SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+          const SizedBox(height: 4),
+          Text(
+            message,
+            style: const TextStyle(color: Colors.white),
               ),
-              const SizedBox(height: 4),
-              Text(
-                message,
-                style: const TextStyle(color: Colors.white),
-              ),
+              
             ],
           ),
+    ),
         ],
       ),
     );
