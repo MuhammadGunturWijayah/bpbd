@@ -645,66 +645,65 @@ class _barang_keluarState extends State<barang_keluar> {
   }
 
   Widget _FieldListBarang({
-    required String hintText,
-    required String label,
-    TextEditingController? controller,
-    VoidCallback? onTap,
-    required VoidCallback onButtonTaps,
-    required List<Barang> listBarang,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: Color.fromARGB(255, 171, 171, 171),
-            fontSize: 12,
-          ),
+  required String hintText,
+  required String label,
+  TextEditingController? controller,
+  VoidCallback? onTap,
+  required VoidCallback onButtonTaps,
+  required List<Barang> listBarang,
+}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        label,
+        style: TextStyle(
+          color: Color.fromARGB(255, 171, 171, 171),
+          fontSize: 12,
         ),
-        SizedBox(height: 5),
-        ListView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: listBarang.length,
-          itemBuilder: (context, index) {
-            final barang = listBarang[index];
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 255, 255, 255),
-                    borderRadius: BorderRadius.circular(10.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 1,
-                        blurRadius: 7,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
+      ),
+      SizedBox(height: 5),
+      ListView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: listBarang.length,
+        itemBuilder: (context, index) {
+          final barang = listBarang[index];
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 10.0), // Add spacing between items
+            child: Container(
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 255, 255, 255),
+                borderRadius: BorderRadius.circular(10.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 1,
+                    blurRadius: 7,
+                    offset: Offset(0, 3),
                   ),
-                  child: ListTile(
-                    title: Text(
-                      'Barang : ${barang.nama}\nJumlah: ${barang.jumlah}',
-                    ),
-                    onTap: onTap,
-                    trailing: IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () {
-                        _deleteItem(index);
-                      },
-                    ),
-                  ),
+                ],
+              ),
+              child: ListTile(
+                title: Text(
+                  'Barang : ${barang.nama}\nJumlah: ${barang.jumlah}',
                 ),
-              ],
-            );
-          },
-        ),
-      ],
-    );
-  }
+                onTap: onTap,
+                trailing: IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    _deleteItem(index);
+                  },
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    ],
+  );
+}
+
 
   void _deleteItem(int index) {
     setState(() {
@@ -1295,7 +1294,7 @@ class _barang_keluarState extends State<barang_keluar> {
     Navigator.of(context).pop();
   }
 
-  void _showSuccessSnackBar(BuildContext context) {
+   void _showSuccessSnackBar(BuildContext context) {
     final snackBar = SnackBar(
       elevation: 0,
       behavior: SnackBarBehavior.floating,
@@ -1336,6 +1335,21 @@ class _barang_keluarState extends State<barang_keluar> {
   String keterangan = _inputKeteranganController.text;
   String dokumentasi = _dokumentasiController.text;
   String tanggalKejadian = _TanggalKejadianController.text;
+
+   // Validasi kolom yang wajib diisi
+  if (namaPenerima.isEmpty ||
+      alamatPenerima.isEmpty ||
+      kkPenerima.isEmpty ||
+      keterangan.isEmpty ||
+      dokumentasi.isEmpty ||
+      tanggalKejadian.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Mohon lengkapi semua kolom.'),
+      ),
+    );
+    return;
+  }
 
   _showLoadingDialog(context); // Show loading dialog
 

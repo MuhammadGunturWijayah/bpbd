@@ -1191,6 +1191,20 @@ Widget _fieldDokumentasi({
     String dokumentasi = _dokumentasiController.text;
     String tanggalKadaluarsa = _tanggalKadaluarsaController.text;
 
+     if (tanggalMasuk.isEmpty ||
+      namaSupplier.isEmpty ||
+      jumlahLogistik.isEmpty ||
+      keteranganMasuk.isEmpty ||
+      dokumentasi.isEmpty ||
+      tanggalKadaluarsa.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Mohon lengkapi semua kolom.'),
+      ),
+    );
+    return;
+  }
+
     _showLoadingDialog(context); // Show loading dialog
 
     try {

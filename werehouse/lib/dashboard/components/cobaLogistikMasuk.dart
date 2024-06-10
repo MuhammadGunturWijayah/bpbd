@@ -26,8 +26,6 @@ class CobaLogistikMasuk extends StatefulWidget {
 }
 
 class _LogistikMasukState extends State<CobaLogistikMasuk> {
-  final TextEditingController _tanggalKadaluarsaController =
-      TextEditingController();
   final TextEditingController _namaSupplierController = TextEditingController();
   final TextEditingController _namaLogistikController = TextEditingController();
   final TextEditingController _ListSupplier = TextEditingController();
