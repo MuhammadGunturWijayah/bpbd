@@ -6,7 +6,7 @@ import 'package:werehouse/shared/global.dart';
 
 enum ContentType {
   success,
-  error,
+  error, failure,
 }
 
 class AwesomeSnackbarContent extends StatelessWidget {

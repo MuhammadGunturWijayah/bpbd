@@ -7,7 +7,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:werehouse/dashboard/component_setting/screens/edit_screen.dart';
 import 'package:werehouse/dashboard/components/logistik_keluar_lanjutan.dart';
+import 'package:werehouse/dashboard/components/logistik_masuk.dart';
 import 'package:werehouse/shared/global.dart';
 
 class barang_keluar extends StatefulWidget {
@@ -34,10 +36,7 @@ class Logistik {
   });
 
   factory Logistik.fromJson(Map<String, dynamic> json) {
-    // Add debug print statements to inspect the JSON data
     print('Parsing Logistik from JSON: $json');
-
-    // Adjust the fields to correctly reflect the types in the JSON response
     return Logistik(
       id: json['id'],
       namaLogistik: json['id_logistik']?.toString() ?? '',
@@ -46,10 +45,21 @@ class Logistik {
   }
 }
 
+
+
 class _barang_keluarState extends State<barang_keluar> {
   final TextEditingController _namaLogistikController = TextEditingController();
   final TextEditingController _jumlahController = TextEditingController();
   final TextEditingController _ListBarang = TextEditingController();
+   final TextEditingController _TanggalKejadianController =
+      TextEditingController();
+  final TextEditingController _inputNomorKKController = TextEditingController();
+  final TextEditingController _inputAlamatController = TextEditingController();
+  final TextEditingController _inputNamaPenerimaController =
+      TextEditingController();
+  final TextEditingController _inputKeteranganController =
+      TextEditingController();
+  final TextEditingController _dokumentasiController = TextEditingController();
   String userName = '';
   String userEmail = '';
   List<Map<String, dynamic>> selectedItems = [];
@@ -107,90 +117,149 @@ class _barang_keluarState extends State<barang_keluar> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
 
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 30,
+  return Scaffold(
+    body: SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 30),
+              _greetings(),
+              const SizedBox(height: 16),
+              _card(),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildThreeFieldsInRow(
+                      hintText1: 'Nama',
+                      hintText2: 'Jumlah',
+                      label1: 'Nama Barang :',
+                      label2: 'Jumlah :',
+                      controller1: _namaLogistikController,
+                      controller2: _jumlahController,
+                      onTap1: () {
+                        _showDaftarBarang(context);
+                      },
+                      onButtonTap: () {
+                        _tambahBarang();
+                      },
+                      addSpacing: true,
+                    ),
+                    _FieldListBarang(
+                      hintText: '',
+                      label: ' ',
+                      controller: _ListBarang,
+                      onTap: () {},
+                      onButtonTaps: () {},
+                      listBarang: listBarang,
+                    ),
+                    const SizedBox(height: 10),
+                    _fieldNama(
+                      hintText: 'Nama',
+                      label: 'Nama Penerima :',
+                      controller: _inputNamaPenerimaController,
+                      onTap: () {},
+                    ),
+                    const SizedBox(height: 10),
+                    _fieldAlamat(
+                      hintText: 'Alamat',
+                      label: 'Alamat Penerima :',
+                      controller: _inputAlamatController,
+                      onTap: () {},
+                    ),
+                    const SizedBox(height: 10),
+                    _fieldNomorKK(
+                      hintText: 'Nomor KK',
+                      label: 'Nomor KK :',
+                      controller: _inputNomorKKController,
+                      onTap: () {},
+                    ),
+                    const SizedBox(height: 10),
+                    _fieldKeterangan(
+                      hintText: 'Keterangan',
+                      label: 'Keterangan Kejadian :',
+                      controller: _inputKeteranganController,
+                      onTap: () {},
+                    ),
+                    const SizedBox(height: 10),
+                    _fieldDokumentasi(
+                      hintText: 'Dokumentasi',
+                      label: 'Dokumentasi :',
+                      controller: _dokumentasiController,
+                      onTap: () =>
+                          _pickImageFromGallery(_dokumentasiController),
+                    ),
+                    const SizedBox(height: 10),
+                    _buildTextFieldWithButton(
+                      hintText: 'Input Tanggal',
+                      label: 'Tanggal Kejadian :',
+                      controller: _TanggalKejadianController,
+                      onTap: () {
+                        _selectDate(context);
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _customButton(
+                          text: 'Simpan',
+                          onPressed: () {
+                            _simpanData(context);
+                          },
+                          color: Colors.blue,
+                        ),
+                        _customButton(
+                          text: 'Cancel',
+                          onPressed: () {
+                            // Tambahkan fungsi untuk menghapus data
+                          },
+                          color: Colors.grey,
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                _greetings(),
-                const SizedBox(
-                  height: 16,
-                ),
-                _card(),
-                const SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildThreeFieldsInRow(
-                        hintText1: 'Nama',
-                        hintText2: 'Jumlah',
-                        label1: 'Nama Barang :',
-                        label2: 'Jumlah :',
-                        controller1: _namaLogistikController,
-                        controller2: _jumlahController,
-                        onTap1: () {
-                          _showDaftarBarang(context);
-                        },
-                        onButtonTap: () {
-                          _tambahBarang();
-                        },
-                        addSpacing: true,
-                      ),
-                      SizedBox(height: 10),
-                      _FieldListBarang(
-                        hintText: '',
-                        label: 'List Barang :',
-                        controller: _ListBarang,
-                        onTap: () {},
-                        onButtonTaps: () {},
-                        listBarang: listBarang,
-                      ),
-                      const SizedBox(height: 10),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Future<List<Logistik>> fetchLogistik() async {
-    try {
-      final response = await http.get(Uri.parse('${Global.baseUrl}${Global.getInLogistikMasuk}'));
+  try {
+    final response = await http.get(Uri.parse('${Global.baseUrl}${Global.getInLogistikMasuk}'));
 
-      if (response.statusCode == 200) {
-        final jsonResponse = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
 
-        if (jsonResponse == null || jsonResponse['data'] == null) {
-          throw Exception('Invalid response format: ${response.body}');
-        }
-
-        final List<dynamic> jsonData = jsonResponse['data'];
-        print('Logistik Response: $jsonData');
-
-        List<Logistik> daftarLogistik = jsonData.map((item) => Logistik.fromJson(item)).toList();
-        return daftarLogistik;
-      } else {
-        throw Exception('Gagal memuat data logistik: ${response.statusCode}');
+      if (jsonResponse == null || jsonResponse['data'] == null) {
+        throw Exception('Invalid response format: ${response.body}');
       }
-    } catch (e) {
-      throw Exception('Gagal memuat data logistik: $e');
+
+      final List<dynamic> jsonData = jsonResponse['data'];
+      print('Logistik Response: $jsonData');
+
+      List<Logistik> daftarLogistik = jsonData.map((item) => Logistik.fromJson(item)).toList();
+      return daftarLogistik;
+    } else {
+      throw Exception('Gagal memuat data logistik: ${response.statusCode}');
     }
+  } catch (e) {
+    throw Exception('Gagal memuat data logistik: $e');
   }
+}
+
   
 
   void _tambahBarang() {
@@ -382,43 +451,6 @@ class _barang_keluarState extends State<barang_keluar> {
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly
                   ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(width: 10),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Satuan :',
-                style: TextStyle(
-                  color: Colors.grey,
-                ),
-              ),
-              SizedBox(height: 5),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 7,
-                      offset: Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    hintText: 'Satuan',
-                    border: InputBorder.none,
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                  ),
                 ),
               ),
             ],
@@ -635,48 +667,6 @@ class _barang_keluarState extends State<barang_keluar> {
           },
         ),
         SizedBox(height: 20),
-        // Menambahkan tombol di bawah field
-        _inkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => lanjutan()),
-            );
-          },
-          child: Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.blue,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 1,
-                  blurRadius: 7,
-                  offset: Offset(0, 3),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Lanjutkan Pengisian Data',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Icon(
-                  Icons.arrow_forward,
-                  color: Colors.white,
-                ),
-              ],
-            ),
-          ),
-        ),
       ],
     );
   }
@@ -822,7 +812,421 @@ class _barang_keluarState extends State<barang_keluar> {
   );
 }
 
+Widget _fieldNama({
+    required String hintText,
+    required String label,
+    TextEditingController? controller,
+    VoidCallback? onTap,
+    VoidCallback? onButtonTap,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 12,
+          ),
+        ),
+        SizedBox(height: 5),
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 7,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: TextFormField(
+                  controller: controller,
+                  onTap: onTap,
+                  maxLines: null,
+                  style: TextStyle(
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: hintText,
+                    border: InputBorder.none,
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                    suffixIcon: onButtonTap != null
+                        ? InkWell(
+                            onTap: onButtonTap,
+                            child: Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Icon(
+                                Icons.add,
+                                size: 24,
+                                color: Colors.white,
+                              ),
+                            ),
+                          )
+                        : null,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 
+  Widget _fieldAlamat({
+    required String hintText,
+    required String label,
+    TextEditingController? controller,
+    VoidCallback? onTap,
+    VoidCallback? onButtonTap,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 12,
+          ),
+        ),
+        SizedBox(height: 5),
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 7,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: TextFormField(
+                  controller: controller,
+                  onTap: onTap,
+                  maxLines: null,
+                  style: TextStyle(
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: hintText,
+                    border: InputBorder.none,
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                    suffixIcon: onButtonTap != null
+                        ? InkWell(
+                            onTap: onButtonTap,
+                            child: Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Icon(
+                                Icons.add,
+                                size: 24,
+                                color: Colors.white,
+                              ),
+                            ),
+                          )
+                        : null,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _fieldKeterangan({
+    required String hintText,
+    required String label,
+    TextEditingController? controller,
+    VoidCallback? onTap,
+    VoidCallback? onButtonTap,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 12,
+          ),
+        ),
+        SizedBox(height: 5),
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 7,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: TextFormField(
+                  controller: controller,
+                  onTap: onTap,
+                  maxLines: null,
+                  style: TextStyle(
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: hintText,
+                    border: InputBorder.none,
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                    suffixIcon: onButtonTap != null
+                        ? InkWell(
+                            onTap: onButtonTap,
+                            child: Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Icon(
+                                Icons.add,
+                                size: 24,
+                                color: Colors.white,
+                              ),
+                            ),
+                          )
+                        : null,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _fieldDokumentasi({
+    required String hintText,
+    required String label,
+    TextEditingController? controller,
+    VoidCallback? onTap,
+    VoidCallback? onButtonTap,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 12,
+          ),
+        ),
+        SizedBox(height: 5),
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 7,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: TextFormField(
+                  controller: controller,
+                  readOnly: true,
+                  onTap: onTap, // Panggil onTap yang telah ditetapkan
+                  maxLines: 1,
+                  style: TextStyle(
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: hintText,
+                    border: InputBorder.none,
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                    suffixIcon: onButtonTap != null
+                        ? InkWell(
+                            onTap: onButtonTap,
+                            child: Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Icon(
+                                Icons.camera_alt,
+                                color: Colors.white,
+                              ),
+                            ),
+                          )
+                        : null,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _customButton({
+    required String text,
+    required VoidCallback onPressed,
+    required Color color,
+  }) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      child: Text(
+        text,
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+        ),
+      ),
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(color),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _pickImageFromGallery(TextEditingController controller) async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      controller.text = image.path;
+    }
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2015, 8),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != selectedDate) selectedDate = picked;
+    _TanggalKejadianController.text = selectedDate.toString().substring(0, 10);
+  }
+
+  Widget _fieldNomorKK({
+    required String hintText,
+    required String label,
+    TextEditingController? controller,
+    VoidCallback? onTap,
+    VoidCallback? onButtonTap,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 12,
+          ),
+        ),
+        SizedBox(height: 5),
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 7,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: TextFormField(
+                  controller: controller,
+                  keyboardType: TextInputType.number,
+                  onTap: onTap,
+                  maxLines: null,
+                  style: TextStyle(
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: hintText,
+                    border: InputBorder.none,
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                    suffixIcon: onButtonTap != null
+                        ? InkWell(
+                            onTap: onButtonTap,
+                            child: Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Icon(
+                                Icons.add,
+                                size: 24,
+                                color: Colors.white,
+                              ),
+                            ),
+                          )
+                        : null,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 
   void main() {
     runApp(MaterialApp(
@@ -833,4 +1237,120 @@ class _barang_keluarState extends State<barang_keluar> {
       home: barang_keluar(),
     ));
   }
+
+
+  
+  void _showLoadingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+  }
+
+  void _hideLoadingDialog(BuildContext context) {
+    Navigator.of(context).pop();
+  }
+
+  void _showSuccessSnackBar(BuildContext context) {
+    final snackBar = SnackBar(
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.transparent,
+      content: AwesomeSnackbarContent(
+        title: 'Success',
+        message: 'Data barang berhasil disimpan!',
+        contentType: ContentType.success,
+      ),
+    );
+
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  void _showFailedSnackBar(BuildContext context, String message) {
+    final snackBar = SnackBar(
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.transparent,
+      content: AwesomeSnackbarContent(
+        title: 'Error',
+        message: message,
+        contentType: ContentType.failure,
+      ),
+    );
+
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  // 'id_logistik': listLogistik.firstWhere((logistik) => logistik.namaLogistik == namaLogistik).id,
+
+  void _simpanData(BuildContext context) async {
+  String namaPenerima = _inputNamaPenerimaController.text;
+  String alamatPenerima = _inputAlamatController.text;
+  String kkPenerima = _inputNomorKKController.text;
+  String keterangan = _inputKeteranganController.text;
+  String dokumentasi = _dokumentasiController.text;
+  String tanggalKejadian = _TanggalKejadianController.text;
+
+  if (listBarang.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Tidak ada barang untuk disimpan'),
+      ),
+    );
+    return;
+  }
+
+  _showLoadingDialog(context); // Show loading dialog
+
+  for (var barang in listBarang) {
+    try {
+      final url = Uri.parse('${Global.baseUrl}${Global.outLogistikpath}');
+      print('Sending POST request to: $url');
+      
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'nama_penerima': namaPenerima,
+          'alamat_penerima': alamatPenerima,
+          'nik_kk_penerima': kkPenerima,
+          'keterangan_keluar': keterangan,
+          'dokumentasi_keluar': dokumentasi,
+          'tanggal_keluar': tanggalKejadian,
+          'id_logistik': barang.nama, // Assuming `barang.nama` is the id of the logistik
+          'jumlah_logistik_keluar': barang.jumlah.toString(),
+        }),
+      );
+
+      print('Response status: ${response.statusCode}');
+      print('Response headers: ${response.headers}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 201) {
+        final responseData = jsonDecode(response.body);
+        if (!responseData['success']) {
+          _showFailedSnackBar(context, responseData['error'] ?? 'Terjadi kesalahan tidak diketahui');
+        }
+      } else {
+        _showFailedSnackBar(context, 'Gagal terhubung ke server dengan status ${response.statusCode}');
+      }
+    } catch (e) {
+      _showFailedSnackBar(context, 'Terjadi kesalahan: $e');
+    }
+  }
+
+  _hideLoadingDialog(context); // Hide loading dialog
+  _showSuccessSnackBar(context); // Show success snackbar
+}
+
+
 }
