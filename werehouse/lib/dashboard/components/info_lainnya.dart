@@ -26,12 +26,12 @@ class Akses extends StatelessWidget {
             child: Column(
               children: [
                 ...[
-                  'Fitur laporan  berfungsi untuk mencetak laporan seperti pemasukan barang, pengeluaran barang dll.',
-                  'Fitur Scan berfungsi untuk pendataan barang masuk maupun barang keluar melalui scan mobile.',
-                  'Fitur Bantua berfungsi ketika kejadian suatu bencana user dapat meminta barang melalui aplikasi yang terhubung ke pegudangan.',
-                  'Fitur Barang   berfungsi untuk menginput barang masuk ataupun barang keluar.',
+                  '1             berfungsi untuk melakukan pendataan barang yang baru datang dari supplier.',
+                  '2           berfungsi untuk pendataan baru terkait data supplier yang telah memberikan barang.',
+                  '3             berfungsi untuk melakukan pengiriman barang kepada user.',
+                  '4              berfungsi untuk menginput barang masuk ataupun barang keluar.',
                 ].map((text) {
-                  if (text.startsWith('Fitur laporan')) {
+                  if (text.startsWith('1')) {
                     return Padding(
                       padding: const EdgeInsets.all(16),
                       child: Row(
@@ -58,7 +58,7 @@ class Akses extends StatelessWidget {
                                 style: regular14.copyWith(color: dark1),
                                 children: [
                                   TextSpan(
-                                    text: 'Fitur laporan',
+                                    text: 'Fitur Logistik Masuk ',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -74,7 +74,7 @@ class Akses extends StatelessWidget {
                         ],
                       ),
                     );
-                  } else if (text.startsWith('Fitur Scan')) {
+                  } else if (text.startsWith('2')) {
                     return Padding(
                       padding: const EdgeInsets.all(16),
                       child: Row(
@@ -101,7 +101,7 @@ class Akses extends StatelessWidget {
                                 style: regular14.copyWith(color: dark1),
                                 children: [
                                   TextSpan(
-                                    text: 'Fitur Scan',
+                                    text: 'Fitur Data Supplier',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -117,7 +117,7 @@ class Akses extends StatelessWidget {
                         ],
                       ),
                     );
-                  } else if (text.startsWith('Fitur Bantua')) {
+                  } else if (text.startsWith('3')) {
                     return Padding(
                       padding: const EdgeInsets.all(16),
                       child: Row(
@@ -144,7 +144,7 @@ class Akses extends StatelessWidget {
                                 style: regular14.copyWith(color: dark1),
                                 children: [
                                   TextSpan(
-                                    text: 'Fitur Bantuan',
+                                    text: 'Fitur Logistik Keluar',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -160,7 +160,7 @@ class Akses extends StatelessWidget {
                         ],
                       ),
                     );
-                  } else if (text.startsWith('Fitur Barang')) {
+                  } else if (text.startsWith('4')) {
                     return Padding(
                       padding: const EdgeInsets.all(16),
                       child: Row(

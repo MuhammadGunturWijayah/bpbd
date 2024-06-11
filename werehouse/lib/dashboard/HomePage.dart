@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:werehouse/dashboard/component_pengiriman_barang/accept_barang.dart';
 import 'package:werehouse/dashboard/component_setting/screens/account_screen.dart';
 import 'package:werehouse/dashboard/components/iklan.dart';
 import 'package:werehouse/dashboard/components/info_lainnya.dart';
@@ -73,8 +74,8 @@ class _HomePageState extends State<HomePage> {
                     label: 'Home',
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.qr_code_2),
-                    label: 'Scan',
+                    icon: Icon(Icons.notifications_active),
+                    label: 'Pesan',
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.settings),
@@ -82,13 +83,19 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
                 onTap: (index) {
-                  if (index == 2) {
+                  if (index == 1) {
                     // Jika item 'Settings' di tap
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => AccountScreen()),
+                      MaterialPageRoute(builder: (context) => AcceptBarang()),
                     );
-                  }
+                  } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AccountScreen()),
+                      );
+                    };
                 },
                 selectedItemColor: Colors.blue,
                 unselectedItemColor: Colors.grey,

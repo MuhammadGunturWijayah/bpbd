@@ -26,10 +26,6 @@ class ButtonIcon {
 
 IconData getIcon(String iconName) {
   switch (iconName) {
-    case 'laporan':
-      return Icons.description;
-    case 'scan':
-      return Icons.scanner;
     case 'bantuan':
       return Icons.help;
     case 'barang':
@@ -49,17 +45,6 @@ IconData getIcon(String iconName) {
 
 List<ButtonIcon> menuIcons = [
   ButtonIcon(
-    icon: 'laporan',
-    title: 'Laporan',
-    color: Colors.green,
-    onPressed: (context) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => fitur_laporan()),
-      );
-    },
-  ),
-  ButtonIcon(
     icon: 'bantuan',
     title: 'Logistik Keluar',
     color: Colors.blue,
@@ -74,31 +59,21 @@ List<ButtonIcon> menuIcons = [
     },
   ),
   ButtonIcon(
-    icon: 'scan',
-    title: 'Scan',
-    color: Colors.red,
-    onPressed: (context) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => RootApp()),
-      );
-    },
-  ),
-   ButtonIcon(
-    icon: 'akun',
-    title: 'Logistik Masuk',
+    icon: 'setting',
+    title: 'Pengaturan',
     color: Colors.green,
     onPressed: (context) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => LogistikMasuk()),
+        MaterialPageRoute(builder: (context) => const AccountScreen()),
       );
     },
   ),
+  
   ButtonIcon(
     icon: 'barang',
     title: 'Data Logistik',
-    color: Colors.green,
+    color: Colors.red,
     onPressed: (context) {
       Navigator.push(
         context,
@@ -107,9 +82,20 @@ List<ButtonIcon> menuIcons = [
     },
   ),
    ButtonIcon(
+    icon: 'akun',
+    title: 'Logistik Masuk',
+    color: Colors.blue,
+    onPressed: (context) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => LogistikMasuk()),
+      );
+    },
+  ),
+   ButtonIcon(
     icon: 'notif',
     title: 'Pesan',
-    color: Colors.blue,
+    color: Colors.green,
     onPressed: (context) {
       Navigator.push(
         context,
@@ -128,18 +114,7 @@ List<ButtonIcon> menuIcons = [
       );
     },
   ),
-   ButtonIcon(
-    icon: 'setting',
-    title: 'Pengaturan',
-    color: Colors.green,
-    onPressed: (context) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const AccountScreen()),
-      );
-    },
-  ),
-  
+   
   // Daftar tombol lainnya disini
 ];
 class Menus extends StatelessWidget {
@@ -155,74 +130,84 @@ class Menus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 27, right: 27, top: 0),
-      child: SizedBox(
-        height: 200,
-        child: GridView.count(
-          crossAxisCount: 4,
-          mainAxisSpacing: 8,
-          children: [
-            ...menuIcons.map(
-              (icon) => Column(
-                children: [
-                  GestureDetector(
-                    onTap: () async {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Row(
-                            children: [
-                              SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 1,
-                                ),
-                              ),
-                              SizedBox(width: 16),
-                              Text("Loading ..."),
-                            ],
-                          ),
-                          duration: Duration(seconds: 1),
-                        ),
-                      );
-
-                      Future.delayed(Duration(seconds: 1), () {
-                        icon.onPressed(context);
-                      });
-                    },
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color:
-                            icon.icon == 'goclub' ? Colors.white : icon.color,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: SvgPicture.asset(
-                        'assets/icons/${icon.icon}.svg',
-                        color: icon.icon == 'goclub'
-                            ? icon.color
-                            : icon.icon == 'other'
-                                ? Colors.black
-                                : Colors.white,
-                        width: 24,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 9),
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      icon.title,
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 1), // Atur padding
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start, // Atur posisi start agar mulai dari atas
+        children: [
+          GridView.count(
+            shrinkWrap: true,
+            crossAxisCount: 3,
+            mainAxisSpacing: 4,
+            children: menuIcons.take(3).map((icon) {
+              return buildMenuIcon(icon, context);
+            }).toList(),
+          ),
+          
+          GridView.count(
+            shrinkWrap: true,
+            crossAxisCount: 3,
+            mainAxisSpacing: 4,
+            children: menuIcons.skip(3).map((icon) {
+              return buildMenuIcon(icon, context);
+            }).toList(),
+          ),
+        ],
       ),
+    );
+  }
+
+  Widget buildMenuIcon(ButtonIcon icon, BuildContext context) {
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: () async {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Row(
+                  children: [
+                    SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 1,
+                      ),
+                    ),
+                    SizedBox(width: 16),
+                    Text("Loading ..."),
+                  ],
+                ),
+                duration: Duration(seconds: 1),
+              ),
+            );
+
+            Future.delayed(Duration(seconds: 1), () {
+              icon.onPressed(context);
+            });
+          },
+          child: Container(
+            width: 44,
+            height: 45,
+            decoration: BoxDecoration(
+              color: icon.icon == 'goclub' ? Colors.white : icon.color,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: SvgPicture.asset(
+              'assets/icons/${icon.icon}.svg',
+              color: icon.icon == 'goclub'
+                  ? icon.color
+                  : icon.icon == 'other'
+                      ? Colors.black
+                      : Colors.white,
+              width: 24,
+            ),
+          ),
+        ),
+        const SizedBox(height: 4), // Mengurangi jarak antara icon dan teks
+        Text(
+          icon.title,
+          style: TextStyle(color: Colors.black),
+        ),
+      ],
     );
   }
 }

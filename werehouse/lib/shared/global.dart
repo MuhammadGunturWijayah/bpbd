@@ -18,6 +18,7 @@ class Global {
   static const getLogistikMasuk = '/logistic';
   static const getSupplierMasuk = '/supplier';
   static const getInLogistikMasuk = '/inlogistic';
+  static const getOutLogistik = '/outlogistic';
   static const supplierPath = '/addSupplier';
   static const inlogistikpath = '/addInlogistic';
   static const outLogistikpath = '/addOutlogistic';
